@@ -1,6 +1,5 @@
 package ba.unsa.etf.doktordetalji.controllers;
 
-import ba.unsa.etf.doktordetalji.services.DoktorService;
 import ba.unsa.etf.doktordetalji.services.KorisnikService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

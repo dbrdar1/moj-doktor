@@ -1,5 +1,6 @@
 package ba.unsa.etf.doktordetalji.models;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,10 +22,13 @@ import java.util.List;
 @DiscriminatorValue("doktor")
 public class Doktor extends Korisnik{
 
+    @NotNull
     private String titula;
 
     private String biografija;
 
+    @Min(1)
+    @Max(5)
     private Integer ocjena;
 
     public Doktor(String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona, String mail, String titula, String biografija, Integer ocjena){
