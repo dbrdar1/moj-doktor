@@ -24,4 +24,7 @@ public class Certifikat {
 
     private Date godinaPocetka;
 
+    @ManyToOne
+    private Doktor doktor;
+
 }

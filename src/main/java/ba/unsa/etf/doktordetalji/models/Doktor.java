@@ -3,11 +3,13 @@ package ba.unsa.etf.doktordetalji.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -29,4 +31,12 @@ public class Doktor extends Korisnik{
         this.biografija = biografija;
         this.ocjena = ocjena;
     }
+
+    @OneToMany(mappedBy = "doktor", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Certifikat> certifikati = new ArrayList<>();
+
+    @OneToMany(mappedBy = "doktor", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Edukacija> edukacije = new ArrayList<>();
 }

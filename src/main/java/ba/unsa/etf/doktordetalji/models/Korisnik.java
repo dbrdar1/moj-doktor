@@ -40,6 +40,5 @@ public class Korisnik {
         this.adresa = adresa;
         this.brojTelefona = brojTelefona;
         this.email = email;
-
     }
 }

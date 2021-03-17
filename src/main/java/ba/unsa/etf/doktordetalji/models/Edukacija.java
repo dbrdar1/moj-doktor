@@ -3,9 +3,7 @@ package ba.unsa.etf.doktordetalji.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Data
@@ -30,5 +28,8 @@ public class Edukacija {
     private String grad;
 
     private String drzava;
+
+    @ManyToOne
+    private Doktor doktor;
 
 }
