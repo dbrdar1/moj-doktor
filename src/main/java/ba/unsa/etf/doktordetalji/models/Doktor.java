@@ -19,7 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "doktor")
-@DiscriminatorValue("doktor")
 public class Doktor extends Korisnik{
 
     @NotNull

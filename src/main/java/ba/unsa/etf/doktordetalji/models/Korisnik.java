@@ -16,9 +16,7 @@ import java.util.Date;
         @UniqueConstraint(columnNames = {
                 "email"
         })})
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="uloga",
-        discriminatorType = DiscriminatorType.STRING)
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Korisnik {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
