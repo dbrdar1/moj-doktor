@@ -1,7 +1,7 @@
-package ba.unsa.etf.usermanagement.controllers;
+package ba.unsa.etf.chatmicroservice.controllers;
 
-import ba.unsa.etf.usermanagement.models.Korisnik;
-import ba.unsa.etf.usermanagement.services.KorisnikService;
+import ba.unsa.etf.chatmicroservice.models.Korisnik;
+import ba.unsa.etf.chatmicroservice.services.KorisnikService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,9 +22,7 @@ public class KorisnikController {
             new Date(),
             "NekaAdresa",
             "samra@mail",
-            "061456321",
-            "SamraP",
-            "123");
+            "061456321");
 
     private final Korisnik k2 = new Korisnik(
             "Esmina",
@@ -32,15 +30,13 @@ public class KorisnikController {
             new Date(),
             "NekaAdresa",
             "esmina@mail",
-            "061456321",
-            "EsminaR",
-            "123");
+            "061456321");
 
     @GetMapping("/pohraniKorisnike")
     public @ResponseBody String spasiListuKorisnika(){
         korisnici.add(k1);
         korisnici.add(k2);
-        return  korisnikService.spasiKorisnike(korisnici);
+        return korisnikService.spasiKorisnike(korisnici);
     }
 }
 

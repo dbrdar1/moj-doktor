@@ -1,7 +1,7 @@
-package ba.unsa.etf.usermanagement.services;
+package ba.unsa.etf.chatmicroservice.services;
 
-import ba.unsa.etf.usermanagement.models.Korisnik;
-import ba.unsa.etf.usermanagement.repositories.KorisnikRepository;
+import ba.unsa.etf.chatmicroservice.models.Korisnik;
+import ba.unsa.etf.chatmicroservice.repositories.KorisnikRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

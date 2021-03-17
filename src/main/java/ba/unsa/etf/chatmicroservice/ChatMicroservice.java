@@ -1,13 +1,13 @@
-package ba.unsa.etf.usermanagement;
+package ba.unsa.etf.chatmicroservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UsermanagementApplication {
+public class ChatMicroservice {
 
     public static void main(String[] args) {
-        SpringApplication.run(UsermanagementApplication.class, args);
+        SpringApplication.run(ChatMicroservice.class, args);
     }
 
 }

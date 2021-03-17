@@ -1,6 +1,6 @@
-package ba.unsa.etf.usermanagement.repositories;
+package ba.unsa.etf.chatmicroservice.repositories;
 
-import ba.unsa.etf.usermanagement.models.Korisnik;
+import ba.unsa.etf.chatmicroservice.models.Korisnik;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

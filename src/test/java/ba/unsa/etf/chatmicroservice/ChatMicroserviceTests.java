@@ -1,10 +1,10 @@
-package ba.unsa.etf.usermanagement;
+package ba.unsa.etf.chatmicroservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UsermanagementApplicationTests {
+class ChatMicroserviceTests {
 
     @Test
     void contextLoads() {
