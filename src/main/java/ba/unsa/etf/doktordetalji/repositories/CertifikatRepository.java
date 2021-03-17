@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CerifikatRepository extends JpaRepository<Certifikat, Long> {
+public interface CertifikatRepository extends JpaRepository<Certifikat, Long> {
 }

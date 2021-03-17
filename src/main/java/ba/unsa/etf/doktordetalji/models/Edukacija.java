@@ -29,6 +29,16 @@ public class Edukacija {
 
     private String drzava;
 
+    public Edukacija(String institucija, String odsjek, String stepen, Integer godinaPocetka, Integer godinaZavrsetka, String grad, String drzava){
+        this.institucija = institucija;
+        this.odsjek = odsjek;
+        this. stepen = stepen;
+        this.godinaPocetka = godinaPocetka;
+        this.godinaZavrsetka = godinaZavrsetka;
+        this.grad = grad;
+        this.drzava = drzava;
+    }
+
     @ManyToOne
     private Doktor doktor;
 

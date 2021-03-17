@@ -22,7 +22,13 @@ public class Certifikat {
 
     private String naziv;
 
-    private Date godinaPocetka;
+    private Date godinaIzdavanja;
+
+    public Certifikat(String institucija, String naziv, Date godinaIzdavanja){
+        this.institucija = institucija;
+        this.naziv = naziv;
+        this.godinaIzdavanja = godinaIzdavanja;
+    }
 
     @ManyToOne
     private Doktor doktor;

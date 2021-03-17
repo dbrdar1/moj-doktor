@@ -12,7 +12,6 @@ import java.util.Date;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "pacijent")
 @DiscriminatorValue("pacijent")
 public class Pacijent extends Korisnik{
