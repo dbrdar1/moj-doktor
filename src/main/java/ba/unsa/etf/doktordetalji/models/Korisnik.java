@@ -1,14 +1,11 @@
 package ba.unsa.etf.doktordetalji.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Past;
 import java.util.Date;
 
 @Entity
@@ -34,7 +31,6 @@ public class Korisnik {
     private String prezime;
 
     @NotNull
-    @Past
     private Date datumRodjenja;
 
     @NotNull

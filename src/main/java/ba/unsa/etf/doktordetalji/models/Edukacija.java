@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Past;
 
 @Entity
 @Data
@@ -29,12 +28,10 @@ public class Edukacija {
 
     @NotNull
     @Min(1900)
-    @Past
     private Integer godinaPocetka;
 
     @NotNull
     @Min(1900)
-    @Past
     private Integer godinaZavrsetka;
 
     @NotNull

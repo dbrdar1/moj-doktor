@@ -1,15 +1,11 @@
 package ba.unsa.etf.doktordetalji.models;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-
 import java.util.Date;
-
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.PastOrPresent;
 
 @Entity
 @Data
@@ -18,19 +14,15 @@ import javax.validation.constraints.PastOrPresent;
 @Table(name = "certifikat")
 public class Certifikat {
     @Id
-    @NonNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NonNull
+    @NotNull
     private String institucija;
 
-    @NonNull
+    @NotNull
     private String naziv;
 
-    @NonNull
-    @Min(1900)
-    @PastOrPresent
     private Date godinaIzdavanja;
 
     public Certifikat(String institucija, String naziv, Date godinaIzdavanja){

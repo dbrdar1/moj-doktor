@@ -18,13 +18,28 @@ public class KorisnikService {
 
     private final DoktorRepository doktorRepository;
     private  final PacijentRepository pacijentRepository;
+    private final EdukacijaRepository edukacijaRepository;
+    private final CertifikatRepository certifikatRepository;
+
 
     public String inicijalizirajBazu() {
+
+        edukacijaRepository.deleteAllInBatch();
+        edukacijaRepository.flush();
+
+        certifikatRepository.deleteAllInBatch();
+        certifikatRepository.flush();
+
+        doktorRepository.deleteAllInBatch();
+        doktorRepository.flush();
+
+        pacijentRepository.deleteAllInBatch();
+        pacijentRepository.flush();
 
         Doktor d = new Doktor(
                 "Samra",
                 "Pusina",
-                new Date(),
+                new Date(1998, 5, 21),
                 "NekaAdresa",
                 "061456321",
                 "spusina1@mail",
@@ -35,13 +50,13 @@ public class KorisnikService {
         Pacijent p = new Pacijent(
                 "Esmina",
                 "Radusic",
-                new Date(),
+                new Date(1998, 5, 21),
                 "NekaAdresa",
                 "061456322",
                 "eradusic1@mail");
 
-        Edukacija e1 = new Edukacija("ETF", "RI", "1", 2017, 2020, "Sarajevo", "BiH");
-        Edukacija e2 = new Edukacija("ETF", "RI", "2", 2020, 2022, "Sarajevo", "BiH");
+        Edukacija e1 = new Edukacija("ETF", "RI", "1", 2015, 2019, "Sarajevo", "BiH");
+        Edukacija e2 = new Edukacija("ETF", "RI", "2", 2019, 2020, "Sarajevo", "BiH");
 
         Certifikat c1 = new Certifikat("EESTEC", "SSA", new Date());
 
