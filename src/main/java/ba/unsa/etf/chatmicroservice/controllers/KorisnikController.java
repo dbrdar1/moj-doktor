@@ -15,28 +15,9 @@ public class KorisnikController {
 
     private final KorisnikService korisnikService;
 
-    private final List<Korisnik> korisnici;
-    private final Korisnik k1 = new Korisnik(
-            "Samra",
-            "Pusina",
-            new Date(),
-            "NekaAdresa",
-            "samra@mail",
-            "061456321");
-
-    private final Korisnik k2 = new Korisnik(
-            "Esmina",
-            "Radusic",
-            new Date(),
-            "NekaAdresa",
-            "esmina@mail",
-            "061456321");
-
-    @GetMapping("/pohraniKorisnike")
-    public @ResponseBody String spasiListuKorisnika(){
-        korisnici.add(k1);
-        korisnici.add(k2);
-        return korisnikService.spasiKorisnike(korisnici);
+    @GetMapping("/inicijalizacijaBaze")
+    public @ResponseBody String inicijalizacija(){
+        return korisnikService.inicijalizirajBazu();
     }
 }
 

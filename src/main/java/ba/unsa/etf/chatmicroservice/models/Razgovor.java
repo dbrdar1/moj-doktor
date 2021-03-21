@@ -1,26 +1,42 @@
 package ba.unsa.etf.chatmicroservice.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "razgovor")
 public class Razgovor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "prviKorisnikId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Korisnik prviKorisnik;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "drugiKorisnikId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Korisnik drugiKorisnik;
+
+    @OneToMany(targetEntity = Poruka.class,
+            cascade = CascadeType.ALL,
+            mappedBy = "razgovor")
+    private List<Poruka> porukas = new ArrayList<>();
 
     public Razgovor(Korisnik prviKorisnik, Korisnik drugiKorisnik) {
         this.prviKorisnik = prviKorisnik;
         this.drugiKorisnik = drugiKorisnik;
     }
-
-    public Razgovor() { }
 }

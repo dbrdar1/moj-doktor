@@ -33,8 +33,8 @@ public class NotifikacijaController {
             "esmina@mail",
             "061456321");
 
-    private final Notifikacija notifikacija1 = new Notifikacija("nesto", "ness", korisnik1);
-    private final Notifikacija notifikacija2 = new Notifikacija("nesto1", "ness2", korisnik2);
+    private final Notifikacija notifikacija1 = new Notifikacija("nesto", "ness", new Date(), "19:00", korisnik1);
+    private final Notifikacija notifikacija2 = new Notifikacija("nesto1", "ness2", new Date(), "18:00", korisnik2);
 
     @GetMapping("/pohraniNotifikacije")
     public @ResponseBody String spasiListuNotifikacija() {
