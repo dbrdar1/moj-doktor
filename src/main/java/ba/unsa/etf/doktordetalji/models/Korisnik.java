@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Entity
@@ -22,22 +23,22 @@ public class Korisnik {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String ime;
 
-    @NotNull
+    @NotBlank
     private String prezime;
 
-    @NotNull
+    @NotBlank
     private Date datumRodjenja;
 
-    @NotNull
+    @NotBlank
     private String adresa;
 
-    @NotNull
+    @NotBlank
     private String brojTelefona;
 
-    @NotNull
+    @NotBlank
     @Email(message = "Email mora biti validan")
     private String email;
 

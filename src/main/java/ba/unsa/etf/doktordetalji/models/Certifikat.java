@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.Date;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
@@ -17,15 +18,15 @@ public class Certifikat {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String institucija;
 
-    @NotNull
+    @NotBlank
     private String naziv;
 
-    private Date godinaIzdavanja;
+    private Integer godinaIzdavanja;
 
-    public Certifikat(String institucija, String naziv, Date godinaIzdavanja){
+    public Certifikat(String institucija, String naziv, Integer godinaIzdavanja){
         this.institucija = institucija;
         this.naziv = naziv;
         this.godinaIzdavanja = godinaIzdavanja;

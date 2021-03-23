@@ -12,7 +12,7 @@ public class KorisnikController {
 
     private final KorisnikService korisnikService;
 
-    @GetMapping("/inicijalizacijaBaze")
+    @GetMapping("/inicijalizacija-baze")
     public @ResponseBody
     String inicijalizacija(){
 

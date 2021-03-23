@@ -10,6 +10,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,20 +22,15 @@ import java.util.List;
 @Table(name = "doktor")
 public class Doktor extends Korisnik{
 
-    @NotNull
+    @NotBlank
     private String titula;
 
     private String biografija;
 
-    @Min(1)
-    @Max(5)
-    private Integer ocjena;
-
-    public Doktor(String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona, String mail, String titula, String biografija, Integer ocjena){
+    public Doktor(String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona, String mail, String titula, String biografija){
         super(ime, prezime, datumRodjenja, adresa, brojTelefona, mail);
         this.titula = titula;
         this.biografija = biografija;
-        this.ocjena = ocjena;
     }
 
     @OneToMany(mappedBy = "doktor", cascade = CascadeType.ALL)
@@ -44,4 +40,8 @@ public class Doktor extends Korisnik{
     @OneToMany(mappedBy = "doktor", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Edukacija> edukacije = new ArrayList<>();
+
+    @OneToMany(mappedBy = "doktor", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Ocjena> ocjene = new ArrayList<>();
 }

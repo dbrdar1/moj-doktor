@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DoktorRepository extends JpaRepository<Doktor, Long> {
+public interface DoktorRepository extends JpaRepository<Doktor, Long>, DoktorFilterRepository{
 
 }

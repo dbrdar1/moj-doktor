@@ -44,8 +44,7 @@ public class KorisnikService {
                 "061456321",
                 "spusina1@mail",
                 "nekaTitula",
-                "bachelor",
-                4);
+                "bachelor");
 
         Pacijent p = new Pacijent(
                 "Esmina",
@@ -58,7 +57,7 @@ public class KorisnikService {
         Edukacija e1 = new Edukacija("ETF", "RI", "1", 2015, 2019, "Sarajevo", "BiH");
         Edukacija e2 = new Edukacija("ETF", "RI", "2", 2019, 2020, "Sarajevo", "BiH");
 
-        Certifikat c1 = new Certifikat("EESTEC", "SSA", new Date());
+        Certifikat c1 = new Certifikat("EESTEC", "SSA", 2016);
 
         List<Edukacija> edukacijaList = new ArrayList<>();
         edukacijaList.add(e1);

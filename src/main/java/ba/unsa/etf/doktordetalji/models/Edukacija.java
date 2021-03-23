@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
@@ -17,27 +18,27 @@ public class Edukacija {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String institucija;
 
-    @NotNull
+    @NotBlank
     private String odsjek;
 
-    @NotNull
+    @NotBlank
     private String stepen;
 
-    @NotNull
+    @NotBlank
     @Min(1900)
     private Integer godinaPocetka;
 
-    @NotNull
+    @NotBlank
     @Min(1900)
     private Integer godinaZavrsetka;
 
-    @NotNull
+    @NotBlank
     private String grad;
 
-    @NotNull
+    @NotBlank
     private String drzava;
 
     public Edukacija(String institucija, String odsjek, String stepen, Integer godinaPocetka, Integer godinaZavrsetka, String grad, String drzava){
