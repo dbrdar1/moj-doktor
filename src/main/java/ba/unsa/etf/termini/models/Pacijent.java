@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,5 +30,6 @@ public class Pacijent extends Korisnik {
             fetch = FetchType.EAGER,
             mappedBy="pacijent")
     @Fetch(value = FetchMode.SUBSELECT)
+   // @OnDelete(action = OnDeleteAction.CASCADE)
     private List<PacijentKartonDoktor> vezeSaDoktorima;
 }

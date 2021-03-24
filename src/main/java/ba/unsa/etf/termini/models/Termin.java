@@ -1,6 +1,8 @@
 package ba.unsa.etf.termini.models;
 
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -23,6 +25,7 @@ public class Termin {
 
     @ManyToOne(cascade = {CascadeType.ALL},fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "pacijent_karton_doktor_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private PacijentKartonDoktor pacijentKartonDoktor;
 
     public Termin(Date datumPregleda, String vrijemePregleda, PacijentKartonDoktor pacijentKartonDoktor) {

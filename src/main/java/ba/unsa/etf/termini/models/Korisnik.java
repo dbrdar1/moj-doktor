@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -68,6 +70,7 @@ public class Korisnik {
             fetch = FetchType.EAGER,
             mappedBy="korisnik")
     @Fetch(value = FetchMode.SUBSELECT)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     private List<Notifikacija> notifikacije;
 }
 

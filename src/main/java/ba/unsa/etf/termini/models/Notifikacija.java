@@ -2,6 +2,8 @@ package ba.unsa.etf.termini.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -40,6 +42,7 @@ public class Notifikacija {
 
     @ManyToOne(cascade = {CascadeType.ALL},fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "korisnik_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Korisnik korisnik;
 

@@ -38,9 +38,10 @@ public class TerminService {
     }
 
     public Response obrisiTermin(Long id) {
-        Termin termin = terminRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ne postoji termin s ovim id-om!"));;
-        //terminRepository.deleteById(id);
-        terminRepository.delete(termin);
+        Termin termin = terminRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Ne postoji termin s ovim id-om!"));;
+        terminRepository.deleteById(id);
+        //terminRepository.delete(termin);
         // ne radi zbog constrainta
         return new Response("Uspješno ste obrisali termin!", 200);
     }
