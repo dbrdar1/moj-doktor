@@ -1,5 +1,6 @@
 package ba.unsa.etf.termini.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "pacijent")
+@JsonIgnoreProperties({"vezeSaDoktorima"})
 public class Pacijent extends Korisnik {
 
     public Pacijent(String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona, String mail){

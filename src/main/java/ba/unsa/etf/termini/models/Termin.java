@@ -3,6 +3,8 @@ package ba.unsa.etf.termini.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -12,8 +14,11 @@ public class Termin {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull(message = "Termin mora imati datum")
     private Date datum;
 
+    @NotNull(message = "Termin mora imati vrijeme")
+    @NotEmpty(message = "Termin mora imati vrijeme")
     private String vrijeme;
 
     @ManyToOne(cascade = {CascadeType.ALL},fetch = FetchType.LAZY, optional = false)

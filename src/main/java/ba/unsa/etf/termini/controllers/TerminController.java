@@ -1,14 +1,15 @@
 package ba.unsa.etf.termini.controllers;
 
+import ba.unsa.etf.termini.Requests.DodajNotifikacijuRequest;
+import ba.unsa.etf.termini.Requests.DodajTerminRequest;
+import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.models.*;
 import ba.unsa.etf.termini.repositories.PacijentKartonDoktorRepository;
 import ba.unsa.etf.termini.services.PacijentKartonDoktorService;
 import ba.unsa.etf.termini.services.TerminService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -84,5 +85,16 @@ public class TerminController {
                 pkd4
         ));
         return terminService.pohraniPocetneTermine(termini);
+    }
+
+    @PostMapping("/dodaj-termin")
+    public ResponseEntity<Response> dodajTermin(@RequestBody DodajTerminRequest dodajTerminRequest){
+        Response response = terminService.dodajTermin(dodajTerminRequest);
+        return ResponseEntity.ok(response);
+    }
+    @DeleteMapping("/termini/{id}")
+    public ResponseEntity<Response> obrisiTermin(@PathVariable Long id) {
+        Response response = terminService.obrisiTermin(id);
+        return ResponseEntity.ok(response);
     }
 }

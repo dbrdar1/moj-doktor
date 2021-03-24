@@ -9,6 +9,7 @@ import ba.unsa.etf.termini.repositories.KorisnikRepository;
 import ba.unsa.etf.termini.services.DoktorService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +24,7 @@ import java.util.List;
 public class DoktorController {
     private final DoktorService doktorService;
     private KorisnikRepository korisnikRepository;
+    private DoktorRepository doktorRepository;
 
     private final Doktor k2 = new Doktor(
             "Dzavid",
@@ -46,4 +48,16 @@ public class DoktorController {
         doktori.add(k2);
         return  doktorService.spasiDoktore(doktori);
     }*/
+
+    @GetMapping("/doktori")
+    List<Doktor> all() {
+        return doktorRepository.findAll();
+    }
+
+    @GetMapping("/doktori/{id}")
+    Doktor one(@PathVariable Long id) throws Exception {
+
+        return doktorRepository.findById(id)
+                .orElseThrow(() -> new Exception("Korisnik nije pronađen"));
+    }
 }

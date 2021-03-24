@@ -1,13 +1,16 @@
 package ba.unsa.etf.termini.controllers;
 
+import ba.unsa.etf.termini.Requests.DodajPacijentKartonDoktorRequest;
+import ba.unsa.etf.termini.Responses.NotifikacijeKorisnikaResponse;
+import ba.unsa.etf.termini.Responses.PacijentKartonDoktorResponse;
+import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.models.Doktor;
 import ba.unsa.etf.termini.models.Pacijent;
 import ba.unsa.etf.termini.models.PacijentKartonDoktor;
 import ba.unsa.etf.termini.services.PacijentKartonDoktorService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 @AllArgsConstructor
@@ -31,10 +34,16 @@ public class PacijentKartonDoktorController {
             "dzavid@mail.com",
             "Doktor opce prakse");
 
-    /*@GetMapping("/pohraniPKD")
-    public @ResponseBody
-    String spasiVezu() {
-        PacijentKartonDoktor pkd1=new PacijentKartonDoktor(d1,p1);
-        return pacijentKartonDoktorService.spasiVezuDoktorPacijent(pkd1);
-    }*/
+    @PostMapping("/dodaj-vezu-pkd")
+    @ResponseBody
+    public ResponseEntity<Response>  spasiVezuDoktorPacijent(@RequestBody DodajPacijentKartonDoktorRequest dodajPacijentKartonDoktorRequest) {
+        Response response = pacijentKartonDoktorService.spasiVezuDoktorPacijent(dodajPacijentKartonDoktorRequest.getPacijentId(),dodajPacijentKartonDoktorRequest.getDoktorId());
+        return ResponseEntity.ok(response);    }
+/*
+    @GetMapping("/veza-pkd/{idDoktora}/{idPacijenta}")
+    public ResponseEntity<PacijentKartonDoktorResponse> dajVezuPkd(@PathVariable("idDoktora") Long idDoktora, @PathVariable("idPacijenta") Long idPacijenta){
+        PacijentKartonDoktorResponse response = pacijentKartonDoktorService.dajVezuPkd(idDoktora,idPacijenta);
+        return ResponseEntity.ok(response);
+    }
+ */
 }

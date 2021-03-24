@@ -1,5 +1,6 @@
 package ba.unsa.etf.termini.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.List;
 
@@ -19,21 +21,37 @@ import java.util.List;
                 "email"
         })})
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonIgnoreProperties({"notifikacije"})
 public class Korisnik {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Size(min = 2, message = "Ime mora biti dugo bar dva znaka")
+    @NotNull(message = "Korisnik mora imati uneseno ime")
+    @NotEmpty(message = "Korisnik mora imati uneseno ime")
     private String ime;
 
+    @Size(min = 2, message = "Prezme mora biti dugo bar dva znaka")
+    @NotNull(message = "Korisnik mora imati uneseno prezime")
+    @NotEmpty(message = "Korisnik mora imati uneseno prezime")
     private String prezime;
 
+    @NotNull(message = "Korisnik mora imati unesen datum rodjenja")
     private Date datumRodjenja;
 
+    @NotNull(message = "Korisnik mora imati unesenu adresu")
+    @NotEmpty(message = "Korisnik mora imati unesenu adresu")
     private String adresa;
 
+    @NotNull(message = "Korisnik mora imati unesen broj telefona")
+    @NotEmpty(message = "Korisnik mora imati unesen telefon")
+    @Size(min=9, max=13, message = "Telefonski broj korisnika mora biti dug 9-13 cifara")
     private String brojTelefona;
 
+    @NotNull(message = "Korisnik mora imati unesenu e-mail adresu")
+    @NotEmpty(message = "Korisnik mora imati unesen e-mail")
+    @Email(message = "Korisnik mora imati unesen ispravan e-mail")
     private String email;
 
     public Korisnik(String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona,  String email) {

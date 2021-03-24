@@ -1,15 +1,17 @@
 package ba.unsa.etf.termini.controllers;
 
+import ba.unsa.etf.termini.Requests.DodajNotifikacijuRequest;
+import ba.unsa.etf.termini.Responses.NotifikacijeKorisnikaResponse;
+import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.models.Korisnik;
 import ba.unsa.etf.termini.models.Notifikacija;
 import ba.unsa.etf.termini.models.Pacijent;
+import ba.unsa.etf.termini.repositories.NotifikacijaRepository;
 import ba.unsa.etf.termini.repositories.PacijentRepository;
 import ba.unsa.etf.termini.services.NotifikacijaService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 public class NotifikacijaController {
     private final NotifikacijaService notifikacijaService;
     private PacijentRepository pacijentRepository;
+    private NotifikacijaRepository notifikacijaRepository;
     private final Pacijent k1 = new Pacijent(
             "Ana",
             "Anic",
@@ -57,5 +60,23 @@ public class NotifikacijaController {
                 a
         ));
         return  notifikacijaService.spasiNotifikacije(notifikacije);
+    }
+
+    @DeleteMapping("/notifikacije/{id}")
+    public ResponseEntity<Response> obrisiNotifikaciju(@PathVariable Long id) {
+        Response response = notifikacijaService.obrisiNotifikaciju(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/dodaj-notifikaciju")
+    public ResponseEntity<Response> dodajNotifikaciju(@RequestBody DodajNotifikacijuRequest dodajNotifikacijuRequest){
+        Response response = notifikacijaService.dodajNotifikaciju(dodajNotifikacijuRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/notifikacije-korisnika/{idKorisnika}")
+    public ResponseEntity<NotifikacijeKorisnikaResponse> dajNotifikacijeKorisnika(@PathVariable Long idKorisnika){
+        NotifikacijeKorisnikaResponse response = notifikacijaService.dajNotifikacijeKorisnika(idKorisnika);
+        return ResponseEntity.ok(response);
     }
 }
