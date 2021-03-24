@@ -1,5 +1,6 @@
 package ba.unsa.etf.chatmicroservice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @Table(name = "doktor")
+@JsonIgnoreProperties({"notifikacijas", "razgovors1", "razgovors2"})
 public class Doktor extends Korisnik {
 
     public Doktor(String ime, String prezime, Date datumRodjenja, String adresa, String email, String brojTelefona) {

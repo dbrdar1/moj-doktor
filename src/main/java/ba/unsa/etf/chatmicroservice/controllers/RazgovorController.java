@@ -1,10 +1,15 @@
 package ba.unsa.etf.chatmicroservice.controllers;
 
+import ba.unsa.etf.chatmicroservice.exceptions.DBObjectNotFoundException;
 import ba.unsa.etf.chatmicroservice.models.Korisnik;
+import ba.unsa.etf.chatmicroservice.models.Poruka;
 import ba.unsa.etf.chatmicroservice.models.Razgovor;
+import ba.unsa.etf.chatmicroservice.repositories.PorukaRepository;
+import ba.unsa.etf.chatmicroservice.repositories.RazgovorRepository;
 import ba.unsa.etf.chatmicroservice.services.RazgovorService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,32 +20,18 @@ import java.util.List;
 @RestController
 public class RazgovorController {
 
-    private final RazgovorService razgovorService;
+    private final RazgovorRepository razgovorRepository;
 
-    private final List<Razgovor> razgovori;
-    private final Korisnik korisnik1 = new Korisnik(
-            "Samra",
-            "Pusina",
-            new Date(),
-            "NekaAdresa",
-            "samra@mail",
-            "061456321"
-    );
-    private final Korisnik korisnik2 = new Korisnik(
-            "Esmina",
-            "Radusic",
-            new Date(),
-            "NekaAdresa",
-            "esmina@mail",
-            "061456321"
-    );
+    @GetMapping("/razgovori")
+    List<Razgovor> all() {
+        return razgovorRepository.findAll();
+    }
 
-    private final Razgovor razgovor1 = new Razgovor(korisnik1, korisnik2);
-
-    @GetMapping("/pohraniRazgovore")
-    public @ResponseBody String spasiListuRazgovora() {
-        razgovori.add(razgovor1);
-        return razgovorService.spasiRazgovore(razgovori);
+    @GetMapping("/razgovori/{id}")
+    Razgovor one(@PathVariable Long id) {
+        String errorMessage = "Objekat sa zadanim ID-jem ne postoji.";
+        return razgovorRepository.findById(id)
+                .orElseThrow(() -> new DBObjectNotFoundException(errorMessage));
     }
 }
 

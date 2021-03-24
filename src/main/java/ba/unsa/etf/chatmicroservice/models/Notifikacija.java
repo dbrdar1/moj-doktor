@@ -8,6 +8,8 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
@@ -26,9 +28,11 @@ public class Notifikacija {
     @NotBlank
     private String tekst;
 
+    @NotNull
     private Date datum;
 
     @NotBlank
+    @Size(min = 5, max = 5, message = "Vrijeme mora imati 5 znakova")
     private String vrijeme;
 
     @ManyToOne

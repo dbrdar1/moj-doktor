@@ -7,7 +7,10 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -23,10 +26,15 @@ public class Poruka {
     @NotBlank
     private String sadrzaj;
 
+    @Min(value = 0, message = "Vrijednost Procitana moze biti 0 ili 1")
+    @Max(value = 1, message = "Vrijednost Procitana moze biti 0 ili 1")
     private Integer procitana;
 
+    @Min(value = 0, message = "Vrijednost Procitana moze biti 0 ili 1")
+    @Max(value = 1, message = "Vrijednost Procitana moze biti 0 ili 1")
     private Integer jeLiOdPrvogKorisnika;
 
+    @NotNull
     private Date datumPoruke;
 
     @NotBlank

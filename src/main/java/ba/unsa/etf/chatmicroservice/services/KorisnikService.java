@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -47,16 +46,16 @@ public class KorisnikService {
                 "Pusina",
                 date,
                 "NekaAdresa1",
-                "061456321",
-                "spusina1@etf.unsa.ba");
+                "spusina1@etf.unsa.ba",
+                "061111222");
 
         Pacijent pacijent = new Pacijent(
                 "Esmina",
                 "Radusic",
                 date,
                 "NekaAdresa2",
-                "061456322",
-                "eradusic1@etf.unsa.ba");
+                "eradusic1@etf.unsa.ba",
+                "061111222");
 
         Notifikacija notifikacija = new Notifikacija(
                 "naziv notifikacije",

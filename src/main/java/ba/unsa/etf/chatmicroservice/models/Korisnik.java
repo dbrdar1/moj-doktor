@@ -4,9 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +26,7 @@ import java.util.List;
         })
 })
 @Inheritance(strategy = InheritanceType.JOINED)
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties({"notifikacijas", "razgovors1", "razgovors2"})
 public class Korisnik {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,6 +38,7 @@ public class Korisnik {
     @NotBlank
     private String prezime;
 
+    @NotNull
     private Date datumRodjenja;
 
     @NotBlank
@@ -42,6 +48,7 @@ public class Korisnik {
     private String brojTelefona;
 
     @NotBlank
+    @Email(message = "Email mora biti validan")
     private String email;
 
     @OneToMany(targetEntity = Notifikacija.class,
@@ -52,12 +59,12 @@ public class Korisnik {
     @OneToMany(targetEntity = Razgovor.class,
             cascade = CascadeType.ALL,
             mappedBy = "prviKorisnik")
-    private List<Razgovor> razgovors1;
+    private List<Razgovor> razgovors1 = new ArrayList<>();
 
     @OneToMany(targetEntity = Razgovor.class,
             cascade = CascadeType.ALL,
             mappedBy = "drugiKorisnik")
-    private List<Razgovor> razgovors2;
+    private List<Razgovor> razgovors2 = new ArrayList<>();
 
     public Korisnik(String ime, String prezime, Date datumRodjenja, String adresa, String email, String brojTelefona) {
         this.ime = ime;
