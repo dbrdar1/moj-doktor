@@ -10,6 +10,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,11 +26,7 @@ public class Pacijent extends Korisnik {
         super(ime, prezime, datumRodjenja, adresa, brojTelefona, mail);
     }
 
-    @OneToMany(targetEntity = PacijentKartonDoktor.class,
-            cascade = {CascadeType.ALL},
-            fetch = FetchType.EAGER,
-            mappedBy="pacijent")
-    @Fetch(value = FetchMode.SUBSELECT)
-   // @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<PacijentKartonDoktor> vezeSaDoktorima;
+    @OneToMany(mappedBy = "pacijent", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<PacijentKartonDoktor> vezeSaDoktorima = new ArrayList<>();
 }

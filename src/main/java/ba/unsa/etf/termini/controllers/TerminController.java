@@ -1,25 +1,26 @@
 package ba.unsa.etf.termini.controllers;
 
-import ba.unsa.etf.termini.Requests.DodajNotifikacijuRequest;
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
 import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.models.*;
+import ba.unsa.etf.termini.repositories.DoktorRepository;
 import ba.unsa.etf.termini.repositories.PacijentKartonDoktorRepository;
-import ba.unsa.etf.termini.services.PacijentKartonDoktorService;
+import ba.unsa.etf.termini.repositories.PacijentRepository;
+import ba.unsa.etf.termini.repositories.TerminRepository;
 import ba.unsa.etf.termini.services.TerminService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
 @AllArgsConstructor
 @RestController
 public class TerminController {
     private TerminService terminService;
+    private PacijentRepository pacijentRepository;
+    private DoktorRepository doktorRepository;
     private PacijentKartonDoktorRepository pacijentKartonDoktorRepository;
+    private TerminRepository terminRepository;
 
     private final Pacijent p1 = new Pacijent(
             "Samra",
@@ -52,39 +53,52 @@ public class TerminController {
             "Doktor opce prakse");
 
     @GetMapping("/pohraniPocetneTermine")
-    public @ResponseBody
+    public
     String spasiListuTermina() {
-        List<Termin> termini = new LinkedList<>();
+        pacijentKartonDoktorRepository.deleteAllInBatch();
+        pacijentKartonDoktorRepository.flush();
+        terminRepository.deleteAllInBatch();
+        terminRepository.flush();
+        System.out.println(d1);
         PacijentKartonDoktor pkd1=new PacijentKartonDoktor(d1,p1);
         PacijentKartonDoktor pkd2=new PacijentKartonDoktor(d2,p1);
         PacijentKartonDoktor pkd3=new PacijentKartonDoktor(d1,p2);
         PacijentKartonDoktor pkd4=new PacijentKartonDoktor(d2,p2);
-        pkd1=pacijentKartonDoktorRepository.save(pkd1);
-        pkd2=pacijentKartonDoktorRepository.save(pkd2);
-        pkd3=pacijentKartonDoktorRepository.save(pkd3);
-        pkd4=pacijentKartonDoktorRepository.save(pkd4);
 
-        termini.add(new Termin(
+        p1.getVezeSaDoktorima().add(pkd1);
+        p1.getVezeSaDoktorima().add(pkd2);
+        p2.getVezeSaDoktorima().add(pkd3);
+        p2.getVezeSaDoktorima().add(pkd4);
+        d1.getVezeSaPacijentima().add(pkd1);
+        d2.getVezeSaPacijentima().add(pkd2);
+        d1.getVezeSaPacijentima().add(pkd3);
+        d2.getVezeSaPacijentima().add(pkd4);
+
+        Termin termin1= new Termin(
                 new Date(2021,5,25),
                 "10:00",
-                pkd1
-        ));
-        termini.add(new Termin(
+                pkd1 );
+        Termin termin2= new Termin(
                 new Date(2021,5,25),
                 "10:00",
-                pkd2
-        ));
-        termini.add(new Termin(
+                pkd2);
+        Termin termin3= new Termin(
                 new Date(2021,5,26),
                 "11:00",
-                pkd3
-        ));
-        termini.add(new Termin(
+                pkd3);
+        Termin termin4= new Termin(
                 new Date(2021,5,26),
                 "9:00",
-                pkd4
-        ));
-        return terminService.pohraniPocetneTermine(termini);
+                pkd4);
+        pkd1.getTermini().add(termin1);
+        pkd2.getTermini().add(termin2);
+        pkd3.getTermini().add(termin3);
+        pkd4.getTermini().add(termin4);
+
+        pacijentRepository.save(p1); pacijentRepository.save(p2);
+        doktorRepository.save(d1); doktorRepository.save(d2);
+
+        return "Spaseni pocetni termini!";
     }
 
     @PostMapping("/dodaj-termin")

@@ -11,6 +11,7 @@ import java.util.Date;
 
 @Entity
 @Data
+@Table(name = "termin")
 public class Termin {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,9 +24,7 @@ public class Termin {
     @NotEmpty(message = "Termin mora imati vrijeme")
     private String vrijeme;
 
-    @ManyToOne(cascade = {CascadeType.ALL},fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "pacijent_karton_doktor_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
     private PacijentKartonDoktor pacijentKartonDoktor;
 
     public Termin(Date datumPregleda, String vrijemePregleda, PacijentKartonDoktor pacijentKartonDoktor) {

@@ -22,44 +22,44 @@ import java.util.List;
 public class NotifikacijaController {
     private final NotifikacijaService notifikacijaService;
     private PacijentRepository pacijentRepository;
-    private NotifikacijaRepository notifikacijaRepository;
-    private final Pacijent k1 = new Pacijent(
+    private final Pacijent a = new Pacijent(
             "Ana",
             "Anic",
             new Date(),
             "NekaAdresa",
             "061456321","ana@mail.com");
-    private final Pacijent k2 = new Pacijent(
+    private final Pacijent b = new Pacijent(
             "Nina",
             "Ninic",
             new Date(),
             "NekaAdresa",
             "061456321","nina@mail.com");
 
-    private final List<Notifikacija> notifikacije;
     private final Date datum = new Date(2021,3,17);
     private final String vrijeme = "9:00";
 
     @GetMapping("/pohraniPocetneNotifikacije")
-    public @ResponseBody
+    public
     String spasiListuNotifikacija(){
-        Korisnik a= pacijentRepository.save(k1);
-        Korisnik b= pacijentRepository.save(k2);
-        notifikacije.add(new Notifikacija(
+        Notifikacija n1 = new Notifikacija(
                 "Otkazan pregled!",
                 "Otkazan pregled 21.3.2020.",
                 datum,
                 vrijeme,
-                b
-        ));
-        notifikacije.add(new Notifikacija(
+                b);
+        Notifikacija n2 =new Notifikacija(
                 "Otkazan pregled!",
                 "Otkazan pregled 20.3.2020.",
                 datum,
                 vrijeme,
-                a
-        ));
-        return  notifikacijaService.spasiNotifikacije(notifikacije);
+                a);
+        b.getNotifikacije().add(n1);
+        a.getNotifikacije().add(n2);
+
+        pacijentRepository.save(a);
+        pacijentRepository.save(b);
+
+        return "Spremljene notifikacije!";
     }
 
     @DeleteMapping("/notifikacije/{id}")

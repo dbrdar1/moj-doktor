@@ -2,8 +2,6 @@ package ba.unsa.etf.termini.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -13,6 +11,7 @@ import java.util.Date;
 
 @Entity
 @Data
+@Table(name = "notifikacija")
 public class Notifikacija {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,10 +39,8 @@ public class Notifikacija {
     @NotEmpty(message = "Notifikacija mora imati vrijeme")
     private String vrijeme;
 
-    @ManyToOne(cascade = {CascadeType.ALL},fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "korisnik_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private Korisnik korisnik;
 
     public Notifikacija(String naslov, String tekst, Date datum, String vrijeme) {

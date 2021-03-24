@@ -22,13 +22,6 @@ public class NotifikacijaService {
     private final NotifikacijaRepository notifikacijaRepository;
     private KorisnikRepository korisnikRepository;
 
-    public String spasiNotifikacije(List<Notifikacija> notifikacije) {
-        notifikacijaRepository.deleteAllInBatch();
-        notifikacijaRepository.flush();
-        notifikacijaRepository.saveAll(notifikacije);
-        return "Spremljene notifikacije!";
-    }
-
     public Response dodajNotifikaciju(DodajNotifikacijuRequest dodajNotifikacijuRequest) {
         Optional<Korisnik> k = korisnikRepository.findById(dodajNotifikacijuRequest.getIdKorisnika());
         if(!k.isPresent()) return new Response("Id korisnika nije postojeći!", 400);

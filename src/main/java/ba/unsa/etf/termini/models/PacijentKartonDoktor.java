@@ -5,32 +5,27 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
 @Data
+@Table(name = "pacijentKartonDoktor")
 public class PacijentKartonDoktor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.ALL},fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "doktor_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
     private Doktor doktor;
 
-    @ManyToOne(cascade = {CascadeType.ALL},fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "pacijent_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
     private Pacijent pacijent;
 
-    @OneToMany(targetEntity = Termin.class,
-            cascade = {CascadeType.ALL},
-            fetch = FetchType.EAGER,
-            mappedBy="pacijentKartonDoktor")
-    //@OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Termin> termini;
+    @OneToMany(mappedBy = "pacijentKartonDoktor", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Termin> termini = new ArrayList<>();
 
     public PacijentKartonDoktor(Doktor doktor, Pacijent pacijent) {
         this.doktor = doktor;

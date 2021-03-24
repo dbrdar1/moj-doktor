@@ -21,12 +21,6 @@ public class TerminService {
     private TerminRepository terminRepository;
     private PacijentKartonDoktorRepository pacijentKartonDoktorRepository;
 
-    public String pohraniPocetneTermine(List<Termin> termini) {
-        terminRepository.deleteAllInBatch();
-        terminRepository.flush();
-        terminRepository.saveAll(termini);
-        return "Spremljeni pocetni termini!";
-    }
 
     public Response dodajTermin(DodajTerminRequest dodajTerminRequest) {
         Optional<PacijentKartonDoktor> pkd = pacijentKartonDoktorRepository.findById(dodajTerminRequest.getIdPkd());
@@ -41,8 +35,6 @@ public class TerminService {
         Termin termin = terminRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Ne postoji termin s ovim id-om!"));;
         terminRepository.deleteById(id);
-        //terminRepository.delete(termin);
-        // ne radi zbog constrainta
         return new Response("Uspješno ste obrisali termin!", 200);
     }
 }

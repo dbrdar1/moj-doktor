@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class Korisnik {
     @NotEmpty(message = "Korisnik mora imati uneseno ime")
     private String ime;
 
-    @Size(min = 2, message = "Prezme mora biti dugo bar dva znaka")
+    @Size(min = 2, message = "PrezIme mora biti dugo bar dva znaka")
     @NotNull(message = "Korisnik mora imati uneseno prezime")
     @NotEmpty(message = "Korisnik mora imati uneseno prezime")
     private String prezime;
@@ -65,12 +66,8 @@ public class Korisnik {
         this.email = email;
     }
 
-    @OneToMany(targetEntity = Notifikacija.class,
-            cascade = {CascadeType.ALL},
-            fetch = FetchType.EAGER,
-            mappedBy="korisnik")
-    @Fetch(value = FetchMode.SUBSELECT)
-    //@OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Notifikacija> notifikacije;
+    @OneToMany(mappedBy = "korisnik", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Notifikacija> notifikacije = new ArrayList<>();
 }
 

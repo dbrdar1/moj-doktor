@@ -3,8 +3,13 @@ package ba.unsa.etf.termini.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +26,10 @@ public class Doktor extends Korisnik{
         this.titula = titula;
     }
 
+    @OneToMany(mappedBy = "doktor", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<PacijentKartonDoktor> vezeSaPacijentima = new ArrayList<>();
+
     /*
     public List<KartonPacijent> dajPacijente() {
         return pacijenti;
@@ -30,11 +39,7 @@ public class Doktor extends Korisnik{
         this.pacijenti = pacijenti;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "pacijent_karton_doktor",
-            joinColumns = @JoinColumn(name = "pacijent_JMBG"),
-            inverseJoinColumns = @JoinColumn(name = "doktor_id"))
-    private List<KartonPacijent> pacijenti;
+
 
     public void dodajPacijentaDoktoru(KartonPacijent pacijent) {
         pacijenti.add(pacijent);
