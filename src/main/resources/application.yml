@@ -4,6 +4,6 @@ spring:
       ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: "jdbc:postgresql://localhost:5432/chatmicroservice"
+    url: "jdbc:postgresql://localhost:5432/pregledi_i_kartoni"
     username: postgres
     password: root
