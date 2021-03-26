@@ -1,6 +1,8 @@
 package ba.unsa.etf.termini.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "pacijentKartonDoktor")
 public class PacijentKartonDoktor {
     @Id
@@ -27,12 +31,4 @@ public class PacijentKartonDoktor {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Termin> termini = new ArrayList<>();
 
-    public PacijentKartonDoktor(Doktor doktor, Pacijent pacijent) {
-        this.doktor = doktor;
-        this.pacijent = pacijent;
-    }
-
-    public PacijentKartonDoktor() {
-
-    }
 }

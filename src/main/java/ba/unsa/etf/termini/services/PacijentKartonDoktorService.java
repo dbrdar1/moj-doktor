@@ -27,7 +27,7 @@ public class PacijentKartonDoktorService {
         if(!p.isPresent()) return new Response("Id pacijenta nije postojeći!", 400);
         Optional<Doktor> d = doktorRepository.findById(doktor);
         if(!d.isPresent()) return new Response("Id doktora nije postojeći!", 400);
-        PacijentKartonDoktor pkd= new PacijentKartonDoktor(d.get(),p.get());
+        PacijentKartonDoktor pkd= new PacijentKartonDoktor();
         p.get().getVezeSaDoktorima().add(pkd);
         pacijentRepository.save(p.get());
         return new Response("Uspješno ste dodali vezu pacijent-doktor!", 200);

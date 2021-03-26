@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
+
 @AllArgsConstructor
 @RestController
 public class TerminController {
@@ -59,16 +61,21 @@ public class TerminController {
         pacijentKartonDoktorRepository.flush();
         terminRepository.deleteAllInBatch();
         terminRepository.flush();
-        System.out.println(d1);
-        PacijentKartonDoktor pkd1=new PacijentKartonDoktor(d1,p1);
-        PacijentKartonDoktor pkd2=new PacijentKartonDoktor(d2,p1);
-        PacijentKartonDoktor pkd3=new PacijentKartonDoktor(d1,p2);
-        PacijentKartonDoktor pkd4=new PacijentKartonDoktor(d2,p2);
+        doktorRepository.deleteAllInBatch();
+        doktorRepository.flush();
+        pacijentRepository.deleteAllInBatch();
+        pacijentRepository.flush();
 
-        p1.getVezeSaDoktorima().add(pkd1);
-        p1.getVezeSaDoktorima().add(pkd2);
-        p2.getVezeSaDoktorima().add(pkd3);
-        p2.getVezeSaDoktorima().add(pkd4);
+        PacijentKartonDoktor pkd1=new PacijentKartonDoktor();
+        PacijentKartonDoktor pkd2=new PacijentKartonDoktor();
+        PacijentKartonDoktor pkd3=new PacijentKartonDoktor();
+        PacijentKartonDoktor pkd4=new PacijentKartonDoktor();
+
+        pkd1.setDoktor(d1);
+        pkd2.setDoktor(d2);
+        pkd3.setDoktor(d1);
+        pkd4.setDoktor(d2);
+
         d1.getVezeSaPacijentima().add(pkd1);
         d2.getVezeSaPacijentima().add(pkd2);
         d1.getVezeSaPacijentima().add(pkd3);
@@ -90,13 +97,30 @@ public class TerminController {
                 new Date(2021,5,26),
                 "9:00",
                 pkd4);
+
         pkd1.getTermini().add(termin1);
         pkd2.getTermini().add(termin2);
         pkd3.getTermini().add(termin3);
         pkd4.getTermini().add(termin4);
 
-        pacijentRepository.save(p1); pacijentRepository.save(p2);
         doktorRepository.save(d1); doktorRepository.save(d2);
+        pacijentRepository.save(p1); pacijentRepository.save(p2);
+
+        List<Pacijent> pacijentList = pacijentRepository.findAll();
+
+        List<PacijentKartonDoktor> pacijentKartonDoktorList = pacijentKartonDoktorRepository.findAll();
+
+        pacijentKartonDoktorList.get(0).setPacijent(pacijentList.get(0));
+        pacijentKartonDoktorList.get(1).setPacijent(pacijentList.get(0));
+        pacijentKartonDoktorList.get(2).setPacijent(pacijentList.get(1));
+        pacijentKartonDoktorList.get(3).setPacijent(pacijentList.get(1));
+
+        pacijentList.get(0).getVezeSaDoktorima().add(pacijentKartonDoktorList.get(0));
+        pacijentList.get(0).getVezeSaDoktorima().add(pacijentKartonDoktorList.get(1));
+        pacijentList.get(1).getVezeSaDoktorima().add(pacijentKartonDoktorList.get(2));
+        pacijentList.get(1).getVezeSaDoktorima().add(pacijentKartonDoktorList.get(3));
+
+        pacijentRepository.save(pacijentList.get(0)); pacijentRepository.save(pacijentList.get(1));
 
         return "Spaseni pocetni termini!";
     }
