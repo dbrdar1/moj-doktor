@@ -1,6 +1,7 @@
 package ba.unsa.etf.termini.services;
 
 import ba.unsa.etf.termini.Requests.DodajNotifikacijuRequest;
+import ba.unsa.etf.termini.Responses.NotifikacijaResponse;
 import ba.unsa.etf.termini.Responses.NotifikacijeKorisnikaResponse;
 import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.exceptions.ResourceNotFoundException;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -44,4 +44,8 @@ public class NotifikacijaService {
         return new Response("Uspješno ste obrisali notifikaciju!", 200);
     }
 
+    public NotifikacijaResponse dajNotifikaciju(Long id) {
+        Notifikacija n = notifikacijaRepository.findById(id).orElseThrow(() -> new ba.unsa.etf.termini.exceptions.ResourceNotFoundException("Ne postoji notifikacija s ovim id-om!"));
+        return new NotifikacijaResponse(n.getNaslov(),n.getTekst(),n.getDatum(),n.getVrijeme());
+    }
 }

@@ -1,5 +1,7 @@
 package ba.unsa.etf.termini.controllers;
 
+import ba.unsa.etf.termini.Responses.DoktorResponse;
+import ba.unsa.etf.termini.Responses.NotifikacijaResponse;
 import ba.unsa.etf.termini.models.Doktor;
 import ba.unsa.etf.termini.models.Korisnik;
 import ba.unsa.etf.termini.models.Notifikacija;
@@ -8,6 +10,7 @@ import ba.unsa.etf.termini.repositories.DoktorRepository;
 import ba.unsa.etf.termini.repositories.KorisnikRepository;
 import ba.unsa.etf.termini.services.DoktorService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,22 +45,10 @@ public class DoktorController {
             mappedBy="doktor")
     private List<PacijentKartonDoktor> vezeSaPacijentima;
 
-   /* @GetMapping("/pohraniDoktore")
-    public @ResponseBody
-    String spasiListuKorisnika(){
-        doktori.add(k2);
-        return  doktorService.spasiDoktore(doktori);
-    }*/
-
-    @GetMapping("/doktori")
-    List<Doktor> all() {
-        return doktorRepository.findAll();
-    }
 
     @GetMapping("/doktori/{id}")
-    Doktor one(@PathVariable Long id) throws Exception {
-
-        return doktorRepository.findById(id)
-                .orElseThrow(() -> new Exception("Korisnik nije pronađen"));
+    public ResponseEntity<DoktorResponse> dajDoktora(@PathVariable Long id){
+        DoktorResponse response = doktorService.dajDoktora(id);
+        return ResponseEntity.ok(response);
     }
 }

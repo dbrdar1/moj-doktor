@@ -1,5 +1,6 @@
 package ba.unsa.etf.termini.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -68,6 +69,7 @@ public class Korisnik {
 
     @OneToMany(mappedBy = "korisnik", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private List<Notifikacija> notifikacije = new ArrayList<>();
 }
 

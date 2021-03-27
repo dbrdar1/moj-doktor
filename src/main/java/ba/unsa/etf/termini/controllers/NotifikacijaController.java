@@ -1,6 +1,7 @@
 package ba.unsa.etf.termini.controllers;
 
 import ba.unsa.etf.termini.Requests.DodajNotifikacijuRequest;
+import ba.unsa.etf.termini.Responses.NotifikacijaResponse;
 import ba.unsa.etf.termini.Responses.NotifikacijeKorisnikaResponse;
 import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.models.Korisnik;
@@ -77,6 +78,12 @@ public class NotifikacijaController {
     @GetMapping("/notifikacije-korisnika/{idKorisnika}")
     public ResponseEntity<NotifikacijeKorisnikaResponse> dajNotifikacijeKorisnika(@PathVariable Long idKorisnika){
         NotifikacijeKorisnikaResponse response = notifikacijaService.dajNotifikacijeKorisnika(idKorisnika);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/notifikacije/{id}")
+    public ResponseEntity<NotifikacijaResponse> dajNotifikaciju(@PathVariable Long id){
+        NotifikacijaResponse response = notifikacijaService.dajNotifikaciju(id);
         return ResponseEntity.ok(response);
     }
 }

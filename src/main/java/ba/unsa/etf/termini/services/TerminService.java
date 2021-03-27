@@ -1,6 +1,7 @@
 package ba.unsa.etf.termini.services;
 
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
+import ba.unsa.etf.termini.Requests.UrediTerminRequest;
 import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.termini.models.Korisnik;
@@ -33,8 +34,18 @@ public class TerminService {
 
     public Response obrisiTermin(Long id) {
         Termin termin = terminRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Ne postoji termin s ovim id-om!"));;
+                new ResourceNotFoundException("Ne postoji termin s ovim id-om!"));
         terminRepository.deleteById(id);
         return new Response("Uspješno ste obrisali termin!", 200);
+    }
+
+
+    public Response urediTermin(Long id, UrediTerminRequest urediTerminRequest) {
+        Termin termin = terminRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Ne postoji termin s ovim id-om!"));
+        termin.setDatum(urediTerminRequest.getDatum());
+        termin.setVrijeme(urediTerminRequest.getVrijeme());
+        terminRepository.save(termin);
+        return new Response("Uspješno ste uredili termin!",200);
     }
 }

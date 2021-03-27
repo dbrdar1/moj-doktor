@@ -1,11 +1,14 @@
 package ba.unsa.etf.termini.controllers;
 
+import ba.unsa.etf.termini.Responses.DoktorResponse;
+import ba.unsa.etf.termini.Responses.PacijentResponse;
 import ba.unsa.etf.termini.models.Pacijent;
 import ba.unsa.etf.termini.models.Korisnik;
 import ba.unsa.etf.termini.repositories.KorisnikRepository;
 import ba.unsa.etf.termini.repositories.PacijentRepository;
 import ba.unsa.etf.termini.services.PacijentService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,23 +33,9 @@ public class PacijentController {
 
     private final List<Pacijent> pacijenti;
 
-
-    /*@GetMapping("/pohraniPacijente")
-    public @ResponseBody
-    String spasiListuKorisnika(){
-        pacijenti.add(k2);
-        return  pacijentService.spasiPacijente(pacijenti);
-    }*/
-
-    @GetMapping("/pacijenti")
-    List<Pacijent> all() {
-        return pacijentRepository.findAll();
-    }
-
     @GetMapping("/pacijenti/{id}")
-    Pacijent one(@PathVariable Long id) throws Exception {
-
-        return pacijentRepository.findById(id)
-                .orElseThrow(() -> new Exception("Korisnik nije pronađen"));
+    public ResponseEntity<PacijentResponse> dajPacijenta(@PathVariable Long id){
+        PacijentResponse response = pacijentService.dajPacijenta(id);
+        return ResponseEntity.ok(response);
     }
 }

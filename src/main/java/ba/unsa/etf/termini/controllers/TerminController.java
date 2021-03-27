@@ -1,6 +1,7 @@
 package ba.unsa.etf.termini.controllers;
 
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
+import ba.unsa.etf.termini.Requests.UrediTerminRequest;
 import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.models.*;
 import ba.unsa.etf.termini.repositories.DoktorRepository;
@@ -111,8 +112,8 @@ public class TerminController {
         List<PacijentKartonDoktor> pacijentKartonDoktorList = pacijentKartonDoktorRepository.findAll();
 
         pacijentKartonDoktorList.get(0).setPacijent(pacijentList.get(0));
-        pacijentKartonDoktorList.get(1).setPacijent(pacijentList.get(0));
-        pacijentKartonDoktorList.get(2).setPacijent(pacijentList.get(1));
+        pacijentKartonDoktorList.get(1).setPacijent(pacijentList.get(1));
+        pacijentKartonDoktorList.get(2).setPacijent(pacijentList.get(0));
         pacijentKartonDoktorList.get(3).setPacijent(pacijentList.get(1));
 
         pacijentList.get(0).getVezeSaDoktorima().add(pacijentKartonDoktorList.get(0));
@@ -133,6 +134,11 @@ public class TerminController {
     @DeleteMapping("/termini/{id}")
     public ResponseEntity<Response> obrisiTermin(@PathVariable Long id) {
         Response response = terminService.obrisiTermin(id);
+        return ResponseEntity.ok(response);
+    }
+    @PutMapping("/termini/{id}")
+    public  ResponseEntity<Response> urediTermin(@RequestBody UrediTerminRequest urediTerminRequest, @PathVariable Long id){
+        Response response=terminService.urediTermin(id, urediTerminRequest);
         return ResponseEntity.ok(response);
     }
 }
