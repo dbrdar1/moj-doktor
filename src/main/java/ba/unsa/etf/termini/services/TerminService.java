@@ -2,17 +2,18 @@ package ba.unsa.etf.termini.services;
 
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
 import ba.unsa.etf.termini.Requests.UrediTerminRequest;
+import ba.unsa.etf.termini.Responses.ListaTerminaResponse;
 import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.exceptions.ResourceNotFoundException;
-import ba.unsa.etf.termini.models.Korisnik;
-import ba.unsa.etf.termini.models.Notifikacija;
-import ba.unsa.etf.termini.models.PacijentKartonDoktor;
-import ba.unsa.etf.termini.models.Termin;
+import ba.unsa.etf.termini.models.*;
+import ba.unsa.etf.termini.repositories.DoktorRepository;
 import ba.unsa.etf.termini.repositories.PacijentKartonDoktorRepository;
+import ba.unsa.etf.termini.repositories.PacijentRepository;
 import ba.unsa.etf.termini.repositories.TerminRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +22,8 @@ import java.util.Optional;
 public class TerminService {
     private TerminRepository terminRepository;
     private PacijentKartonDoktorRepository pacijentKartonDoktorRepository;
-
+    private PacijentRepository pacijentRepository;
+    private DoktorRepository doktorRepository;
 
     public Response dodajTermin(DodajTerminRequest dodajTerminRequest) {
         Optional<PacijentKartonDoktor> pkd = pacijentKartonDoktorRepository.findById(dodajTerminRequest.getIdPkd());
@@ -39,7 +41,6 @@ public class TerminService {
         return new Response("Uspješno ste obrisali termin!", 200);
     }
 
-
     public Response urediTermin(Long id, UrediTerminRequest urediTerminRequest) {
         Termin termin = terminRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Ne postoji termin s ovim id-om!"));
@@ -47,5 +48,29 @@ public class TerminService {
         termin.setVrijeme(urediTerminRequest.getVrijeme());
         terminRepository.save(termin);
         return new Response("Uspješno ste uredili termin!",200);
+    }
+
+    public ListaTerminaResponse dajTerminePacijenta(Long id) {
+        Pacijent p = pacijentRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Ne postoji pacijent s ovim id-om!"));
+        List<PacijentKartonDoktor> veze = pacijentKartonDoktorRepository.findAllByPacijent(p);
+        List<Termin> sviTermini = new ArrayList<>();
+        for (int i =0; i< veze.size();i++){
+            List<Termin> t = terminRepository.findAllByPacijentKartonDoktor(veze.get(i));
+            sviTermini.addAll(t);
+        }
+        return  new ListaTerminaResponse(sviTermini);
+    }
+
+    public ListaTerminaResponse dajTermineDoktora(Long id) {
+        Doktor d = doktorRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Ne postoji doktor s ovim id-om!"));
+        List<PacijentKartonDoktor> veze = pacijentKartonDoktorRepository.findAllByDoktor(d);
+        List<Termin> sviTermini = new ArrayList<>();
+        for (int i =0; i< veze.size();i++){
+            List<Termin> t = terminRepository.findAllByPacijentKartonDoktor(veze.get(i));
+            sviTermini.addAll(t);
+        }
+        return  new ListaTerminaResponse(sviTermini);
     }
 }

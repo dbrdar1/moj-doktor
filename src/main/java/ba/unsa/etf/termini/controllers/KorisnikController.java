@@ -6,9 +6,11 @@ import ba.unsa.etf.termini.models.Korisnik;
 import ba.unsa.etf.termini.repositories.KorisnikRepository;
 import ba.unsa.etf.termini.services.KorisnikService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 
@@ -33,13 +35,6 @@ public class KorisnikController {
             "NekaAdresa","061456321",
             "esmina@mail.com");
 
-   /* @GetMapping("/pohraniKorisnike")
-    public @ResponseBody String spasiListuKorisnika(){
-        korisnici.add(k1);
-        korisnici.add(k2);
-        return  korisnikService.spasiKorisnike(korisnici);
-    }*/
-
     @GetMapping("/korisnici")
     List<Korisnik> all() {
         return korisnikRepository.findAll();
@@ -56,6 +51,14 @@ public class KorisnikController {
     public ResponseEntity<Response> dodajKorisnika(@RequestBody DodajKorisnikaRequest dodajKorisnikaRequest){
         Response response = korisnikService.dodajKorisnika(dodajKorisnikaRequest);
         return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response handleNoSuchElementFoundException(
+            ConstraintViolationException exception
+    ) {
+        return new Response(exception.getConstraintViolations().toString(),500);
     }
 }
 

@@ -32,29 +32,24 @@ public class Korisnik {
     private Long id;
 
     @Size(min = 2, message = "Ime mora biti dugo bar dva znaka")
-    @NotNull(message = "Korisnik mora imati uneseno ime")
-    @NotEmpty(message = "Korisnik mora imati uneseno ime")
+    @NotBlank(message = "Korisnik mora imati uneseno ime")
     private String ime;
 
     @Size(min = 2, message = "PrezIme mora biti dugo bar dva znaka")
-    @NotNull(message = "Korisnik mora imati uneseno prezime")
-    @NotEmpty(message = "Korisnik mora imati uneseno prezime")
+    @NotBlank(message = "Korisnik mora imati uneseno prezime")
     private String prezime;
 
-    @NotNull(message = "Korisnik mora imati unesen datum rodjenja")
+    @NotBlank(message = "Korisnik mora imati unesen datum rodjenja")
     private Date datumRodjenja;
 
-    @NotNull(message = "Korisnik mora imati unesenu adresu")
-    @NotEmpty(message = "Korisnik mora imati unesenu adresu")
+    @NotBlank(message = "Korisnik mora imati unesenu adresu")
     private String adresa;
 
-    @NotNull(message = "Korisnik mora imati unesen broj telefona")
-    @NotEmpty(message = "Korisnik mora imati unesen telefon")
+    @NotBlank(message = "Korisnik mora imati unesen broj telefona")
     @Size(min=9, max=13, message = "Telefonski broj korisnika mora biti dug 9-13 cifara")
     private String brojTelefona;
 
-    @NotNull(message = "Korisnik mora imati unesenu e-mail adresu")
-    @NotEmpty(message = "Korisnik mora imati unesen e-mail")
+    @NotBlank(message = "Korisnik mora imati unesenu e-mail adresu")
     @Email(message = "Korisnik mora imati unesen ispravan e-mail")
     private String email;
 

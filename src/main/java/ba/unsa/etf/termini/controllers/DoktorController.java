@@ -29,16 +29,6 @@ public class DoktorController {
     private KorisnikRepository korisnikRepository;
     private DoktorRepository doktorRepository;
 
-    private final Doktor k2 = new Doktor(
-            "Dzavid",
-            "Brdar",
-            new Date(),
-            "NekaAdresa","061456321",
-            "dzavid@mail.com",
-            "Doktor opce prakse");
-
-    private final List<Doktor> doktori;
-
     @OneToMany(targetEntity = PacijentKartonDoktor.class,
             cascade = {CascadeType.ALL},
             fetch = FetchType.EAGER,

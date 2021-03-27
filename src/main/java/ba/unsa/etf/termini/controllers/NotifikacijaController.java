@@ -11,9 +11,11 @@ import ba.unsa.etf.termini.repositories.NotifikacijaRepository;
 import ba.unsa.etf.termini.repositories.PacijentRepository;
 import ba.unsa.etf.termini.services.NotifikacijaService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 
@@ -85,5 +87,13 @@ public class NotifikacijaController {
     public ResponseEntity<NotifikacijaResponse> dajNotifikaciju(@PathVariable Long id){
         NotifikacijaResponse response = notifikacijaService.dajNotifikaciju(id);
         return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response handleNoSuchElementFoundException(
+            ConstraintViolationException exception
+    ) {
+        return new Response(exception.getConstraintViolations().toString(),500);
     }
 }

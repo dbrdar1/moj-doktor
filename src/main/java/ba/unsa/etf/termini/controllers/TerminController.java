@@ -2,6 +2,7 @@ package ba.unsa.etf.termini.controllers;
 
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
 import ba.unsa.etf.termini.Requests.UrediTerminRequest;
+import ba.unsa.etf.termini.Responses.ListaTerminaResponse;
 import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.models.*;
 import ba.unsa.etf.termini.repositories.DoktorRepository;
@@ -10,11 +11,18 @@ import ba.unsa.etf.termini.repositories.PacijentRepository;
 import ba.unsa.etf.termini.repositories.TerminRepository;
 import ba.unsa.etf.termini.services.TerminService;
 import lombok.AllArgsConstructor;
+import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @RestController
@@ -136,9 +144,30 @@ public class TerminController {
         Response response = terminService.obrisiTermin(id);
         return ResponseEntity.ok(response);
     }
+
     @PutMapping("/termini/{id}")
     public  ResponseEntity<Response> urediTermin(@RequestBody UrediTerminRequest urediTerminRequest, @PathVariable Long id){
         Response response=terminService.urediTermin(id, urediTerminRequest);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/termini-pacijenta/{id}")
+    public  ResponseEntity<ListaTerminaResponse> dajTerminePacijenta(@PathVariable Long id){
+        ListaTerminaResponse response=terminService.dajTerminePacijenta(id);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/termini-doktora/{id}")
+    public  ResponseEntity<ListaTerminaResponse> dajTermineDoktora(@PathVariable Long id){
+        ListaTerminaResponse response=terminService.dajTermineDoktora(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response handleNoSuchElementFoundException(
+            ConstraintViolationException exception
+    ) {
+        return new Response(exception.getConstraintViolations().toString(),500);
+    }
+
 }

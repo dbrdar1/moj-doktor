@@ -29,29 +29,4 @@ public class Doktor extends Korisnik{
     @OneToMany(mappedBy = "doktor", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<PacijentKartonDoktor> vezeSaPacijentima = new ArrayList<>();
-
-    /*
-    public List<KartonPacijent> dajPacijente() {
-        return pacijenti;
-    }
-
-    public void postaviPacijente(List<KartonPacijent> pacijenti) {
-        this.pacijenti = pacijenti;
-    }
-
-
-
-    public void dodajPacijentaDoktoru(KartonPacijent pacijent) {
-        pacijenti.add(pacijent);
-        List<Doktor> doktoriNovi = pacijent.dajDoktore();
-        doktoriNovi.add(this);
-        pacijent.postaviDoktore(doktoriNovi);
-    }
-
-    public void izbaciPacijenta(KartonPacijent pacijent) {
-        pacijenti.remove(pacijent);
-        List<Doktor> doktoriNovi = pacijent.dajDoktore();
-        doktoriNovi.remove(this);
-        pacijent.postaviDoktore(doktoriNovi);
-    }*/
 }

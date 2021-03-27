@@ -1,8 +1,10 @@
 package ba.unsa.etf.termini.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -24,22 +26,21 @@ public class Notifikacija {
         this.korisnik = korisnik;
     }
 
-    @NotNull(message = "Notifikacija mora imati naslov")
-    @NotEmpty(message = "Notifikacija mora imati naslov")
+    @NotBlank(message = "Notifikacija mora imati naslov")
     private String naslov;
 
     @Size(min = 10, max = 500, message = "Tekst notifikacije mora biti izmedju 10 i 500 karaktera")
     private String tekst;
 
-    @NotNull(message = "Notifikacija mora imati datum")
+    @NotBlank(message = "Notifikacija mora imati datum")
     private Date datum;
 
-    @NotNull(message = "Notifikacija mora imati vrijeme")
-    @NotEmpty(message = "Notifikacija mora imati vrijeme")
+    @NotBlank(message = "Notifikacija mora imati vrijeme")
     private String vrijeme;
 
     @ManyToOne
     @JoinColumn(name = "korisnik_id", nullable = false)
+    @JsonIgnore
     private Korisnik korisnik;
 
     public Notifikacija(String naslov, String tekst, Date datum, String vrijeme) {

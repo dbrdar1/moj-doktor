@@ -9,9 +9,11 @@ import ba.unsa.etf.termini.models.Pacijent;
 import ba.unsa.etf.termini.models.PacijentKartonDoktor;
 import ba.unsa.etf.termini.services.PacijentKartonDoktorService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
 @AllArgsConstructor
 @RestController
@@ -39,11 +41,12 @@ public class PacijentKartonDoktorController {
     public ResponseEntity<Response>  spasiVezuDoktorPacijent(@RequestBody DodajPacijentKartonDoktorRequest dodajPacijentKartonDoktorRequest) {
         Response response = pacijentKartonDoktorService.spasiVezuDoktorPacijent(dodajPacijentKartonDoktorRequest.getPacijentId(),dodajPacijentKartonDoktorRequest.getDoktorId());
         return ResponseEntity.ok(response);    }
-/*
-    @GetMapping("/veza-pkd/{idDoktora}/{idPacijenta}")
-    public ResponseEntity<PacijentKartonDoktorResponse> dajVezuPkd(@PathVariable("idDoktora") Long idDoktora, @PathVariable("idPacijenta") Long idPacijenta){
-        PacijentKartonDoktorResponse response = pacijentKartonDoktorService.dajVezuPkd(idDoktora,idPacijenta);
-        return ResponseEntity.ok(response);
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response handleNoSuchElementFoundException(
+            ConstraintViolationException exception
+    ) {
+        return new Response(exception.getConstraintViolations().toString(),500);
     }
- */
 }

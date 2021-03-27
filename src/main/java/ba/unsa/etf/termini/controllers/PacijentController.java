@@ -24,15 +24,6 @@ public class PacijentController {
     private KorisnikRepository korisnikRepository;
     private PacijentRepository pacijentRepository;
 
-    private final Pacijent k2 = new Pacijent(
-            "Jusuf",
-            "Delalic",
-            new Date(),
-            "NekaAdresa","061456321",
-            "jusuf@mail.com");
-
-    private final List<Pacijent> pacijenti;
-
     @GetMapping("/pacijenti/{id}")
     public ResponseEntity<PacijentResponse> dajPacijenta(@PathVariable Long id){
         PacijentResponse response = pacijentService.dajPacijenta(id);

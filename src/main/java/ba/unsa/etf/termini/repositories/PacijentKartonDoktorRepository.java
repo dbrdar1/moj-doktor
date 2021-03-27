@@ -7,7 +7,10 @@ import ba.unsa.etf.termini.models.PacijentKartonDoktor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PacijentKartonDoktorRepository extends JpaRepository<PacijentKartonDoktor, Long> {
-    //PacijentKartonDoktor findByVeza(Doktor doktor, Pacijent pacijent);
+    List<PacijentKartonDoktor> findAllByDoktor(Doktor doktor);
+    List<PacijentKartonDoktor> findAllByPacijent(Pacijent pacijent);
 }
