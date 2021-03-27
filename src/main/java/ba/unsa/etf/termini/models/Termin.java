@@ -19,7 +19,7 @@ public class Termin {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank(message = "Termin mora imati datum")
+    @NotNull(message = "Termin mora imati datum")
     private Date datum;
 
     @NotBlank(message = "Termin mora imati vrijeme")

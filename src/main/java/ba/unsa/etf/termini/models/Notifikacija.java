@@ -32,7 +32,7 @@ public class Notifikacija {
     @Size(min = 10, max = 500, message = "Tekst notifikacije mora biti izmedju 10 i 500 karaktera")
     private String tekst;
 
-    @NotBlank(message = "Notifikacija mora imati datum")
+    @NotNull(message = "Notifikacija mora imati datum")
     private Date datum;
 
     @NotBlank(message = "Notifikacija mora imati vrijeme")

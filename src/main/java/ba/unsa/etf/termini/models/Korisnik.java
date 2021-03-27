@@ -39,7 +39,7 @@ public class Korisnik {
     @NotBlank(message = "Korisnik mora imati uneseno prezime")
     private String prezime;
 
-    @NotBlank(message = "Korisnik mora imati unesen datum rodjenja")
+    @NotNull(message = "Korisnik mora imati unesen datum rodjenja")
     private Date datumRodjenja;
 
     @NotBlank(message = "Korisnik mora imati unesenu adresu")
