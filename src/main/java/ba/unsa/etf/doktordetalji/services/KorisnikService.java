@@ -20,6 +20,7 @@ public class KorisnikService {
     private  final PacijentRepository pacijentRepository;
     private final EdukacijaRepository edukacijaRepository;
     private final CertifikatRepository certifikatRepository;
+    private final OcjenaRepository ocjenaRepository;
 
 
     public String inicijalizirajBazu() {
@@ -35,6 +36,9 @@ public class KorisnikService {
 
         pacijentRepository.deleteAllInBatch();
         pacijentRepository.flush();
+
+        ocjenaRepository.deleteAllInBatch();
+        ocjenaRepository.flush();
 
         Doktor d = new Doktor(
                 "Samra",
@@ -76,6 +80,6 @@ public class KorisnikService {
         doktorRepository.save(d);
         pacijentRepository.save(p);
 
-        return "Inicijalizacija baze završena!";
+        return "Inicijalizacija baze zavrsena!";
     }
 }

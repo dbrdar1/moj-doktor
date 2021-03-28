@@ -1,12 +1,13 @@
 package ba.unsa.etf.doktordetalji.models;
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
@@ -23,23 +24,26 @@ public class Korisnik {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Korisnik mora imati uneseno ime.")
+    @Size(min = 2, message = "Ime mora biti dugo bar dva znaka.")
     private String ime;
 
-    @NotBlank
+    @NotBlank(message = "Korisnik mora imati uneseno prezime.")
+    @Size(min = 2, message = "Prezime mora biti dugo bar dva znaka")
     private String prezime;
 
-    @NotBlank
+    @NotNull(message = "Korisnik mora imati unesen datum rodjenja.")
     private Date datumRodjenja;
 
-    @NotBlank
+    @NotBlank(message = "Korisnik mora imati unesenu adresu.")
     private String adresa;
 
-    @NotBlank
+    @NotBlank(message = "Korisnik mora imati unesen broj telefona.")
+    @Size(min=9, max=13, message = "Telefonski broj korisnika mora biti dug 9-13 cifara.")
     private String brojTelefona;
 
-    @NotBlank
     @Email(message = "Email mora biti validan")
+    @NotBlank(message = "Korisnik mora imati unesen ispravan e-mail.")
     private String email;
 
     public Korisnik(String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona,  String email) {

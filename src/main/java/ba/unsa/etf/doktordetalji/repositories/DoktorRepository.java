@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface DoktorRepository extends JpaRepository<Doktor, Long>, DoktorFilterRepository{
-
+    Doktor findByIme(String ime);
 }

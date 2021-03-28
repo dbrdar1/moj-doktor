@@ -151,5 +151,6 @@ public class DoktorService {
         d.get().setBiografija(urediPodatkeDoktoraRequest.getBiografija());
         return new Response("Uspješno ste uredili osnovne podatke doktora!", 200);
     }
+
 }
 

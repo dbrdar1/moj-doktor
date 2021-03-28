@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface CertifikatRepository extends JpaRepository<Certifikat, Long> {
     List<Certifikat> findByDoktor(Doktor doktor);
+    Certifikat findByNaziv(String naziv);
 }

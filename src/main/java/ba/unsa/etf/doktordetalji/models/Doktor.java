@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,6 @@ import java.util.List;
 @Table(name = "doktor")
 public class Doktor extends Korisnik{
 
-    @NotBlank
     private String titula;
 
     private String biografija;

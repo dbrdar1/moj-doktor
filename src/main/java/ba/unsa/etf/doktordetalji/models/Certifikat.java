@@ -1,12 +1,11 @@
 package ba.unsa.etf.doktordetalji.models;
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -18,12 +17,15 @@ public class Certifikat {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Naziv institucije mora biti unesen.")
+    @Size(min = 2, message = "Naziv institucije mora biti dug bar dva znaka.")
     private String institucija;
 
-    @NotBlank
+    @NotBlank(message = "Naziv certifikata mora biti unesen.")
+    @Size(min = 2, message = "Naziv certifikata mora biti dug bar dva znaka.")
     private String naziv;
 
+    @NotBlank(message = "Godina izdavanja mora biti unesena.")
     private Integer godinaIzdavanja;
 
     public Certifikat(String institucija, String naziv, Integer godinaIzdavanja){

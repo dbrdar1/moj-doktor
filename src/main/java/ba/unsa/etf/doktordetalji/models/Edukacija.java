@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -18,27 +19,28 @@ public class Edukacija {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Naziv institucije mora biti unesen.")
+    @Size(min = 2, message = "Naziv institucije mora biti dug bar dva znaka.")
     private String institucija;
 
-    @NotBlank
+    @NotBlank(message = "Odsjek mora biti unesen.")
+    @Size(min = 2, message = "Naziv odsjeka mora biti dug bar dva znaka.")
     private String odsjek;
 
-    @NotBlank
+    @NotBlank(message = "Stepen mora biti unesen.")
+    @Size(min = 2, message = "Naziv stepena mora biti dug bar dva znaka.")
     private String stepen;
 
-    @NotBlank
     @Min(1900)
+    @NotBlank(message = "Godina pocetka mora biti unesena.")
     private Integer godinaPocetka;
 
-    @NotBlank
     @Min(1900)
+    @NotBlank(message = "Godina zavrsetka mora biti unesena.")
     private Integer godinaZavrsetka;
 
-    @NotBlank
     private String grad;
 
-    @NotBlank
     private String drzava;
 
     public Edukacija(String institucija, String odsjek, String stepen, Integer godinaPocetka, Integer godinaZavrsetka, String grad, String drzava){
