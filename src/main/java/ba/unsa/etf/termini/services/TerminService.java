@@ -1,6 +1,7 @@
 package ba.unsa.etf.termini.services;
 
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
+import ba.unsa.etf.termini.Requests.ObrisiTerminRequest;
 import ba.unsa.etf.termini.Requests.UrediTerminRequest;
 import ba.unsa.etf.termini.Responses.ListaTerminaResponse;
 import ba.unsa.etf.termini.Responses.Response;
@@ -73,4 +74,15 @@ public class TerminService {
         }
         return  new ListaTerminaResponse(sviTermini);
     }
+
+//    public Response obrisiTerminPoAtributima(ObrisiTerminRequest obrisiTerminRequest) {
+//        Termin t;
+//        try{
+//            t= terminRepository.findByDatumAndVrijeme(obrisiTerminRequest.getDatum(), obrisiTerminRequest.getVrijeme());
+//        } catch (Exception e){
+//            throw new ResourceNotFoundException("Ne postoji termin s ovim datumom i vremenom!");
+//        }
+//        terminRepository.delete(t);
+//        return new Response("Termin uspjesno obrisan!");
+//    }
 }

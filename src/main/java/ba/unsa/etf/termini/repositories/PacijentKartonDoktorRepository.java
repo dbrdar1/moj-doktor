@@ -13,4 +13,6 @@ import java.util.List;
 public interface PacijentKartonDoktorRepository extends JpaRepository<PacijentKartonDoktor, Long> {
     List<PacijentKartonDoktor> findAllByDoktor(Doktor doktor);
     List<PacijentKartonDoktor> findAllByPacijent(Pacijent pacijent);
+
+    PacijentKartonDoktor findByPacijent(Pacijent p);
 }

@@ -1,6 +1,7 @@
 package ba.unsa.etf.termini.controllers;
 
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
+import ba.unsa.etf.termini.Requests.ObrisiTerminRequest;
 import ba.unsa.etf.termini.Requests.UrediTerminRequest;
 import ba.unsa.etf.termini.Responses.ListaTerminaResponse;
 import ba.unsa.etf.termini.Responses.Response;
@@ -144,6 +145,12 @@ public class TerminController {
         Response response = terminService.obrisiTermin(id);
         return ResponseEntity.ok(response);
     }
+
+//    @DeleteMapping("/obrisi-termin")
+//    public ResponseEntity<Response> obrisiTermin(@RequestBody ObrisiTerminRequest obrisiTerminRequest) {
+//        Response response = terminService.obrisiTerminPoAtributima(obrisiTerminRequest);
+//        return ResponseEntity.ok(response);
+//    }
 
     @PutMapping("/termini/{id}")
     public  ResponseEntity<Response> urediTermin(@RequestBody UrediTerminRequest urediTerminRequest, @PathVariable Long id){
