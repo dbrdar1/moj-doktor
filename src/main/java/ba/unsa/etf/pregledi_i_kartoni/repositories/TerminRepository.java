@@ -14,6 +14,4 @@ import java.util.Optional;
 public interface TerminRepository extends JpaRepository<Termin, Long>{
     Optional<Termin> findById(Long id);
 
-
-
 }

@@ -10,8 +10,9 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PregledRequest {
+public class DodajPregledRequest {
 
+    private Long terminId;
     private String simptomi;
     private String fizikalniPregled;
     private String dijagnoza;

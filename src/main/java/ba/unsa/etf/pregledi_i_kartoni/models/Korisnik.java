@@ -21,6 +21,8 @@ import java.util.Set;
         @UniqueConstraint(columnNames = {
                 "email"
         })})
+
+
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Korisnik {

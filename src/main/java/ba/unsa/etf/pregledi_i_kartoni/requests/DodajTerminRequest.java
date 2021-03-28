@@ -10,14 +10,10 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DoktorRequest {
+public class DodajTerminRequest {
 
-    private String ime;
-    private String prezime;
-    private Date datumRodjenja;
-    private String adresa;
-    private String brojTelefona;
-    private String email;
+    private Long pacijentDoktorId;
+    private Date datumPregleda;
+    private String vrijemePregleda;
 
 }
-

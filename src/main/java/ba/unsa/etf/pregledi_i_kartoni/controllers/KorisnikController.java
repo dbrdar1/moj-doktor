@@ -1,12 +1,16 @@
 package ba.unsa.etf.pregledi_i_kartoni.controllers;
 
+import ba.unsa.etf.pregledi_i_kartoni.models.Doktor;
 import ba.unsa.etf.pregledi_i_kartoni.models.Korisnik;
+import ba.unsa.etf.pregledi_i_kartoni.requests.DodajDoktoraRequest;
+import ba.unsa.etf.pregledi_i_kartoni.requests.DodajKorisnikaRequest;
+import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
+import ba.unsa.etf.pregledi_i_kartoni.services.DoktorService;
 import ba.unsa.etf.pregledi_i_kartoni.services.KorisnikService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Date;
 import java.util.List;
 
@@ -16,28 +20,25 @@ public class KorisnikController {
 
     private final KorisnikService korisnikService;
 
-    private final List<Korisnik> korisnici;
-    private final Korisnik k1 = new Korisnik(
-            "Samra",
-            "Pusina",
-            new Date(),
-            "NekaAdresa",
-            "samra@mail",
-            "061456321");
+    // prikaz jednog korisnika na osnovu id
+    @GetMapping("/korisnik")
+    public ResponseEntity<Korisnik> dajKorisnika(@RequestParam(value = "id") Long idKorisnika){
+        Korisnik trazeniKorisnik = korisnikService.dajKorisnikaNaOsnovuId(idKorisnika);
+        return ResponseEntity.ok(trazeniKorisnik);
+    }
 
-    private final Korisnik k2 = new Korisnik(
-            "Esmina",
-            "Radusic",
-            new Date(),
-            "NekaAdresa",
-            "esmina@mail",
-            "061456321");
+    // prikaz svih korisnika
+    @GetMapping("/svi-korisnici")
+    public ResponseEntity<List<Korisnik>> dajSveKorisnike(){
+        List<Korisnik> sviKorisnici = korisnikService.dajSveKorisnike();
+        return ResponseEntity.ok(sviKorisnici);
+    }
 
-    @PostMapping("/pohraniKorisnike")
-    public @ResponseBody String spasiListuKorisnika(){
-        korisnici.add(k1);
-        korisnici.add(k2);
-        return korisnikService.spasiKorisnike(korisnici);
+    // pohrana korisnika
+    @PostMapping("/dodaj-korisnika")
+    public ResponseEntity<Response> dodajKorisnika(@RequestBody DodajKorisnikaRequest dodajKorisnikaRequest) {
+        Response response = korisnikService.dodajKorisnika(dodajKorisnikaRequest);
+        return ResponseEntity.ok(response);
     }
 }
 

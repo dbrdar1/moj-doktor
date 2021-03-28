@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PacijentRequest {
+public class DodajDoktoraRequest {
 
     private String ime;
     private String prezime;
@@ -18,12 +18,6 @@ public class PacijentRequest {
     private String adresa;
     private String brojTelefona;
     private String email;
-    private String spol;
-    private double visina;
-    private double tezina;
-    private String krvnaGrupa;
-    private String hronicneBolesti;
-    private String hronicnaTerapija;
 
 }
 

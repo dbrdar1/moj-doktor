@@ -1,4 +1,4 @@
-package ba.unsa.etf.pregledi_i_kartoni;
+package test.ba.unsa.etf.pregledi_i_kartoni;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
