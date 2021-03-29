@@ -1,9 +1,10 @@
 package ba.unsa.etf.chatmicroservice.controllers;
 
-import ba.unsa.etf.chatmicroservice.exceptions.DBObjectNotFoundException;
 import ba.unsa.etf.chatmicroservice.models.Poruka;
 import ba.unsa.etf.chatmicroservice.repositories.PorukaRepository;
+import ba.unsa.etf.chatmicroservice.services.PorukaService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import java.util.List;
 public class PorukaController {
 
     private final PorukaRepository porukaRepository;
+    private final PorukaService porukaService;
 
     @GetMapping("/poruke")
     List<Poruka> all() {
@@ -22,10 +24,9 @@ public class PorukaController {
     }
 
     @GetMapping("/poruke/{id}")
-    Poruka one(@PathVariable Long id) {
-        String errorMessage = "Objekat sa zadanim ID-jem ne postoji.";
-        return porukaRepository.findById(id)
-                .orElseThrow(() -> new DBObjectNotFoundException(errorMessage));
+    public ResponseEntity<Poruka> dajPoruku(@PathVariable Long id){
+        Poruka poruka = porukaService.dajPoruku(id);
+        return ResponseEntity.ok(poruka);
     }
 }
 

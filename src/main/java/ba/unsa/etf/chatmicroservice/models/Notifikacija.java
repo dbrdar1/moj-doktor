@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -22,17 +23,18 @@ public class Notifikacija {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
-    private String naziv;
+    @NotBlank(message = "Notifikacija mora imati naslov")
+    private String naslov;
 
-    @NotBlank
+    @Size(min = 10, max = 500, message = "Tekst notifikacije mora biti izmedju 10 i 500 karaktera")
     private String tekst;
 
-    @NotNull
+    @NotNull(message = "Notifikacija mora imati datum")
     private Date datum;
 
-    @NotBlank
-    @Size(min = 5, max = 5, message = "Vrijeme mora imati 5 znakova")
+    @NotBlank(message = "Notifikacija mora imati vrijeme")
+    @Pattern(regexp = "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
+            message = "Vrijeme mora biti zadano u ispravnom formatu (HH:MM)")
     private String vrijeme;
 
     @ManyToOne
@@ -40,8 +42,8 @@ public class Notifikacija {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Korisnik korisnik;
 
-    public Notifikacija(String naziv, String tekst, Date datum, String vrijeme, Korisnik korisnik) {
-        this.naziv = naziv;
+    public Notifikacija(String naslov, String tekst, Date datum, String vrijeme, Korisnik korisnik) {
+        this.naslov = naslov;
         this.tekst = tekst;
         this.datum = datum;
         this.vrijeme = vrijeme;

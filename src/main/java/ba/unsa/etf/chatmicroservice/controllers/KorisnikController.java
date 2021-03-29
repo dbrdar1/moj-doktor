@@ -1,15 +1,14 @@
 package ba.unsa.etf.chatmicroservice.controllers;
 
-import ba.unsa.etf.chatmicroservice.exceptions.DBObjectNotFoundException;
 import ba.unsa.etf.chatmicroservice.models.Korisnik;
 import ba.unsa.etf.chatmicroservice.repositories.KorisnikRepository;
+import ba.unsa.etf.chatmicroservice.responses.Response;
 import ba.unsa.etf.chatmicroservice.services.KorisnikService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @AllArgsConstructor
@@ -31,10 +30,15 @@ public class KorisnikController {
     }
 
     @GetMapping("/korisnici/{id}")
-    Korisnik one(@PathVariable Long id) {
-        String errorMessage = "Objekat sa zadanim ID-jem ne postoji.";
+    Korisnik one(@PathVariable Long id) throws Exception {
         return korisnikRepository.findById(id)
-                .orElseThrow(() -> new DBObjectNotFoundException(errorMessage));
+                .orElseThrow(() -> new Exception("Korisnik nije pronađen"));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response handleNoSuchElementFoundException(ConstraintViolationException exception) {
+        return new Response(exception.getConstraintViolations().toString(),500);
     }
 }
 

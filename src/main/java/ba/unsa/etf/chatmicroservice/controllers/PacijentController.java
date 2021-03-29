@@ -1,10 +1,11 @@
 package ba.unsa.etf.chatmicroservice.controllers;
 
-import ba.unsa.etf.chatmicroservice.exceptions.DBObjectNotFoundException;
-import ba.unsa.etf.chatmicroservice.models.Korisnik;
 import ba.unsa.etf.chatmicroservice.models.Pacijent;
 import ba.unsa.etf.chatmicroservice.repositories.PacijentRepository;
+import ba.unsa.etf.chatmicroservice.responses.PacijentResponse;
+import ba.unsa.etf.chatmicroservice.services.PacijentService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 public class PacijentController {
 
+    private final PacijentService pacijentService;
     private final PacijentRepository pacijentRepository;
 
     @GetMapping("/pacijenti")
@@ -23,10 +25,9 @@ public class PacijentController {
     }
 
     @GetMapping("/pacijenti/{id}")
-    Korisnik one(@PathVariable Long id) {
-        String errorMessage = "Objekat sa zadanim ID-jem ne postoji.";
-        return pacijentRepository.findById(id)
-                .orElseThrow(() -> new DBObjectNotFoundException(errorMessage));
+    public ResponseEntity<PacijentResponse> dajPacijenta(@PathVariable Long id) {
+        PacijentResponse pacijentResponse = pacijentService.dajPacijenta(id);
+        return ResponseEntity.ok(pacijentResponse);
     }
 }
 
