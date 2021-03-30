@@ -23,21 +23,16 @@ public class PacijentDoktorService {
 
     public Response spasiVezuPacijentDoktor(Long idPacijenta, Long idDoktora) {
 
+        String errorMessageDoktor = String.format("Ne postoji doktor sa id = '%d'!", idDoktora);
+        String errorMessagePacijent = String.format("Ne postoji pacijent sa id = '%d'!", idPacijenta);
+
         Optional<Pacijent> trazeniPacijent = pacijentRepository.findById(idPacijenta);
-        if(!trazeniPacijent.isPresent()) return new Response("Id pacijenta nije postojeći!", 400);
+        if(!trazeniPacijent.isPresent()) return new Response(errorMessagePacijent, 400);
         Optional<Doktor> trazeniDoktor = doktorRepository.findById(idDoktora);
-        if(!trazeniDoktor.isPresent()) return new Response("Id doktora nije postojeći!", 400);
-
-        /*
-
-        PacijentDoktor pacijentDoktorVeza = new PacijentDoktor();
-        trazeniPacijent.get().getVezeSaDoktorima().add(pacijentDoktorVeza);
-        pacijentRepository.save(trazeniPacijent.get());
-
-        */
+        if(!trazeniDoktor.isPresent()) return new Response(errorMessageDoktor, 400);
 
         PacijentDoktor pacijentDoktorVeza = new PacijentDoktor(trazeniDoktor.get(), trazeniPacijent.get());
-
+        pacijentDoktorRepository.save(pacijentDoktorVeza);
         return new Response("Uspješno ste dodali vezu pacijent-doktor!", 200);
     }
 }

@@ -25,13 +25,6 @@ public class Pacijent extends Korisnik{
     private String hronicneBolesti;
     private String hronicnaTerapija;
 
-    /*
-
-    @OneToMany(mappedBy = "pacijent", cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<PacijentDoktor> vezeSaDoktorima = new ArrayList<>();
-
-    */
 
     public Pacijent(String ime, String prezime, Date datumRodjenja, String adresa,
                     String brojTelefona, String mail, String spol, double visina,

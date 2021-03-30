@@ -1,9 +1,12 @@
 package ba.unsa.etf.pregledi_i_kartoni.controllers;
 
 import ba.unsa.etf.pregledi_i_kartoni.models.*;
-import ba.unsa.etf.pregledi_i_kartoni.requests.DodajPregledRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajTerminRequest;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
+import ba.unsa.etf.pregledi_i_kartoni.responses.TerminResponse;
+import ba.unsa.etf.pregledi_i_kartoni.services.DoktorService;
+import ba.unsa.etf.pregledi_i_kartoni.services.PacijentDoktorService;
+import ba.unsa.etf.pregledi_i_kartoni.services.PacijentService;
 import ba.unsa.etf.pregledi_i_kartoni.services.TerminService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +21,7 @@ public class TerminController {
 
     private final TerminService terminService;
 
-    private final List<Termin> termini;
+    // private final List<Termin> termini;
 
     private final Doktor doktor1 = new Doktor("ImeDoktora1", "PrezimeDoktora1", new Date(), "AdresaDoktora1", "061-123-123", "nekimaildoktora1@gmail.com");
     private final Pacijent pacijent1 = new Pacijent( "Ime1", "Prezime1", new Date(), "Adresa1", "061-456-456", "nekimailp1@gmail.com",
@@ -36,6 +39,8 @@ public class TerminController {
     private final Termin termin1 = new Termin(new Date(), "15:20", pd1);
     private final Termin termin2 = new Termin(new Date(), "16:30", pd2);
 
+    /*
+
     @GetMapping("/sacuvaj-pocetne-termine")
     public @ResponseBody String spasiListuTermina() {
         termini.add(termin1);
@@ -43,20 +48,23 @@ public class TerminController {
         return terminService.spasiTermine(termini);
     }
 
+    */
+
 
     // prikaz svih termina
     @GetMapping("/svi-termini")
-    public ResponseEntity<List<Termin>> dajSveTermine(){
-        List<Termin> trazeniTermini = terminService.getAllTermin();
+    public ResponseEntity<List<TerminResponse>> dajSveTermine(){
+        List<TerminResponse> trazeniTermini = terminService.dajSveTermine();
         return ResponseEntity.ok(trazeniTermini);
     }
 
     // prikaz termina na osnovu id
     @GetMapping("/termin/{idTermina}")
-    public ResponseEntity<Termin> dajTermin(@PathVariable(value = "idTermina") Long idTermina){
-        Termin trazeniTermin = terminService.getTerminById(idTermina);
+        public ResponseEntity<TerminResponse> dajTermin(@PathVariable(value = "idTermina") Long idTermina){
+        TerminResponse trazeniTermin = terminService.dajTerminNaOsnovuId(idTermina);
         return ResponseEntity.ok(trazeniTermin);
     }
+
 
     // pohrana termina
     @PostMapping("/dodaj-termin")

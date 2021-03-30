@@ -4,6 +4,7 @@ import ba.unsa.etf.pregledi_i_kartoni.models.Doktor;
 import ba.unsa.etf.pregledi_i_kartoni.models.Korisnik;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajDoktoraRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajKorisnikaRequest;
+import ba.unsa.etf.pregledi_i_kartoni.responses.KorisnikResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.services.DoktorService;
 import ba.unsa.etf.pregledi_i_kartoni.services.KorisnikService;
@@ -21,16 +22,16 @@ public class KorisnikController {
     private final KorisnikService korisnikService;
 
     // prikaz jednog korisnika na osnovu id
-    @GetMapping("/korisnik")
-    public ResponseEntity<Korisnik> dajKorisnika(@RequestParam(value = "id") Long idKorisnika){
-        Korisnik trazeniKorisnik = korisnikService.dajKorisnikaNaOsnovuId(idKorisnika);
+    @GetMapping("/korisnik/{idKorisnika}")
+    public ResponseEntity<KorisnikResponse> dajKorisnika(@PathVariable(value = "idKorisnika") Long idKorisnika){
+        KorisnikResponse trazeniKorisnik = korisnikService.dajKorisnikaNaOsnovuId(idKorisnika);
         return ResponseEntity.ok(trazeniKorisnik);
     }
 
     // prikaz svih korisnika
     @GetMapping("/svi-korisnici")
-    public ResponseEntity<List<Korisnik>> dajSveKorisnike(){
-        List<Korisnik> sviKorisnici = korisnikService.dajSveKorisnike();
+    public ResponseEntity<List<KorisnikResponse>> dajSveKorisnike(){
+        List<KorisnikResponse> sviKorisnici = korisnikService.dajSveKorisnike();
         return ResponseEntity.ok(sviKorisnici);
     }
 

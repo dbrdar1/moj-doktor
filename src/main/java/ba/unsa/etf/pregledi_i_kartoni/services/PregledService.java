@@ -4,10 +4,14 @@ import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.pregledi_i_kartoni.models.*;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.*;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajPregledRequest;
+import ba.unsa.etf.pregledi_i_kartoni.responses.DoktorResponse;
+import ba.unsa.etf.pregledi_i_kartoni.responses.PacijentResponse;
+import ba.unsa.etf.pregledi_i_kartoni.responses.PregledResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -72,23 +76,82 @@ public class PregledService {
         return "Inicijalizacija baze podataka završena!";
     }
 
-    public Pregled dajPregledNaOsonvuId(Long id) {
-        String errorMessage = String.format("Ne postoji pregled sa id = '%d'", id);
-        return pregledRepository
-                .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(errorMessage));
+    public PregledResponse dajPregledNaOsonvuId(Long idPregleda) {
+
+        String errorMessagePregled = String.format("Ne postoji pregled sa id = '%d'!", idPregleda);
+        Pregled trazeniPregled = pregledRepository.findById(idPregleda).orElseThrow(() -> new ResourceNotFoundException(errorMessagePregled));
+        return new PregledResponse(trazeniPregled.getId(), trazeniPregled.getSimptomi(), trazeniPregled.getFizikalniPregled(),
+                                   trazeniPregled.getDijagnoza(), trazeniPregled.getTretman(), trazeniPregled.getKomentar(),
+                                   trazeniPregled.getTermin().getId()
+        );
+
+
+
     }
 
 
-    public List<Pregled> dajSvePreglede() {
-        return pregledRepository
-                .findAll();
+    public List<PregledResponse> dajSvePreglede() {
+        List<Pregled> pregledi = pregledRepository.findAll();
+        List<PregledResponse> listaPregledResponse = new ArrayList<>();
+        for (Pregled pregled : pregledi) {
+            listaPregledResponse.add(new PregledResponse(pregled.getId(), pregled.getSimptomi(), pregled.getFizikalniPregled(),
+                    pregled.getDijagnoza(), pregled.getTretman(), pregled.getKomentar(),
+                    pregled.getTermin().getId()
+                    )
+            );
+        }
+
+        return listaPregledResponse;
+
     }
 
 
-    public List<Pregled> dajPregledeNaOsnovuIdDoktoraIdPacijenta(Long idDoktor, Long idPacijent) {
-        return pregledRepository.findByIdDoktoraIPacijenta(idDoktor, idPacijent);
+    public List<PregledResponse> filtrirajPreglede(Long idDoktor, Long idPacijent, Long idTermin) {
+
+        Doktor trazeniDoktor = null;
+        Pacijent trazeniPacijent = null;
+        Termin trazeniTermin = null;
+
+
+        if(idDoktor != null) {
+            Optional<Doktor> trazeniDoktorOptional = doktorRepository.findById(idDoktor);
+            if (trazeniDoktorOptional.isPresent()) {
+                trazeniDoktor = trazeniDoktorOptional.get();
+            }
+        }
+
+        if(idPacijent != null) {
+            Optional<Pacijent> trazeniPacijentOptional = pacijentRepository.findById(idPacijent);
+            if (trazeniPacijentOptional.isPresent()) {
+                trazeniPacijent = trazeniPacijentOptional.get();
+            }
+        }
+
+        if(idTermin != null) {
+            Optional<Termin> trazeniTerminOptional = terminRepository.findById(idTermin);
+            if (trazeniTerminOptional.isPresent()) {
+                trazeniTermin = trazeniTerminOptional.get();
+            }
+        }
+
+
+
+        List<Pregled> trazeniPregledi = pregledRepository.findByQueryPregled(trazeniDoktor, trazeniPacijent, trazeniTermin).get();
+
+        List<PregledResponse> listaPregledResponse = new ArrayList<>();
+        for (Pregled pregled : trazeniPregledi) {
+            listaPregledResponse.add(new PregledResponse(pregled.getId(), pregled.getSimptomi(), pregled.getFizikalniPregled(),
+                    pregled.getDijagnoza(), pregled.getTretman(), pregled.getKomentar(),
+                    pregled.getTermin().getId()
+                    )
+            );
+
+        }
+
+        return listaPregledResponse;
+
     }
+
 
 
     public Response dodajPregled(DodajPregledRequest dodajPregledRequest) {
@@ -98,9 +161,18 @@ public class PregledService {
                 dodajPregledRequest.getSimptomi(), dodajPregledRequest.getFizikalniPregled(), dodajPregledRequest.getDijagnoza(),
                 dodajPregledRequest.getTretman(), dodajPregledRequest.getKomentar(), terminPregleda.get()
         );
-        //terminPregleda.get().getPregledi().add(noviPregled);
         pregledRepository.save(noviPregled);
         return new Response("Uspješno ste dodali pregled!", 200);
+    }
+
+    public Response obrisiPregled(Long id) {
+        String errorBrisanjePregleda = String.format("Ne postoji pregled sa id = '%d'", id);
+        Optional<Pregled> trazeniPregled = pregledRepository.findById(id);
+        if(!trazeniPregled.isPresent()) {
+            return new Response(errorBrisanjePregleda, 400);
+        }
+        pregledRepository.deleteById(id);
+        return new Response("Uspješno ste obrisali pregled!", 200);
     }
 
 
