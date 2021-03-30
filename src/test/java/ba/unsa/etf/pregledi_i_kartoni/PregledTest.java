@@ -1,4 +1,4 @@
-package test.ba.unsa.etf.pregledi_i_kartoni;
+package ba.unsa.etf.pregledi_i_kartoni;
 
 import ba.unsa.etf.pregledi_i_kartoni.models.Doktor;
 import ba.unsa.etf.pregledi_i_kartoni.models.Pacijent;
