@@ -38,7 +38,7 @@ public class Notifikacija {
     private String vrijeme;
 
     @ManyToOne
-    @JoinColumn(name = "korisnikId")
+    @JoinColumn(name = "korisnik_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Korisnik korisnik;
 

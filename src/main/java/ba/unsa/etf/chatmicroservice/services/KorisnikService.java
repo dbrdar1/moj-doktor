@@ -15,7 +15,6 @@ public class KorisnikService {
     private final DoktorRepository doktorRepository;
     private final PacijentRepository pacijentRepository;
     private final NotifikacijaRepository notifikacijaRepository;
-    private final RazgovorRepository razgovorRepository;
     private final PorukaRepository porukaRepository;
 
 
@@ -32,9 +31,6 @@ public class KorisnikService {
 
         notifikacijaRepository.deleteAllInBatch();
         notifikacijaRepository.flush();
-
-        razgovorRepository.deleteAllInBatch();
-        razgovorRepository.flush();
 
         porukaRepository.deleteAllInBatch();
         porukaRepository.flush();
@@ -64,20 +60,17 @@ public class KorisnikService {
                 "14:00",
                 pacijent);
 
-        Razgovor razgovor = new Razgovor(doktor, pacijent);
-
         Poruka poruka = new Poruka(
                 "dje si",
                 0,
-                1,
                 date,
-                "14:00",
-                razgovor);
+                "13:00",
+                doktor,
+                pacijent);
 
         doktorRepository.save(doktor);
         pacijentRepository.save(pacijent);
         notifikacijaRepository.save(notifikacija);
-        razgovorRepository.save(razgovor);
         porukaRepository.save(poruka);
 
         return "Inicijalizacija baze završena!";

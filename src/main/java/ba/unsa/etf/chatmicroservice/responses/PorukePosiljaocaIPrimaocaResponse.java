@@ -1,6 +1,6 @@
 package ba.unsa.etf.chatmicroservice.responses;
 
-import ba.unsa.etf.chatmicroservice.models.Razgovor;
+import ba.unsa.etf.chatmicroservice.models.Poruka;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.MediaType;
@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping(method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
 @ResponseBody
-public class RazgovoriKorisnikaResponse {
+public class PorukePosiljaocaIPrimaocaResponse {
 
-    private List<Razgovor> razgovori;
+    private List<Poruka> poruke;
 }

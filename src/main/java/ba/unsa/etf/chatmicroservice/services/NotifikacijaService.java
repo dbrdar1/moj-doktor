@@ -35,16 +35,17 @@ public class NotifikacijaService {
 
     public Response dodajNotifikaciju(DodajNotifikacijuRequest dodajNotifikacijuRequest) {
         Optional<Korisnik> k = korisnikRepository.findById(dodajNotifikacijuRequest.getIdKorisnika());
-        if(!k.isPresent()) return new Response("Id korisnika nije postojeći!", 400);
+        if (!k.isPresent()) return new Response("Id korisnika nije postojeći!", 400);
         Notifikacija n = new Notifikacija(dodajNotifikacijuRequest.getNaslov(), dodajNotifikacijuRequest.getTekst(),
                 dodajNotifikacijuRequest.getDatum(),dodajNotifikacijuRequest.getVrijeme(),k.get());
-        k.get().getNotifikacijas().add(n);
+        k.get().getNotifikacije().add(n);
         korisnikRepository.save(k.get());
         return new Response("Uspješno ste dodali notifikaciju!", 200);
     }
 
     public Response obrisiNotifikaciju(Long id){
-        Notifikacija notifikacija = notifikacijaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ne postoji notifikacija s ovim id-om!"));;
+        Optional<Notifikacija> notifikacija = notifikacijaRepository.findById(id);
+        if (!notifikacija.isPresent()) return new Response("Id notifikacije nije postojeći!", 400);
         notifikacijaRepository.deleteById(id);
         return new Response("Uspješno ste obrisali notifikaciju!", 200);
     }

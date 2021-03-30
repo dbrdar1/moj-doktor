@@ -1,9 +1,12 @@
 package ba.unsa.etf.chatmicroservice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -23,7 +26,7 @@ import java.util.List;
         })
 })
 @Inheritance(strategy = InheritanceType.JOINED)
-@JsonIgnoreProperties({"notifikacijas", "razgovors1", "razgovors2"})
+@JsonIgnoreProperties({"notifikacije", "poslanePoruke", "primljenePoruke"})
 public class Korisnik {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,20 +51,20 @@ public class Korisnik {
     @Email(message = "Email mora biti validan")
     private String email;
 
-    @OneToMany(targetEntity = Notifikacija.class,
-            cascade = CascadeType.ALL,
-            mappedBy = "korisnik")
-    private List<Notifikacija> notifikacijas = new ArrayList<>();
+    @OneToMany(targetEntity = Notifikacija.class, cascade = CascadeType.ALL, mappedBy = "korisnik")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private List<Notifikacija> notifikacije = new ArrayList<>();
 
-    @OneToMany(targetEntity = Razgovor.class,
-            cascade = CascadeType.ALL,
-            mappedBy = "prviKorisnik")
-    private List<Razgovor> razgovors1 = new ArrayList<>();
+    @OneToMany(targetEntity = Poruka.class, cascade = CascadeType.ALL, mappedBy = "posiljalac")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private List<Poruka> poslanePoruke = new ArrayList<>();
 
-    @OneToMany(targetEntity = Razgovor.class,
-            cascade = CascadeType.ALL,
-            mappedBy = "drugiKorisnik")
-    private List<Razgovor> razgovors2 = new ArrayList<>();
+    @OneToMany(targetEntity = Poruka.class, cascade = CascadeType.ALL, mappedBy = "primalac")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private List<Poruka> primljenePoruke = new ArrayList<>();
 
     public Korisnik(String ime, String prezime, Date datumRodjenja, String adresa, String email, String brojTelefona) {
         this.ime = ime;

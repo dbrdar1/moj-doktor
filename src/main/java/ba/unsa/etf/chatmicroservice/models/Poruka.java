@@ -23,34 +23,35 @@ public class Poruka {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Poruka mora imati sadrzaj")
     private String sadrzaj;
 
     @Min(value = 0, message = "Vrijednost Procitana moze biti 0 ili 1")
     @Max(value = 1, message = "Vrijednost Procitana moze biti 0 ili 1")
     private Integer procitana;
 
-    @Min(value = 0, message = "Vrijednost Procitana moze biti 0 ili 1")
-    @Max(value = 1, message = "Vrijednost Procitana moze biti 0 ili 1")
-    private Integer jeLiOdPrvogKorisnika;
-
     @NotNull
-    private Date datumPoruke;
+    private Date datum;
 
     @NotBlank
-    private String vrijemePoruke;
+    private String vrijeme;
 
     @ManyToOne
-    @JoinColumn(name = "razgovorId")
+    @JoinColumn(name = "posiljalac_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Razgovor razgovor;
+    private Korisnik posiljalac;
 
-    public Poruka(String sadrzaj, Integer procitana, Integer jeLiOdPrvogKorisnika, Date datumPoruke, String vrijemePoruke, Razgovor razgovor) {
+    @ManyToOne
+    @JoinColumn(name = "primalac_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Korisnik primalac;
+
+    public Poruka(String sadrzaj, Integer procitana, Date datum, String vrijeme, Korisnik posiljalac, Korisnik primalac) {
         this.sadrzaj = sadrzaj;
         this.procitana = procitana;
-        this.jeLiOdPrvogKorisnika = jeLiOdPrvogKorisnika;
-        this.datumPoruke = datumPoruke;
-        this.vrijemePoruke = vrijemePoruke;
-        this.razgovor = razgovor;
+        this.datum = datum;
+        this.vrijeme = vrijeme;
+        this.posiljalac = posiljalac;
+        this.primalac = primalac;
     }
 }
