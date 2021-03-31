@@ -15,9 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @AllArgsConstructor
@@ -90,10 +93,16 @@ public class NotifikacijaController {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response handleNoSuchElementFoundException(
             ConstraintViolationException exception
     ) {
-        return new Response(exception.getConstraintViolations().toString(),500);
+        String message="";
+        List<String> messages = exception.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage).collect(Collectors.toList());
+        for (int i =0; i<messages.size();i++)
+            if(i<messages.size()-1) message += messages.get(i)+ "; ";
+            else message += messages.get(i);
+        return new Response(message,400);
     }
 }
