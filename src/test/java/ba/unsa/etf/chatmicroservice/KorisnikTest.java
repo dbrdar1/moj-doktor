@@ -1,9 +1,7 @@
 package ba.unsa.etf.chatmicroservice;
 
 import ba.unsa.etf.chatmicroservice.models.*;
-import ba.unsa.etf.chatmicroservice.projections.NotifikacijaProjection;
 import ba.unsa.etf.chatmicroservice.repositories.*;
-import ba.unsa.etf.chatmicroservice.requests.DodajNotifikacijuRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +14,12 @@ import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class NotifikacijaTest {
+public class KorisnikTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -108,64 +104,28 @@ public class NotifikacijaTest {
     }
 
     @Test
-    public void getNotifikacijeTest() throws Exception {
+    public void getKorisniciTest() throws Exception {
         inicijalizirajBazu();
-        this.mockMvc.perform(get("/notifikacije")
+        this.mockMvc.perform(get("/korisnici")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(jsonPath("$[0].naslov", is("naziv notifikacije")))
-                .andExpect(jsonPath("$[0].tekst", is("imate novu poruku")))
-                .andExpect(jsonPath("$[0].vrijeme", is("14:00")));
+                .andExpect(jsonPath("$[0].ime", is("Samra")))
+                .andExpect(jsonPath("$[0].prezime", is("Pusina")))
+                .andExpect(jsonPath("$[0].email", is("spusina1@etf.unsa.ba")))
+                .andExpect(jsonPath("$[1].ime", is("Esmina")))
+                .andExpect(jsonPath("$[1].prezime", is("Radusic")))
+                .andExpect(jsonPath("$[1].email", is("eradusic1@etf.unsa.ba")));
     }
 
     @Test
-    public void getNotifikacijaByIdTest() throws Exception {
+    public void getKorisnikByIdTest() throws Exception {
         inicijalizirajBazu();
-        NotifikacijaProjection notifikacija = notifikacijaRepository.findByNaslov("naziv notifikacije");
-        this.mockMvc.perform(get("/notifikacije/" + notifikacija.getId())
+        Korisnik korisnik = korisnikRepository.findByIme("Esmina");
+        this.mockMvc.perform(get("/korisnici/" + korisnik.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(jsonPath("$.naslov", is("naziv notifikacije")))
-                .andExpect(jsonPath("$.tekst", is("imate novu poruku")))
-                .andExpect(jsonPath("$.vrijeme", is("14:00")));
-    }
-
-    @Test
-    public void postIspravnaNotifikacijaTest() throws Exception {
-        inicijalizirajBazu();
-        Korisnik korisnik = new Korisnik("test","testovic", new Date(), "Bulevar Testova 64","ttestovic1@gmail.com","061123456");
-        korisnik = korisnikRepository.save(korisnik);
-        this.mockMvc.perform(post("/dodaj-notifikaciju")
-                .content(asJsonString(new DodajNotifikacijuRequest(korisnik.getId(), "Test naslov", "Test notifikacija!", new Date(), "11:00")))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-        korisnikRepository.delete(korisnik);
-    }
-
-    @Test
-    public void postNotifikacijaNepostojeciKorisnikTest() throws Exception {
-        inicijalizirajBazu();
-        this.mockMvc.perform(post("/dodaj-notifikaciju")
-                .content(asJsonString(new DodajNotifikacijuRequest(10L,"Test naslov", "Test notifikacija!", new Date(), "11:00")))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(jsonPath("$.message", is("Id korisnika nije postojeći!")))
-                .andExpect(jsonPath("$.statusCode", is(400)));
-    }
-
-    @Test
-    public void postNotifikacijeBezNaslova() throws Exception {
-        inicijalizirajBazu();
-        Korisnik korisnik = new Korisnik("test","testovic", new Date(), "Bulevar Testova 64","ttestovic1@gmail.com","061123456");
-        korisnik = korisnikRepository.save(korisnik);
-        this.mockMvc.perform(post("/dodaj-notifikaciju")
-                .content(asJsonString(new DodajNotifikacijuRequest(korisnik.getId(),"", "Test notifikacija!", new Date(), "11:00")))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(jsonPath("$.statusCode", is(400)));
+                .andExpect(jsonPath("$.ime", is("Esmina")))
+                .andExpect(jsonPath("$.prezime", is("Radusic")))
+                .andExpect(jsonPath("$.email", is("eradusic1@etf.unsa.ba")));
     }
 }

@@ -1,6 +1,7 @@
 package ba.unsa.etf.chatmicroservice.responses;
 
 import ba.unsa.etf.chatmicroservice.models.Poruka;
+import ba.unsa.etf.chatmicroservice.projections.PorukaProjection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.MediaType;
@@ -16,5 +17,5 @@ import java.util.List;
 @ResponseBody
 public class PorukePosiljaocaIPrimaocaResponse {
 
-    private List<Poruka> poruke;
+    private List<PorukaProjection> poruke;
 }

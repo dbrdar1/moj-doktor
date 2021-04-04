@@ -4,6 +4,7 @@ import ba.unsa.etf.chatmicroservice.models.Doktor;
 import ba.unsa.etf.chatmicroservice.models.Notifikacija;
 import ba.unsa.etf.chatmicroservice.models.Pacijent;
 import ba.unsa.etf.chatmicroservice.models.Poruka;
+import ba.unsa.etf.chatmicroservice.projections.PorukaProjection;
 import ba.unsa.etf.chatmicroservice.repositories.*;
 import ba.unsa.etf.chatmicroservice.requests.DodajPorukuRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -122,7 +123,7 @@ public class PorukaTest {
     @Test
     public void getPorukaByIdTest() throws Exception {
         inicijalizirajBazu();
-        Poruka poruka = porukaRepository.findBySadrzaj("dje si");
+        PorukaProjection poruka = porukaRepository.findBySadrzaj("dje si");
         this.mockMvc.perform(get("/poruke/" + poruka.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -174,6 +175,6 @@ public class PorukaTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(jsonPath("$.statusCode", is(500)));
+                .andExpect(jsonPath("$.statusCode", is(400)));
     }
 }

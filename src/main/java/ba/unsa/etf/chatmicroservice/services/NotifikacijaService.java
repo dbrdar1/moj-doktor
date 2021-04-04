@@ -3,6 +3,7 @@ package ba.unsa.etf.chatmicroservice.services;
 import ba.unsa.etf.chatmicroservice.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.chatmicroservice.models.Korisnik;
 import ba.unsa.etf.chatmicroservice.models.Notifikacija;
+import ba.unsa.etf.chatmicroservice.projections.NotifikacijaProjection;
 import ba.unsa.etf.chatmicroservice.repositories.KorisnikRepository;
 import ba.unsa.etf.chatmicroservice.repositories.NotifikacijaRepository;
 import ba.unsa.etf.chatmicroservice.requests.DodajNotifikacijuRequest;
@@ -23,13 +24,16 @@ public class NotifikacijaService {
     private final KorisnikRepository korisnikRepository;
 
     public NotifikacijaResponse dajNotifikaciju(Long id) {
-        Notifikacija n = notifikacijaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ne postoji notifikacija s ovim id-om!"));
-        return new NotifikacijaResponse(n.getNaslov(),n.getTekst(),n.getDatum(),n.getVrijeme());
+        Notifikacija n = notifikacijaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ne postoji notifikacija s ovim id-om!"));
+        return new NotifikacijaResponse(n.getId(), n.getNaslov(),n.getTekst(),n.getDatum(),n.getVrijeme(),
+                n.getKorisnik().getId());
     }
 
     public NotifikacijeKorisnikaResponse dajNotifikacijeKorisnika(Long idKorisnika) {
-        Korisnik k = korisnikRepository.findById(idKorisnika).orElseThrow(() -> new ResourceNotFoundException("Ne postoji korisnik s ovim id-om!"));
-        List<Notifikacija> notifikacije = notifikacijaRepository.findAllByKorisnik(k);
+        Korisnik k = korisnikRepository.findById(idKorisnika)
+                .orElseThrow(() -> new ResourceNotFoundException("Ne postoji korisnik s ovim id-om!"));
+        List<NotifikacijaProjection> notifikacije = notifikacijaRepository.findAllByKorisnik(k);
         return new NotifikacijeKorisnikaResponse(notifikacije);
     }
 

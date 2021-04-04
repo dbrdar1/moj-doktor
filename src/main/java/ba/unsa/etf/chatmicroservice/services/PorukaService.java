@@ -2,10 +2,14 @@ package ba.unsa.etf.chatmicroservice.services;
 
 import ba.unsa.etf.chatmicroservice.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.chatmicroservice.models.Korisnik;
+import ba.unsa.etf.chatmicroservice.models.Notifikacija;
 import ba.unsa.etf.chatmicroservice.models.Poruka;
+import ba.unsa.etf.chatmicroservice.projections.PorukaProjection;
 import ba.unsa.etf.chatmicroservice.repositories.KorisnikRepository;
 import ba.unsa.etf.chatmicroservice.repositories.PorukaRepository;
 import ba.unsa.etf.chatmicroservice.requests.DodajPorukuRequest;
+import ba.unsa.etf.chatmicroservice.responses.NotifikacijaResponse;
+import ba.unsa.etf.chatmicroservice.responses.PorukaResponse;
 import ba.unsa.etf.chatmicroservice.responses.PorukePosiljaocaIPrimaocaResponse;
 import ba.unsa.etf.chatmicroservice.responses.Response;
 import lombok.AllArgsConstructor;
@@ -22,16 +26,19 @@ public class PorukaService {
     private final PorukaRepository porukaRepository;
     private final KorisnikRepository korisnikRepository;
 
-    public Poruka dajPoruku(Long id) {
+    public PorukaResponse dajPoruku(Long id) {
         Poruka poruka = porukaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ne postoji poruka s ovim id-om!"));
-        return poruka;
+        return new PorukaResponse(poruka.getId(), poruka.getSadrzaj(), poruka.getProcitana(), poruka.getDatum(),
+                poruka.getVrijeme(), poruka.getPosiljalac().getId(), poruka.getPrimalac().getId());
     }
 
     public PorukePosiljaocaIPrimaocaResponse dajPorukePosiljaocaIPrimaoca(Long idPosiljaoca, Long idPrimaoca) {
-        Korisnik posiljalac = korisnikRepository.findById(idPosiljaoca).orElseThrow(() -> new ResourceNotFoundException("Ne postoji korisnik s ovim id-om!"));
-        Korisnik primalac = korisnikRepository.findById(idPrimaoca).orElseThrow(() -> new ResourceNotFoundException("Ne postoji korisnik s ovim id-om!"));
-        List<Poruka> poruke = porukaRepository.findAllByPosiljalacAndPrimalac(posiljalac, primalac);
+        Korisnik posiljalac = korisnikRepository.findById(idPosiljaoca)
+                .orElseThrow(() -> new ResourceNotFoundException("Ne postoji korisnik s ovim id-om!"));
+        Korisnik primalac = korisnikRepository.findById(idPrimaoca)
+                .orElseThrow(() -> new ResourceNotFoundException("Ne postoji korisnik s ovim id-om!"));
+        List<PorukaProjection> poruke = porukaRepository.findAllByPosiljalacAndPrimalac(posiljalac, primalac);
         return new PorukePosiljaocaIPrimaocaResponse(poruke);
     }
 
