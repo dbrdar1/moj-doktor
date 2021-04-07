@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class MessageRestController {
 
-    @Value("${message:Hello default}")
+    @Value("${message}")
     private String message;
 
     @RequestMapping("/message")
     String getMessage() {
-        return this.message;
+        return message;
     }
 }
