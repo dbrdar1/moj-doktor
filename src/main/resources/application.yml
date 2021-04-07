@@ -4,6 +4,28 @@ spring:
       ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: "jdbc:postgresql://localhost:5432/chatmicroservice"
-    username: postgres
-    password: root
+    url: ${DATA_URL}
+    username: ${DATA_USER}
+    password: ${DATA_PASSWORD}
+  application:
+    name: chat
+  cloud:
+    config:
+      uri: http://localhost:8888
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+message: hello pocetno
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    refresh:
+      enabled: true
+server:
+  port : 8085
