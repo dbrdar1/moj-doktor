@@ -7,6 +7,10 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,10 +22,19 @@ import java.util.List;
 @Table(name = "pacijent")
 public class Pacijent extends Korisnik{
 
+    @Pattern(regexp = "muski|zenski", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Spol može biti samo muški ili ženski")
     private String spol;
+
+    @DecimalMin(value = "0.0", message = "Visina ne može biti negativna")
+    @DecimalMax(value = "3.0", message = "Visina ne može biti veća od 3m")
     private double visina;
+
+    @DecimalMin(value = "0.0", message = "Težina ne može biti negativna")
     private double tezina;
+
+    @Pattern(regexp = "^(A|B|AB|0)[+-]$", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Nevalidna krvna grupa")
     private String krvnaGrupa;
+
     private String hronicneBolesti;
     private String hronicnaTerapija;
 
@@ -44,6 +57,10 @@ public class Pacijent extends Korisnik{
                     String brojTelefona, String mail) {
         super(ime, prezime, datumRodjenja, adresa, brojTelefona, mail);
     }
+
+    @OneToMany(mappedBy = "pacijent", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<PacijentDoktor> vezeSaDoktorima = new ArrayList<>();
 
 }
 

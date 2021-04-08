@@ -2,6 +2,7 @@ package ba.unsa.etf.pregledi_i_kartoni;
 
 import ba.unsa.etf.pregledi_i_kartoni.models.*;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.*;
+import ba.unsa.etf.pregledi_i_kartoni.requests.DodajPacijentaRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajPregledRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,7 +33,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PregledTest {
+public class KartonTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -146,169 +147,79 @@ public class PregledTest {
 
 
     @Test
-    public void postIspravnogPregleda() throws Exception {
-
-        Pacijent p = new Pacijent("test1", "test", new Date(), "adresa", "033211211", "neko1@gmail.com");
-        Doktor d = new Doktor("test2", "test", new Date(), "adresa", "033211211", "neko2@gmail.com");
+    public void postIspravnogKartona() throws Exception {
 
 
-        pacijentRepository.save(p);
-        doktorRepository.save(d);
-
-        p = pacijentRepository.findByIme("test1").get();
-        d = doktorRepository.findByIme("test2").get();
-        PacijentDoktor pd = new PacijentDoktor();
-
-
-        pd.setDoktor(d);
-        pd.setPacijent(p);
-
-
-        pacijentDoktorRepository.save(pd);
-        pd = pacijentDoktorRepository.findByPacijent(p).get();
-
-        Termin t = new Termin();
-        t.setPacijentDoktor(pd);
-        t.setDatumPregleda(new Date());
-        t.setVrijemePregleda("13:00");
-
-        terminRepository.save(t);
-
-
-        this.mockMvc.perform(post("/dodaj-pregled")                 // sve ok
-                .content(asJsonString(new DodajPregledRequest(t.getId(),
-                        "bol u leđima i očima",
-                        "ne izgleda dobro ni sekunde",
-                        "rana faza skolioze i negativna dioptrija",
-                        "manje sjediti za računarom, više se kretati",
-                        "no comment")))
+        this.mockMvc.perform(post("/dodaj-pacijenta")
+                .content(asJsonString(new DodajPacijentaRequest("test1", "test", new Date(), "adresa", "033211211", "neko1@gmail.com",
+                        null, 0, 0, null, null, null)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
-        pacijentRepository.delete(p);
-        doktorRepository.delete(d);
-        terminRepository.delete(t);
+
     }
 
     @Test
     public void postNeispravnihFormata() throws Exception {
-        Pacijent p = new Pacijent("test1", "test", new Date(), "adresa", "033211211", "neko1@gmail.com");
-        Doktor d = new Doktor("test2", "test", new Date(), "adresa", "033211211", "neko2@gmail.com");
-        pacijentRepository.save(p);
-        doktorRepository.save(d);
-        p = pacijentRepository.findByIme("test1").get();
-        d = doktorRepository.findByIme("test2").get();
-        PacijentDoktor pd = new PacijentDoktor();
-        pd.setDoktor(d);
-        pd.setPacijent(p);
-        pacijentDoktorRepository.save(pd);
-        pd = pacijentDoktorRepository.findByPacijent(p).get();
 
-        Termin t = new Termin();
-        t.setPacijentDoktor(pd);
-        t.setDatumPregleda(new Date());
-        t.setVrijemePregleda("13:00");
 
-        terminRepository.save(t);
-
-        this.mockMvc.perform(post("/dodaj-pregled")
-                .content(asJsonString(new DodajPregledRequest(null,     // nema termina za pregled
-                        "bol u leđima i očima",
-                        "ne izgleda dobro ni sekunde",
-                        "rana faza skolioze i negativna dioptrija",
-                        "manje sjediti za računarom, više se kretati",
-                        "no comment")))
+        this.mockMvc.perform(post("/dodaj-pacijenta")
+                .content(asJsonString(new DodajPacijentaRequest("", "test", new Date(), "adresa", "033211211", "neko1@gmail.com",
+                        null, 1.75, 80, null, null, null)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(jsonPath("$.statusniKod", is(400)));
         this.mockMvc.perform(post("/dodaj-pregled")
-                .content(asJsonString(new DodajPregledRequest(t.getId(),
-                        "bol u leđima i očima",
-                        "",                                         // prazno polje fizikalni pregled
-                        "rana faza skolioze i negativna dioptrija",
-                        "manje sjediti za računarom, više se kretati",
-                        "no comment")))
+                .content(asJsonString(new DodajPacijentaRequest("test1", "test", new Date(), "adresa", "211211", "neko1@gmail.com",
+                        null, 1.75, 80, null, null, null)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(jsonPath("$.statusniKod", is(400)));
-        this.mockMvc.perform(post("/dodaj-pregled")
-                .content(asJsonString(new DodajPregledRequest(t.getId(),
-                        "bol u leđima i očima",
-                        "ne izgleda dobro ni sekunde",
-                        "rana faza skolioze i negativna dioptrija",
-                        "",                                         // prazno polje tretman
-                        "no comment")))
+        this.mockMvc.perform(post("/dodaj-pacijenta")
+                .content(asJsonString(new DodajPacijentaRequest("test1", "test", new Date(), "adresa", "033211211", "neko1gmail.com",
+                        null, 1.75, 80, null, null, null)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(jsonPath("$.statusniKod", is(400)));
-        pacijentRepository.delete(p);
-        doktorRepository.delete(d);
-        terminRepository.delete(t);
+        this.mockMvc.perform(post("/dodaj-pacijenta")
+                .content(asJsonString(new DodajPacijentaRequest("test1", "test", new Date(), "adresa", "033211211", "neko1@gmail.com",
+                        null, 1.75, 80, "C+", null, null)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(jsonPath("$.statusniKod", is(400)));
+
     }
 
     @Test
-    public void getPregleda() throws Exception {
-
-        Pacijent p = new Pacijent("test1", "test", new Date(), "adresa", "033211211", "neko1@gmail.com");
-        Doktor d = new Doktor("test2", "test", new Date(), "adresa", "033211211", "neko2@gmail.com");
-        pacijentRepository.save(p);
-        doktorRepository.save(d);
-        p = pacijentRepository.findByIme("test1").get();
-        d = doktorRepository.findByIme("test2").get();
-        PacijentDoktor pd = new PacijentDoktor();
-        pd.setDoktor(d);
-        pd.setPacijent(p);
-        pacijentDoktorRepository.save(pd);
-        pd = pacijentDoktorRepository.findByPacijent(p).get();
-
-        Termin t = new Termin();
-        t.setPacijentDoktor(pd);
-        t.setDatumPregleda(new Date());
-        t.setVrijemePregleda("13:00");
-
-        terminRepository.save(t);
-
-        Termin t2 = new Termin();
-        t2.setPacijentDoktor(pd);
-        t2.setDatumPregleda(new Date());
-        t2.setVrijemePregleda("14:00");
-
-        terminRepository.save(t2);
+    public void getKartona() throws Exception {
 
 
-        this.mockMvc.perform(post("/dodaj-pregled")
-                .content(asJsonString(new DodajPregledRequest(t.getId(),
-                        "bol u leđima i očima",
-                        "ne izgleda dobro ni sekunde",
-                        "rana faza skolioze i negativna dioptrija",
-                        "manje sjediti za računarom, više se kretati",
-                        "no comment")))
+        this.mockMvc.perform(post("/dodaj-pacijenta")
+                .content(asJsonString(new DodajPacijentaRequest("Sabit", "Iztarcina", new Date(), "adresa", "033211211", "neko1@gmail.com",
+                        null, 1.75, 80, null, null, null)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
-        this.mockMvc.perform(post("/dodaj-pregled")
-                .content(asJsonString(new DodajPregledRequest(t2.getId(),
-                        "zvoni nešto u ušima",
-                        "normala sve izgleda",
-                        "vjerovatno se nije javio na poziv",
-                        "kretati se, piti dosta čajeva, češće se javljati na telefon",
-                        "")))
+        this.mockMvc.perform(post("/dodaj-pacijenta")
+                .content(asJsonString(new DodajPacijentaRequest("Ragib", "Nagib", new Date(), "adresa", "033211211", "neko2@gmail.com",
+                        null, 1.75, 80, null, null, null)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
-        this.mockMvc.perform(get("/pregled?idDoktor=" + d.getId()))
+        this.mockMvc.perform(get("/karton?ime=Ragib"))
                 .andDo(print())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(2)));
-        pacijentRepository.delete(p);
-        doktorRepository.delete(d);
-        terminRepository.delete(t);
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].ime", is("Ragib")));
+
+
     }
 
 

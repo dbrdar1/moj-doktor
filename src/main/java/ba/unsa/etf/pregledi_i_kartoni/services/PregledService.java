@@ -49,19 +49,34 @@ public class PregledService {
 
         Doktor doktor1 = new Doktor("ImeDoktora1", "PrezimeDoktora1", new Date(), "AdresaDoktora1", "061-123-123", "nekimaildoktora1@gmail.com");
         Pacijent pacijent1 = new Pacijent( "ImePacijenta1", "PrezimePacijenta1", new Date(), "Adresa1", "061-456-456", "nekimailpacijenta1@gmail.com",
-                "zenski", 175.2, 68.3, "0+", "/", "/");
+                "zenski", 1.85, 68.3, "0+", "/", "/");
 
         Doktor doktor2 = new Doktor("ImeDoktora2", "PrezimeDoktora2", new Date(), "AdresaDoktora2", "061-723-723", "nekimaildoktora2@gmail.com");
         Pacijent pacijent2 = new Pacijent( "ImePacijenta2", "PrezimePacijenta2", new Date(), "Adresa2", "061-323-323", "nekimailpacijenta2@gmail.com",
-                "zenski", 165.4, 56.3, "A-", "/", "/");
+                "zenski", 1.34, 56.3, "A-", "/", "/");
 
-        PacijentDoktor pd1 = new PacijentDoktor(doktor1, pacijent1);
-        PacijentDoktor pd2 = new PacijentDoktor(doktor2, pacijent2);
 
+        doktorRepository.save(doktor1);
+        doktorRepository.save(doktor2);
+        pacijentRepository.save(pacijent1);
+        pacijentRepository.save(pacijent2);
+
+        PacijentDoktor pd1 = new PacijentDoktor();
+        pd1.setDoktor(doktor1);
+        pd1.setPacijent(pacijent1);
+        PacijentDoktor pd2 = new PacijentDoktor();
+        pd2.setDoktor(doktor2);
+        pd2.setPacijent(pacijent2);
+
+        pacijentDoktorRepository.save(pd1);
+        pacijentDoktorRepository.save(pd2);
 
 
         Termin termin1 = new Termin(new Date(), "15:20", pd1);
         Termin termin2 = new Termin(new Date(), "16:30", pd2);
+
+        terminRepository.save(termin1);
+        terminRepository.save(termin2);
 
 
         Pregled pregled1 = new Pregled("neki simptomi1", "neki fiz pregled1", "neka dijagnoza1",
@@ -69,6 +84,7 @@ public class PregledService {
 
         Pregled pregled2 = new Pregled("neki simptomi2", "neki fiz pregled2", "neka dijagnoza2",
                 "neki tretman2", "neki komentar2", termin2);
+
 
         pregledRepository.save(pregled1);
         pregledRepository.save(pregled2);
@@ -155,6 +171,9 @@ public class PregledService {
 
 
     public Response dodajPregled(DodajPregledRequest dodajPregledRequest) {
+        if(dodajPregledRequest.getTerminId() == null) {
+            return new Response("Nije moguce dodati pregled bez termina!", 400);
+        }
         Optional<Termin> terminPregleda = terminRepository.findById(dodajPregledRequest.getTerminId());
         if(!terminPregleda.isPresent()) return new Response("Ne postoji zakazani termin za dati pregled!", 400);
         Pregled noviPregled = new Pregled(

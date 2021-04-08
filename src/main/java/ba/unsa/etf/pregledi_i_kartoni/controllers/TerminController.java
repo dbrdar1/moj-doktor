@@ -9,9 +9,25 @@ import ba.unsa.etf.pregledi_i_kartoni.services.PacijentDoktorService;
 import ba.unsa.etf.pregledi_i_kartoni.services.PacijentService;
 import ba.unsa.etf.pregledi_i_kartoni.services.TerminService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Date;
 import java.util.List;
 
@@ -21,34 +37,6 @@ public class TerminController {
 
     private final TerminService terminService;
 
-    // private final List<Termin> termini;
-
-    private final Doktor doktor1 = new Doktor("ImeDoktora1", "PrezimeDoktora1", new Date(), "AdresaDoktora1", "061-123-123", "nekimaildoktora1@gmail.com");
-    private final Pacijent pacijent1 = new Pacijent( "Ime1", "Prezime1", new Date(), "Adresa1", "061-456-456", "nekimailp1@gmail.com",
-            "zenski", 175.2, 68.3, "0+", "/", "/");
-
-    private final Doktor doktor2 = new Doktor("ImeDoktora2", "PrezimeDoktora2", new Date(), "AdresaDoktora2", "061-723-723", "nekimaildoktora2@gmail.com");
-    private final Pacijent pacijent2 = new Pacijent( "Ime2", "Prezime2", new Date(), "Adresa2", "061-323-323", "nekimailp2@gmail.com",
-            "zenski", 165.4, 56.3, "A-", "/", "/");
-
-    private final PacijentDoktor pd1 = new PacijentDoktor(doktor1, pacijent1);
-    private final PacijentDoktor pd2 = new PacijentDoktor(doktor2, pacijent2);
-
-
-
-    private final Termin termin1 = new Termin(new Date(), "15:20", pd1);
-    private final Termin termin2 = new Termin(new Date(), "16:30", pd2);
-
-    /*
-
-    @GetMapping("/sacuvaj-pocetne-termine")
-    public @ResponseBody String spasiListuTermina() {
-        termini.add(termin1);
-        termini.add(termin2);
-        return terminService.spasiTermine(termini);
-    }
-
-    */
 
 
     // prikaz svih termina
@@ -79,5 +67,31 @@ public class TerminController {
         Response response = terminService.obrisiTermin(idTermina);
         return ResponseEntity.ok(response);
     }
+
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response handleNoSuchElementFoundException(
+            ConstraintViolationException exception
+    ) {
+        String message="";
+        List<String> messages = exception.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage).collect(Collectors.toList());
+        for (int i =0; i<messages.size();i++)
+            if(i<messages.size()-1) message += messages.get(i)+ "; ";
+            else message += messages.get(i);
+        return new Response(message,400);
+    }
+
+
+
+    @GetMapping("/termini-pacijenta/{idPacijenta}")
+    public ResponseEntity<String> dajTerminePacijenta(@PathVariable(value = "idPacijenta") Long idPacijenta) {
+
+        String response = terminService.dajTerminePacijenta(idPacijenta);
+        return ResponseEntity.ok(response);
+
+    }
+
 }
 

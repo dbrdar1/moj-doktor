@@ -12,7 +12,11 @@ import ba.unsa.etf.pregledi_i_kartoni.responses.TerminResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.responses.TerminResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +28,10 @@ public class TerminService {
 
     private final TerminRepository terminRepository;
     private final PacijentDoktorRepository pacijentDoktorRepository;
+
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public String spasiTermine(List<Termin> termini) {
         terminRepository.deleteAllInBatch();
@@ -64,8 +72,10 @@ public class TerminService {
         Termin noviTermin = new Termin(
                 dodajTerminRequest.getDatumPregleda(), dodajTerminRequest.getVrijemePregleda(), pacijentDoktorVeza.get()
         );
-        terminRepository.save(noviTermin);
-        return new Response("Uspješno ste dodali termin termina!", 200);
+        pacijentDoktorVeza.get().getTermini().add(noviTermin);
+        pacijentDoktorRepository.save(pacijentDoktorVeza.get());
+        //terminRepository.save(noviTermin);
+        return new Response("Uspješno ste dodali termin pregleda!", 200);
     }
 
     public Response obrisiTermin(Long id) {
@@ -77,6 +87,14 @@ public class TerminService {
         }
         terminRepository.deleteById(id);
         return new Response("Uspješno ste obrisali pregled!", 200);
+
+    }
+
+    public String dajTerminePacijenta(Long idPacijenta) {
+
+        String fooResourceUrl = "http://termini/termini-pacijenta/" + idPacijenta.toString();
+        ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl, String.class);
+        return response.getStatusCode() == HttpStatus.OK ? response.getBody() : null;
 
     }
 

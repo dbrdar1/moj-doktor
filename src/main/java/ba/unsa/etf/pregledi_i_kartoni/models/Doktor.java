@@ -3,10 +3,14 @@ package ba.unsa.etf.pregledi_i_kartoni.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -14,7 +18,10 @@ import java.util.Date;
 @Table(name = "doktor")
 public class Doktor extends Korisnik {
     public Doktor(String ime, String prezime, Date datumRodjenja, String adresa,
-                  String brojTelefona, String mail) {
-        super(ime, prezime, datumRodjenja, adresa, brojTelefona, mail);
+                  String brojTelefona, String email) {
+        super(ime, prezime, datumRodjenja, adresa, brojTelefona, email);
     }
+    @OneToMany(mappedBy = "doktor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<PacijentDoktor> vezeSaPacijentima = new ArrayList<>();
 }

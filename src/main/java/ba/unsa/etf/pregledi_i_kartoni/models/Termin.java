@@ -1,28 +1,36 @@
 package ba.unsa.etf.pregledi_i_kartoni.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Entity
 @Data
-@NoArgsConstructor
 @Table(name = "termin")
+@NoArgsConstructor
 public class Termin {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull(message = "Termin mora imati datum")
     private Date datumPregleda;
 
+    @NotBlank(message = "Termin mora imati vrijeme")
+    @Pattern(regexp = "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
+            message = "Vrijeme mora biti zadano u ispravnom formatu (HH:MM)")
     private String vrijemePregleda;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne//(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JsonIgnore
     private PacijentDoktor pacijentDoktor;
 
     public Termin(Date datumPregleda, String vrijemePregleda, PacijentDoktor pacijentDoktor) {

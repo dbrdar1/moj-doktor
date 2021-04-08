@@ -3,16 +3,21 @@ package ba.unsa.etf.pregledi_i_kartoni.controllers;
 import ba.unsa.etf.pregledi_i_kartoni.models.Korisnik;
 import ba.unsa.etf.pregledi_i_kartoni.models.Pacijent;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajPacijentaRequest;
+import ba.unsa.etf.pregledi_i_kartoni.requests.UrediKartonRequest;
 import ba.unsa.etf.pregledi_i_kartoni.responses.KartonResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.PacijentResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.services.PacijentService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -23,11 +28,6 @@ public class PacijentController {
     private final List<Pacijent> pacijenti;
 
 
-    private final Pacijent pacijent1 = new Pacijent( "Ime1", "Prezime1", new Date(), "Adresa1", "061-456-456", "nekimailp1@gmail.com",
-            "zenski", 175.2, 68.3, "0+", "/", "/");
-
-    private final Pacijent pacijent2 = new Pacijent( "Ime2", "Prezime2", new Date(), "Adresa2", "061-323-323", "nekimailp2@gmail.com",
-            "zenski", 165.4, 56.3, "A-", "/", "/");
 
     // prikaz pacijenta na osnovu id
     @GetMapping("/pacijent/{idPacijenta}")
@@ -73,7 +73,7 @@ public class PacijentController {
 
     // filtriranje pacijenta
     @GetMapping("/pacijent")
-    public ResponseEntity<List<PacijentResponse>> filtrirajKartone(@RequestParam(name = "ime", required = false) String ime,
+    public ResponseEntity<List<PacijentResponse>> filtrirajPacijente(@RequestParam(name = "ime", required = false) String ime,
                                                                  @RequestParam(name = "prezime", required = false) String prezime) {
         List<PacijentResponse> trazeniPacijenti = pacijentService.filtrirajPacijente(ime, prezime);
         return ResponseEntity.ok(trazeniPacijenti);
@@ -88,7 +88,27 @@ public class PacijentController {
         return ResponseEntity.ok(response);
     }
 
+    // uredjivanje kartona
+    @PutMapping("/karton/{id}")
+    public  ResponseEntity<Response> urediKarton(@RequestBody UrediKartonRequest urediKartonRequest, @PathVariable Long id){
+        Response response = pacijentService.urediKarton(id, urediKartonRequest);
+        return ResponseEntity.ok(response);
+    }
 
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response handleNoSuchElementFoundException(
+            ConstraintViolationException exception
+    ) {
+        String message="";
+        List<String> messages = exception.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage).collect(Collectors.toList());
+        for (int i =0; i<messages.size();i++)
+            if(i<messages.size()-1) message += messages.get(i)+ "; ";
+            else message += messages.get(i);
+        return new Response(message,400);
+    }
 
 
 

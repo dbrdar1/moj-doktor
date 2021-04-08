@@ -156,21 +156,6 @@ public class PacijentService {
         pacijentRepository.save(trazeniKarton);
         return new Response("Uspješno ste uredili karton!",200);
 
-        /*
-            private String ime;
-    private String prezime;
-    private Date datumRodjenja;
-    private String adresa;
-    private String brojTelefona;
-    private String email;
-    private String spol;
-    private double visina;
-    private double tezina;
-    private String krvnaGrupa;
-    private String hronicneBolesti;
-    private String hronicnaTerapija;
-
-         */
     }
 
 

@@ -6,6 +6,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -17,17 +19,21 @@ public class Pregled {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "Pregled mora imati simptome")
     private String simptomi;
 
+    @NotBlank(message = "Pregled mora imati fizikalni pregled")
     private String fizikalniPregled;
 
+    @NotBlank(message = "Pregled mora imati dijagnozu")
     private String dijagnoza;
 
+    @NotBlank(message = "Pregled mora imati tretman")
     private String tretman;
 
     private String komentar;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Termin termin;
 
