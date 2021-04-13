@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface EdukacijaRepository extends JpaRepository<Edukacija, Long> {
     List<Edukacija> findByDoktor(Doktor doktor);
+
     Edukacija findByInstitucija(String naziv);
 }

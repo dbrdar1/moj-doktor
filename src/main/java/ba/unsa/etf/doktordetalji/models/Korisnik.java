@@ -1,8 +1,8 @@
 package ba.unsa.etf.doktordetalji.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -12,7 +12,6 @@ import java.util.Date;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "korisnik", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
@@ -21,7 +20,6 @@ import java.util.Date;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Korisnik {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotBlank(message = "Korisnik mora imati uneseno ime.")
@@ -39,14 +37,15 @@ public class Korisnik {
     private String adresa;
 
     @NotBlank(message = "Korisnik mora imati unesen broj telefona.")
-    @Size(min=9, max=13, message = "Telefonski broj korisnika mora biti dug 9-13 cifara.")
+    @Size(min = 9, max = 13, message = "Telefonski broj korisnika mora biti dug 9-13 cifara.")
     private String brojTelefona;
 
     @Email(message = "Email mora biti validan")
     @NotBlank(message = "Korisnik mora imati unesen ispravan e-mail.")
     private String email;
 
-    public Korisnik(String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona,  String email) {
+    public Korisnik(Long id, String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona, String email) {
+        this.id = id;
         this.ime = ime;
         this.prezime = prezime;
         this.datumRodjenja = datumRodjenja;

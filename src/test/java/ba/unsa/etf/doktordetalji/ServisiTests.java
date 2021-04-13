@@ -53,6 +53,7 @@ class ServisiTests {
     @Test
     public void getDoktorByIdTest() throws Exception {
         Doktor d = new Doktor(
+                1L,
                 "Test",
                 "Test",
                 new Date(1998, 5, 21),
@@ -73,6 +74,7 @@ class ServisiTests {
     @Test
     public void ocijeniDoktoraTest() throws Exception {
         Doktor d = new Doktor(
+                1L,
                 "Test",
                 "Test",
                 new Date(1998, 5, 21),
@@ -105,6 +107,7 @@ class ServisiTests {
     @Test
     public void dodajCertifikatTest() throws Exception {
         Doktor d = new Doktor(
+                1L,
                 "Test",
                 "Test",
                 new Date(1998, 5, 21),
@@ -139,6 +142,7 @@ class ServisiTests {
     @Test
     public void dodajEdukacijuTest() throws Exception {
         Doktor d = new Doktor(
+                1L,
                 "Test",
                 "Test",
                 new Date(1998, 5, 21),
@@ -259,6 +263,7 @@ class ServisiTests {
     @Test
     public void urediPodatkeDoktoraTest() throws Exception {
         Doktor d = new Doktor(
+                1L,
                 "Test",
                 "Test",
                 new Date(1998, 5, 21),

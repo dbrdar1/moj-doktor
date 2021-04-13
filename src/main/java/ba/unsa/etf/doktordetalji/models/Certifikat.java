@@ -1,8 +1,10 @@
 package ba.unsa.etf.doktordetalji.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -25,15 +27,15 @@ public class Certifikat {
     @Size(min = 2, message = "Naziv certifikata mora biti dug bar dva znaka.")
     private String naziv;
 
-    @NotBlank(message = "Godina izdavanja mora biti unesena.")
     private Integer godinaIzdavanja;
 
-    public Certifikat(String institucija, String naziv, Integer godinaIzdavanja){
+    public Certifikat(String institucija, String naziv, Integer godinaIzdavanja) {
         this.institucija = institucija;
         this.naziv = naziv;
         this.godinaIzdavanja = godinaIzdavanja;
     }
 
+    @JsonIgnore
     @ManyToOne
     private Doktor doktor;
 

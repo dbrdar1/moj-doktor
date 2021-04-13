@@ -4,19 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DoktorCVResponse {
+public class KorisnikResponse {
+    private Long id;
     private String ime;
     private String prezime;
+    private Date datumRodjenja;
     private String adresa;
+    private String brojTelefona;
     private String email;
-    private String titula;
-    private String biografija;
-    private Double ocjena;
-    private List<EdukacijeResponse> edukacije;
-    private List<CertifikatiResponse> certifikati;
 }

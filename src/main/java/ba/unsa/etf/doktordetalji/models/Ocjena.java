@@ -1,5 +1,6 @@
 package ba.unsa.etf.doktordetalji.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,11 @@ public class Ocjena {
 
     private Integer vrijednost;
 
-    public Ocjena(Integer vrijednost){
+    public Ocjena(Integer vrijednost) {
         this.vrijednost = vrijednost;
     }
 
+    @JsonIgnore
     @ManyToOne
     private Doktor doktor;
 }

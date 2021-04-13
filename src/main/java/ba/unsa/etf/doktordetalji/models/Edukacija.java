@@ -1,9 +1,10 @@
 package ba.unsa.etf.doktordetalji.models;
 
-import com.sun.istack.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -32,27 +33,26 @@ public class Edukacija {
     private String stepen;
 
     @Min(1900)
-    @NotBlank(message = "Godina pocetka mora biti unesena.")
     private Integer godinaPocetka;
 
     @Min(1900)
-    @NotBlank(message = "Godina zavrsetka mora biti unesena.")
     private Integer godinaZavrsetka;
 
     private String grad;
 
     private String drzava;
 
-    public Edukacija(String institucija, String odsjek, String stepen, Integer godinaPocetka, Integer godinaZavrsetka, String grad, String drzava){
+    public Edukacija(String institucija, String odsjek, String stepen, Integer godinaPocetka, Integer godinaZavrsetka, String grad, String drzava) {
         this.institucija = institucija;
         this.odsjek = odsjek;
-        this. stepen = stepen;
+        this.stepen = stepen;
         this.godinaPocetka = godinaPocetka;
         this.godinaZavrsetka = godinaZavrsetka;
         this.grad = grad;
         this.drzava = drzava;
     }
 
+    @JsonIgnore
     @ManyToOne
     private Doktor doktor;
 
