@@ -4,16 +4,21 @@ import ba.unsa.etf.termini.Requests.DodajNotifikacijuRequest;
 import ba.unsa.etf.termini.Responses.NotifikacijaResponse;
 import ba.unsa.etf.termini.Responses.NotifikacijeKorisnikaResponse;
 import ba.unsa.etf.termini.Responses.Response;
-import ba.unsa.etf.termini.models.Korisnik;
 import ba.unsa.etf.termini.models.Notifikacija;
 import ba.unsa.etf.termini.models.Pacijent;
-import ba.unsa.etf.termini.repositories.NotifikacijaRepository;
 import ba.unsa.etf.termini.repositories.PacijentRepository;
 import ba.unsa.etf.termini.services.NotifikacijaService;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ba.unsa.etf.grpc.ActionRequest;
+import ba.unsa.etf.grpc.ActionResponse;
+import ba.unsa.etf.grpc.SystemEventsServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -88,6 +93,17 @@ public class NotifikacijaController {
 
     @GetMapping("/notifikacije/{id}")
     public ResponseEntity<NotifikacijaResponse> dajNotifikaciju(@PathVariable Long id){
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8866)
+                .usePlaintext()
+                .build();
+        SystemEventsServiceGrpc.SystemEventsServiceBlockingStub stub
+                = SystemEventsServiceGrpc.newBlockingStub(channel);
+        ActionResponse actionResponse = stub.registrujAkciju(ActionRequest.newBuilder()
+                .setResurs("resssssssi")
+                .build());
+        System.out.println("Response received from server:\n" + actionResponse);
+        channel.shutdown();
+
         NotifikacijaResponse response = notifikacijaService.dajNotifikaciju(id);
         return ResponseEntity.ok(response);
     }

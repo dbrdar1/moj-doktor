@@ -6,9 +6,11 @@ import ba.unsa.etf.termini.models.Korisnik;
 import ba.unsa.etf.termini.repositories.KorisnikRepository;
 import ba.unsa.etf.termini.services.KorisnikService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
@@ -20,6 +22,10 @@ public class KorisnikController {
 
     private KorisnikRepository korisnikRepository;
     private final KorisnikService korisnikService;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
     private final List<Korisnik> korisnici;
     private final Korisnik k1 = new Korisnik(
             "Samra",
@@ -51,6 +57,14 @@ public class KorisnikController {
     public ResponseEntity<Response> dodajKorisnika(@RequestBody DodajKorisnikaRequest dodajKorisnikaRequest){
         Response response = korisnikService.dodajKorisnika(dodajKorisnikaRequest);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/dobavi-korisnike")
+    public ResponseEntity<String> postKorisnici(){
+
+        String fooResourceUrl = "http://user-management/getKorisnici";
+        ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl, String.class);
+        return response;
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
