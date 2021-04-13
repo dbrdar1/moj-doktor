@@ -8,6 +8,8 @@ import ba.unsa.etf.pregledi_i_kartoni.responses.KorisnikResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.services.DoktorService;
 import ba.unsa.etf.pregledi_i_kartoni.services.KorisnikService;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ba.unsa.etf.grpc.ActionRequest;
+import ba.unsa.etf.grpc.ActionResponse;
+import ba.unsa.etf.grpc.SystemEventsServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+
+
 @AllArgsConstructor
 @RestController
 public class KorisnikController {
@@ -28,6 +37,24 @@ public class KorisnikController {
     // prikaz jednog korisnika na osnovu id
     @GetMapping("/korisnik/{idKorisnika}")
     public ResponseEntity<KorisnikResponse> dajKorisnika(@PathVariable(value = "idKorisnika") Long idKorisnika){
+        
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8866)
+                .usePlaintext()
+                .build();
+
+        SystemEventsServiceGrpc.SystemEventsServiceBlockingStub stub =
+                SystemEventsServiceGrpc.newBlockingStub(channel);
+
+        ActionResponse actionResponse = stub.registrujAkciju(ActionRequest.newBuilder()
+            .setResurs("neki resurs")
+            .build());
+
+        System.out.println("Response received from server:\n" + actionResponse);
+
+        channel.shutdown();
+
+        
+        
         KorisnikResponse trazeniKorisnik = korisnikService.dajKorisnikaNaOsnovuId(idKorisnika);
         return ResponseEntity.ok(trazeniKorisnik);
     }

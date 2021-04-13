@@ -1,0 +1,15 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package ba.unsa.etf.grpc;
+
+message ActionRequest {
+    string resurs = 1;
+}
+
+message ActionResponse {
+    string tekst = 1;
+}
+
+service SystemEventsService {
+    rpc registrujAkciju(ActionRequest) returns (ActionResponse);
+}
