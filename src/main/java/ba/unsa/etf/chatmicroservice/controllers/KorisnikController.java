@@ -49,7 +49,7 @@ public class KorisnikController {
         ActionResponse actionResponse = stub.registrujAkciju(ActionRequest.newBuilder()
                 .setTimestampAkcije(Timestamp.from(ZonedDateTime.now(ZoneId.of("Europe/Sarajevo")).toInstant()).toString())
                 .setNazivMikroservisa("chat")
-                .setResurs("korisnik")
+                .setResurs("korisnik/" + id)
                 .setTipAkcije(ActionRequest.TipAkcije.GET)
                 .setTipOdgovoraNaAkciju(ActionRequest.TipOdgovoraNaAkciju.USPJEH)
                 .build());
