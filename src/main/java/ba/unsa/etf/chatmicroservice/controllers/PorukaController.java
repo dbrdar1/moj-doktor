@@ -1,10 +1,8 @@
 package ba.unsa.etf.chatmicroservice.controllers;
 
 import ba.unsa.etf.chatmicroservice.models.Poruka;
-import ba.unsa.etf.chatmicroservice.projections.PorukaProjection;
 import ba.unsa.etf.chatmicroservice.repositories.PorukaRepository;
 import ba.unsa.etf.chatmicroservice.requests.DodajPorukuRequest;
-import ba.unsa.etf.chatmicroservice.responses.NotifikacijaResponse;
 import ba.unsa.etf.chatmicroservice.responses.PorukaResponse;
 import ba.unsa.etf.chatmicroservice.responses.PorukePosiljaocaIPrimaocaResponse;
 import ba.unsa.etf.chatmicroservice.responses.Response;
