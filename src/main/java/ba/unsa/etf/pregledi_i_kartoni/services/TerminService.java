@@ -8,6 +8,7 @@ import ba.unsa.etf.pregledi_i_kartoni.models.Termin;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.PacijentDoktorRepository;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.TerminRepository;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajTerminRequest;
+import ba.unsa.etf.pregledi_i_kartoni.responses.ListaTerminaResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.TerminResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.responses.TerminResponse;
@@ -90,11 +91,13 @@ public class TerminService {
 
     }
 
+    // Komunikacija sa "termini" mikroservisom
     public String dajTerminePacijenta(Long idPacijenta) {
 
         String fooResourceUrl = "http://termini/termini-pacijenta/" + idPacijenta.toString();
-        ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl, String.class);
-        return response.getStatusCode() == HttpStatus.OK ? response.getBody() : null;
+        ResponseEntity<String> responseString = restTemplate.getForEntity(fooResourceUrl, String.class);
+        ResponseEntity<ListaTerminaResponse> response = restTemplate.getForEntity(fooResourceUrl, ListaTerminaResponse.class);
+        return responseString.getStatusCode() == HttpStatus.OK ? responseString.getBody() : null;
 
     }
 

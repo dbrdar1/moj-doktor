@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +38,7 @@ public class KorisnikController {
     private final KorisnikService korisnikService;
 
     // prikaz jednog korisnika na osnovu id
+    // slanje zahtjeva System Event servisu
     @GetMapping("/korisnik/{idKorisnika}")
     public ResponseEntity<KorisnikResponse> dajKorisnika(@PathVariable(value = "idKorisnika") Long idKorisnika){
         
@@ -46,15 +50,19 @@ public class KorisnikController {
                 SystemEventsServiceGrpc.newBlockingStub(channel);
 
         ActionResponse actionResponse = stub.registrujAkciju(ActionRequest.newBuilder()
-            .setResurs("neki resurs")
+            .setTimestampAkcije(Timestamp.from(ZonedDateTime.now(
+                    ZoneId.of("Europe/Sarajevo")
+            ).toInstant()).toString())
+            .setNazivMikroservisa("pregledi-i-kartoni")
+            .setResurs("/korisnik/" + idKorisnika.toString())
+            .setTipAkcije(ActionRequest.TipAkcije.GET)
+            .setTipOdgovoraNaAkciju(ActionRequest.TipOdgovoraNaAkciju.USPJEH)
             .build());
 
         System.out.println("Response received from server:\n" + actionResponse);
 
         channel.shutdown();
 
-        
-        
         KorisnikResponse trazeniKorisnik = korisnikService.dajKorisnikaNaOsnovuId(idKorisnika);
         return ResponseEntity.ok(trazeniKorisnik);
     }

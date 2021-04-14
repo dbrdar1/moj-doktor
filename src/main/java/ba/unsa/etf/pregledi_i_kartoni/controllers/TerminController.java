@@ -2,6 +2,7 @@ package ba.unsa.etf.pregledi_i_kartoni.controllers;
 
 import ba.unsa.etf.pregledi_i_kartoni.models.*;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajTerminRequest;
+import ba.unsa.etf.pregledi_i_kartoni.responses.ListaTerminaResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.responses.TerminResponse;
 import ba.unsa.etf.pregledi_i_kartoni.services.DoktorService;
@@ -88,8 +89,8 @@ public class TerminController {
     @GetMapping("/termini-pacijenta/{idPacijenta}")
     public ResponseEntity<String> dajTerminePacijenta(@PathVariable(value = "idPacijenta") Long idPacijenta) {
 
-        String response = terminService.dajTerminePacijenta(idPacijenta);
-        return ResponseEntity.ok(response);
+        String trazeniTerminiPacijenta = terminService.dajTerminePacijenta(idPacijenta);
+        return ResponseEntity.ok(trazeniTerminiPacijenta);
 
     }
 
