@@ -18,7 +18,9 @@ import java.time.ZonedDateTime;
 public class HTTPHandlerInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request,
+                             HttpServletResponse response,
+                             Object handler) {
         return true;
     }
 
@@ -27,6 +29,13 @@ public class HTTPHandlerInterceptor implements HandlerInterceptor {
                            HttpServletResponse response,
                            Object handler,
                            ModelAndView modelAndView) {
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request,
+                                HttpServletResponse response,
+                                Object handler,
+                                Exception ex) {
         ActionRequest.TipOdgovoraNaAkciju tipOdgovoraNaAkciju = ActionRequest.TipOdgovoraNaAkciju.USPJEH;
         if (response.getStatus() != HttpStatus.OK.value())
             tipOdgovoraNaAkciju = ActionRequest.TipOdgovoraNaAkciju.GRESKA;
@@ -57,7 +66,7 @@ public class HTTPHandlerInterceptor implements HandlerInterceptor {
         }
     }
 
-    public void saveEventUsingGRPC(String resurs,
+    private void saveEventUsingGRPC(String resurs,
                                    ActionRequest.TipAkcije tipAkcije,
                                    ActionRequest.TipOdgovoraNaAkciju tipOdgovoraNaAkciju) {
         String timestampAkcijeNow =
