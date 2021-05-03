@@ -5,6 +5,7 @@ import ba.unsa.etf.grpc.ActionResponse;
 import ba.unsa.etf.grpc.SystemEventsServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,7 +28,8 @@ public class HTTPHandlerInterceptor implements HandlerInterceptor {
                            Object handler,
                            ModelAndView modelAndView) {
         ActionRequest.TipOdgovoraNaAkciju tipOdgovoraNaAkciju = ActionRequest.TipOdgovoraNaAkciju.USPJEH;
-        if (response.getStatus() != 200) tipOdgovoraNaAkciju = ActionRequest.TipOdgovoraNaAkciju.GRESKA;
+        if (response.getStatus() != HttpStatus.OK.value())
+            tipOdgovoraNaAkciju = ActionRequest.TipOdgovoraNaAkciju.GRESKA;
         if (request.getMethod().equals("GET")) {
             ActionRequest.TipAkcije tipAkcijeGet = ActionRequest.TipAkcije.GET;
             if (request.getServletPath().contains("/korisnici"))
