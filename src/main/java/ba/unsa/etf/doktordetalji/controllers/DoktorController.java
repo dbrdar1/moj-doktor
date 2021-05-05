@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ba.unsa.etf.grpc.ActionRequest;
-import ba.unsa.etf.grpc.ActionResponse;
-import ba.unsa.etf.grpc.SystemEventsServiceGrpc;
 
 @AllArgsConstructor
 @RestController
@@ -38,16 +38,7 @@ public class DoktorController {
         FilterRequest filterRequest = new FilterRequest(
                 ime, prezime, titula, ocjena
         );
-       ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8866)
-                .usePlaintext()
-                .build();
-        SystemEventsServiceGrpc.SystemEventsServiceBlockingStub stub
-                = SystemEventsServiceGrpc.newBlockingStub(channel);
-        ActionResponse actionResponse = stub.registrujAkciju(ActionRequest.newBuilder()
-                .setResurs("resssssssi")
-                .build());
-        System.out.println("Response received from server:\n" + actionResponse);
-        channel.shutdown();
+
         return doktorService.getDoktori(filterRequest);
     }
 
