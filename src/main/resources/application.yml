@@ -1,0 +1,55 @@
+spring:
+  profiles:
+    active: default
+  application:
+    name: zuul-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: ${DATA_URL}
+    username: ${DATA_USER}
+    password: ${DATA_PASSWORD}
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: ${MAIL_USER}
+    password: ${MAIL_PASSWORD}
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+
+zuul:
+  #Service will be mapped under the /api URI
+  host:
+    connect-timeout-millis: 500000000
+    socket-timeout-millis: 500000000
+  routes:
+    hello-client:
+      path: /client/**
+      serviceId: HELLO-CLIENT
+      stripPrefix: true
+    doktor-detalji:
+      path: /doktor-detalji/**
+      #url: http://localhost:8082
+      serviceId: DOKTOR-DETALJI
+      stripPrefix: true
+  ignored-services: "*"
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: localhost
+
+server:
+  port: 8079
