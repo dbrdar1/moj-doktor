@@ -5,6 +5,7 @@ import ba.unsa.etf.termini.Requests.ObrisiTerminRequest;
 import ba.unsa.etf.termini.Requests.UrediTerminRequest;
 import ba.unsa.etf.termini.Responses.ListaTerminaResponse;
 import ba.unsa.etf.termini.Responses.Response;
+import ba.unsa.etf.termini.Responses.TerminResponse;
 import ba.unsa.etf.termini.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.termini.models.*;
 import ba.unsa.etf.termini.repositories.DoktorRepository;
@@ -73,6 +74,11 @@ public class TerminService {
             sviTermini.addAll(t);
         }
         return  new ListaTerminaResponse(sviTermini);
+    }
+
+    public TerminResponse dajTermin(Long id) {
+        Termin t = terminRepository.findById(id).orElseThrow(() -> new ba.unsa.etf.termini.exceptions.ResourceNotFoundException("Ne postoji termin s ovim id-om!"));
+        return new TerminResponse(t.getDatum(),t.getVrijeme());
     }
 
 //    public Response obrisiTerminPoAtributima(ObrisiTerminRequest obrisiTerminRequest) {
