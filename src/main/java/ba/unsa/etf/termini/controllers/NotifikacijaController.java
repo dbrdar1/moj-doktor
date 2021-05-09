@@ -8,23 +8,18 @@ import ba.unsa.etf.termini.models.Notifikacija;
 import ba.unsa.etf.termini.models.Pacijent;
 import ba.unsa.etf.termini.repositories.PacijentRepository;
 import ba.unsa.etf.termini.services.NotifikacijaService;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ba.unsa.etf.grpc.ActionRequest;
-import ba.unsa.etf.grpc.ActionResponse;
-import ba.unsa.etf.grpc.SystemEventsServiceGrpc;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -81,7 +76,12 @@ public class NotifikacijaController {
 
     @PostMapping("/dodaj-notifikaciju")
     public ResponseEntity<Response> dodajNotifikaciju(@RequestBody DodajNotifikacijuRequest dodajNotifikacijuRequest){
-        Response response = notifikacijaService.dodajNotifikaciju(dodajNotifikacijuRequest);
+        Response response = null;
+        try {
+            response = notifikacijaService.dodajNotifikaciju(dodajNotifikacijuRequest);
+        }catch (Exception e){
+            throw e;
+        }
         return ResponseEntity.ok(response);
     }
 
@@ -93,18 +93,12 @@ public class NotifikacijaController {
 
     @GetMapping("/notifikacije/{id}")
     public ResponseEntity<NotifikacijaResponse> dajNotifikaciju(@PathVariable Long id){
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8866)
-                .usePlaintext()
-                .build();
-        SystemEventsServiceGrpc.SystemEventsServiceBlockingStub stub
-                = SystemEventsServiceGrpc.newBlockingStub(channel);
-        ActionResponse actionResponse = stub.registrujAkciju(ActionRequest.newBuilder()
-                .setResurs("resssssssi")
-                .build());
-        System.out.println("Response received from server:\n" + actionResponse);
-        channel.shutdown();
-
-        NotifikacijaResponse response = notifikacijaService.dajNotifikaciju(id);
+        NotifikacijaResponse response = null;
+        try {
+            response = notifikacijaService.dajNotifikaciju(id);
+        } catch (Exception e){
+            throw e;
+        }
         return ResponseEntity.ok(response);
     }
 

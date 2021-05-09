@@ -1,29 +1,27 @@
 package ba.unsa.etf.termini.controllers;
 
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
-import ba.unsa.etf.termini.Requests.ObrisiTerminRequest;
 import ba.unsa.etf.termini.Requests.UrediTerminRequest;
 import ba.unsa.etf.termini.Responses.ListaTerminaResponse;
 import ba.unsa.etf.termini.Responses.Response;
-import ba.unsa.etf.termini.models.*;
+import ba.unsa.etf.termini.models.Doktor;
+import ba.unsa.etf.termini.models.Pacijent;
+import ba.unsa.etf.termini.models.PacijentKartonDoktor;
+import ba.unsa.etf.termini.models.Termin;
 import ba.unsa.etf.termini.repositories.DoktorRepository;
 import ba.unsa.etf.termini.repositories.PacijentKartonDoktorRepository;
 import ba.unsa.etf.termini.repositories.PacijentRepository;
 import ba.unsa.etf.termini.repositories.TerminRepository;
 import ba.unsa.etf.termini.services.TerminService;
 import lombok.AllArgsConstructor;
-import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor

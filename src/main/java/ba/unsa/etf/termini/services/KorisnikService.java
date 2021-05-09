@@ -1,16 +1,13 @@
 package ba.unsa.etf.termini.services;
 
 import ba.unsa.etf.termini.Requests.DodajKorisnikaRequest;
-import ba.unsa.etf.termini.Requests.DodajNotifikacijuRequest;
 import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.models.Korisnik;
-import ba.unsa.etf.termini.models.Notifikacija;
 import ba.unsa.etf.termini.repositories.KorisnikRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service

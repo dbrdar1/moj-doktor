@@ -1,11 +1,9 @@
 package ba.unsa.etf.termini;
 
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
-import ba.unsa.etf.termini.Requests.ObrisiTerminRequest;
 import ba.unsa.etf.termini.models.Doktor;
 import ba.unsa.etf.termini.models.Pacijent;
 import ba.unsa.etf.termini.models.PacijentKartonDoktor;
-import ba.unsa.etf.termini.models.Termin;
 import ba.unsa.etf.termini.repositories.DoktorRepository;
 import ba.unsa.etf.termini.repositories.PacijentKartonDoktorRepository;
 import ba.unsa.etf.termini.repositories.PacijentRepository;
@@ -18,16 +16,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-
 import java.util.Date;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.web.servlet.function.RequestPredicates.contentType;
 
 @SpringBootTest
 @AutoConfigureMockMvc
