@@ -18,8 +18,7 @@ public interface PacijentRepository extends JpaRepository<Pacijent, Long> {
     String filterKartoneUpit = "SELECT p FROM Pacijent p WHERE " +
             "p.id IN " +
             "(SELECT k.id FROM Korisnik k WHERE (:ime IS NULL OR k.ime = :ime) AND " +
-            "(:prezime IS NULL OR k.prezime = :prezime)" +
-            ") AND " +
+            "(:prezime IS NULL OR k.prezime = :prezime)) AND " +
             "(:spol IS NULL OR p.spol = :spol) AND " +
             "(:krvnaGrupa IS NULL OR p.krvnaGrupa = :krvnaGrupa) AND " +
             "(:hronicneBolesti IS NULL OR p.hronicneBolesti = :hronicneBolesti) AND " +

@@ -1,5 +1,6 @@
 package ba.unsa.etf.pregledi_i_kartoni.controllers;
 
+import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.pregledi_i_kartoni.models.Doktor;
 import ba.unsa.etf.pregledi_i_kartoni.models.Korisnik;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajDoktoraRequest;
@@ -8,6 +9,7 @@ import ba.unsa.etf.pregledi_i_kartoni.responses.KorisnikResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.services.DoktorService;
 import ba.unsa.etf.pregledi_i_kartoni.services.KorisnikService;
+import ba.unsa.etf.pregledi_i_kartoni.util.ErrorHandlingHelper;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.AllArgsConstructor;
@@ -83,16 +85,14 @@ public class KorisnikController {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response handleNoSuchElementFoundException(
-            ConstraintViolationException exception
-    ) {
-        String message="";
-        List<String> messages = exception.getConstraintViolations().stream()
-                .map(ConstraintViolation::getMessage).collect(Collectors.toList());
-        for (int i =0; i<messages.size();i++)
-            if(i<messages.size()-1) message += messages.get(i)+ "; ";
-            else message += messages.get(i);
-        return new Response(message,400);
+    public Response handleConstraintViolationException(ConstraintViolationException exception) {
+        return ErrorHandlingHelper.handleConstraintViolationException(exception);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response handleEntityNotFoundException(ResourceNotFoundException exception) {
+        return ErrorHandlingHelper.handleEntityNotFoundException(exception);
     }
 }
 

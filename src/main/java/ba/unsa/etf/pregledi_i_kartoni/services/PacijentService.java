@@ -135,10 +135,10 @@ public class PacijentService {
 
 
     public Response urediKarton(Long id, UrediKartonRequest urediKartonRequest) {
-        String errorNepostojeciKarton = String.format("Ne postoji karton sa id = '%d'", id);
+        String errorNepostojeciKarton = String.format("Ne postoji pacijent sa id = '%d'", id);
         Optional<Pacijent> karton = pacijentRepository.findById(id);
         if(!karton.isPresent()) {
-            return new Response(errorNepostojeciKarton, 400);
+            throw new ResourceNotFoundException(errorNepostojeciKarton);
         }
         Pacijent trazeniKarton = karton.get();
         trazeniKarton.setIme(urediKartonRequest.getIme());

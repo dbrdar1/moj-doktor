@@ -1,5 +1,6 @@
 package ba.unsa.etf.pregledi_i_kartoni.services;
 
+import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.pregledi_i_kartoni.models.Doktor;
 import ba.unsa.etf.pregledi_i_kartoni.models.Pacijent;
 import ba.unsa.etf.pregledi_i_kartoni.models.PacijentDoktor;
@@ -27,9 +28,9 @@ public class PacijentDoktorService {
         String errorMessagePacijent = String.format("Ne postoji pacijent sa id = '%d'!", idPacijenta);
 
         Optional<Pacijent> trazeniPacijent = pacijentRepository.findById(idPacijenta);
-        if(!trazeniPacijent.isPresent()) return new Response(errorMessagePacijent, 400);
+        if(!trazeniPacijent.isPresent()) throw new ResourceNotFoundException(errorMessagePacijent);
         Optional<Doktor> trazeniDoktor = doktorRepository.findById(idDoktora);
-        if(!trazeniDoktor.isPresent()) return new Response(errorMessageDoktor, 400);
+        if(!trazeniDoktor.isPresent()) throw new ResourceNotFoundException(errorMessageDoktor);
 
         //PacijentDoktor pacijentDoktorVeza = new PacijentDoktor(trazeniDoktor.get(), trazeniPacijent.get());
         PacijentDoktor pacijentDoktorVeza = new PacijentDoktor();

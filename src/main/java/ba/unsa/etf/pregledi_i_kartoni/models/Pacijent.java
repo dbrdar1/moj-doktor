@@ -25,8 +25,9 @@ public class Pacijent extends Korisnik{
     @Pattern(regexp = "muski|zenski", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Spol može biti samo muški ili ženski")
     private String spol;
 
+    // visina u centimetrima
     @DecimalMin(value = "0.0", message = "Visina ne može biti negativna")
-    @DecimalMax(value = "3.0", message = "Visina ne može biti veća od 3m")
+    @DecimalMax(value = "300", message = "Visina ne može biti veća od 3m")
     private double visina;
 
     @DecimalMin(value = "0.0", message = "Težina ne može biti negativna")

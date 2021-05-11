@@ -33,8 +33,10 @@ public class Pregled {
 
     private String komentar;
 
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name="termin_id", referencedColumnName = "id")
     private Termin termin;
 
     public Pregled(String simptomi, String fizikalniPregled, String dijagnoza, String tretman, String komentar, Termin termin) {

@@ -29,9 +29,15 @@ public class Termin {
             message = "Vrijeme mora biti zadano u ispravnom formatu (HH:MM)")
     private String vrijemePregleda;
 
-    @ManyToOne//(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne
     @JsonIgnore
     private PacijentDoktor pacijentDoktor;
+
+
+    @OneToOne(mappedBy = "termin")
+    @JsonIgnore
+    private Pregled pregled;
+
 
     public Termin(Date datumPregleda, String vrijemePregleda, PacijentDoktor pacijentDoktor) {
         this.datumPregleda = datumPregleda;

@@ -1,10 +1,12 @@
 package ba.unsa.etf.pregledi_i_kartoni.controllers;
 
+import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.pregledi_i_kartoni.models.Doktor;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajDoktoraRequest;
 import ba.unsa.etf.pregledi_i_kartoni.responses.DoktorResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.services.DoktorService;
+import ba.unsa.etf.pregledi_i_kartoni.util.ErrorHandlingHelper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,16 +49,14 @@ public class DoktorController {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response handleNoSuchElementFoundException(
-            ConstraintViolationException exception
-    ) {
-        String message="";
-        List<String> messages = exception.getConstraintViolations().stream()
-                .map(ConstraintViolation::getMessage).collect(Collectors.toList());
-        for (int i =0; i<messages.size();i++)
-            if(i<messages.size()-1) message += messages.get(i)+ "; ";
-            else message += messages.get(i);
-        return new Response(message,400);
+    public Response handleConstraintViolationException(ConstraintViolationException exception) {
+        return ErrorHandlingHelper.handleConstraintViolationException(exception);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response handleEntityNotFoundException(ResourceNotFoundException exception) {
+        return ErrorHandlingHelper.handleEntityNotFoundException(exception);
     }
 
 }

@@ -69,7 +69,7 @@ public class TerminService {
 
     public Response dodajTermin(DodajTerminRequest dodajTerminRequest) {
         Optional<PacijentDoktor> pacijentDoktorVeza = pacijentDoktorRepository.findById(dodajTerminRequest.getPacijentDoktorId());
-        if(!pacijentDoktorVeza.isPresent()) return new Response("Ne postoji veza pacijent-doktor za dati termin!", 400);
+        if(!pacijentDoktorVeza.isPresent()) throw new ResourceNotFoundException("Ne postoji veza pacijent-doktor za dati termin!");
         Termin noviTermin = new Termin(
                 dodajTerminRequest.getDatumPregleda(), dodajTerminRequest.getVrijemePregleda(), pacijentDoktorVeza.get()
         );
@@ -84,7 +84,7 @@ public class TerminService {
         String errorBrisanjeTermina = String.format("Ne postoji termin sa id = '%d'", id);
         Optional<Termin> trazeniTermin = terminRepository.findById(id);
         if(!trazeniTermin.isPresent()) {
-            return new Response(errorBrisanjeTermina, 400);
+            throw new ResourceNotFoundException(errorBrisanjeTermina);
         }
         terminRepository.deleteById(id);
         return new Response("Uspješno ste obrisali pregled!", 200);

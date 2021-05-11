@@ -11,10 +11,8 @@ import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.text.DateFormat;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -71,12 +69,14 @@ public class PregledService {
         pacijentDoktorRepository.save(pd1);
         pacijentDoktorRepository.save(pd2);
 
-
         Termin termin1 = new Termin(new Date(), "15:20", pd1);
         Termin termin2 = new Termin(new Date(), "16:30", pd2);
+        Termin termin3 = new Termin(new Date(2020, Calendar.MAY, 14),  "13:40", pd1);
+
 
         terminRepository.save(termin1);
         terminRepository.save(termin2);
+        terminRepository.save(termin3);
 
 
         Pregled pregled1 = new Pregled("neki simptomi1", "neki fiz pregled1", "neka dijagnoza1",
@@ -172,10 +172,15 @@ public class PregledService {
 
     public Response dodajPregled(DodajPregledRequest dodajPregledRequest) {
         if(dodajPregledRequest.getTerminId() == null) {
-            return new Response("Nije moguce dodati pregled bez termina!", 400);
+            throw new ResourceNotFoundException("Nije moguce dodati pregled bez termina!");
         }
         Optional<Termin> terminPregleda = terminRepository.findById(dodajPregledRequest.getTerminId());
-        if(!terminPregleda.isPresent()) return new Response("Ne postoji zakazani termin za dati pregled!", 400);
+        if(!terminPregleda.isPresent())
+            throw new ResourceNotFoundException("Ne postoji zakazani termin za dati pregled!");
+
+        Optional<List<Pregled>> pregledi = pregledRepository.findByQueryPregled(null, null, terminPregleda.get());
+        if(!pregledi.get().isEmpty()) throw new ResourceNotFoundException("Već postoji pregled za dati termin!");
+
         Pregled noviPregled = new Pregled(
                 dodajPregledRequest.getSimptomi(), dodajPregledRequest.getFizikalniPregled(), dodajPregledRequest.getDijagnoza(),
                 dodajPregledRequest.getTretman(), dodajPregledRequest.getKomentar(), terminPregleda.get()
@@ -188,7 +193,7 @@ public class PregledService {
         String errorBrisanjePregleda = String.format("Ne postoji pregled sa id = '%d'", id);
         Optional<Pregled> trazeniPregled = pregledRepository.findById(id);
         if(!trazeniPregled.isPresent()) {
-            return new Response(errorBrisanjePregleda, 400);
+            throw new ResourceNotFoundException(errorBrisanjePregleda);
         }
         pregledRepository.deleteById(id);
         return new Response("Uspješno ste obrisali pregled!", 200);
