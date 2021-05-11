@@ -1,7 +1,7 @@
 package ba.unsa.etf.chatmicroservice;
 
-import ba.unsa.etf.chatmicroservice.models.*;
-import ba.unsa.etf.chatmicroservice.repositories.*;
+import ba.unsa.etf.chatmicroservice.model.*;
+import ba.unsa.etf.chatmicroservice.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

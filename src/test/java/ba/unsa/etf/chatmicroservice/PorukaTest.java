@@ -1,12 +1,12 @@
 package ba.unsa.etf.chatmicroservice;
 
-import ba.unsa.etf.chatmicroservice.models.Doktor;
-import ba.unsa.etf.chatmicroservice.models.Notifikacija;
-import ba.unsa.etf.chatmicroservice.models.Pacijent;
-import ba.unsa.etf.chatmicroservice.models.Poruka;
-import ba.unsa.etf.chatmicroservice.projections.PorukaProjection;
-import ba.unsa.etf.chatmicroservice.repositories.*;
-import ba.unsa.etf.chatmicroservice.requests.DodajPorukuRequest;
+import ba.unsa.etf.chatmicroservice.model.Doktor;
+import ba.unsa.etf.chatmicroservice.model.Notifikacija;
+import ba.unsa.etf.chatmicroservice.model.Pacijent;
+import ba.unsa.etf.chatmicroservice.model.Poruka;
+import ba.unsa.etf.chatmicroservice.dto.PorukaProjection;
+import ba.unsa.etf.chatmicroservice.repository.*;
+import ba.unsa.etf.chatmicroservice.request.DodajPorukuRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,8 +158,8 @@ public class PorukaTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(jsonPath("$.message", is("Id korisnika nije postojeći!")))
-                .andExpect(jsonPath("$.statusCode", is(400)));
+                .andExpect(jsonPath("$.message", is("Ne postoji posiljalac s ovim id-om!")))
+                .andExpect(jsonPath("$.statusCode", is(404)));
     }
 
     @Test

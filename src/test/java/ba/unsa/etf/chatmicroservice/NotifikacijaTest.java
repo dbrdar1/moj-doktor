@@ -1,9 +1,9 @@
 package ba.unsa.etf.chatmicroservice;
 
-import ba.unsa.etf.chatmicroservice.models.*;
-import ba.unsa.etf.chatmicroservice.projections.NotifikacijaProjection;
-import ba.unsa.etf.chatmicroservice.repositories.*;
-import ba.unsa.etf.chatmicroservice.requests.DodajNotifikacijuRequest;
+import ba.unsa.etf.chatmicroservice.model.*;
+import ba.unsa.etf.chatmicroservice.dto.NotifikacijaProjection;
+import ba.unsa.etf.chatmicroservice.repository.*;
+import ba.unsa.etf.chatmicroservice.request.DodajNotifikacijuRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,8 +152,8 @@ public class NotifikacijaTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(jsonPath("$.message", is("Id korisnika nije postojeći!")))
-                .andExpect(jsonPath("$.statusCode", is(400)));
+                .andExpect(jsonPath("$.message", is("Ne postoji korisnik s ovim id-om!")))
+                .andExpect(jsonPath("$.statusCode", is(404)));
     }
 
     @Test

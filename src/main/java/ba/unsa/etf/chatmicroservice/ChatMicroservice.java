@@ -1,6 +1,6 @@
 package ba.unsa.etf.chatmicroservice;
 
-import ba.unsa.etf.chatmicroservice.interceptors.HTTPHandlerInterceptor;
+import ba.unsa.etf.chatmicroservice.interceptor.HTTPHandlerInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
