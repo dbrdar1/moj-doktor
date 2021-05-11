@@ -27,9 +27,9 @@ spring:
   #  protocol: smtp
   #  test-connection: false
 eureka:
-  #client:
-  #  serviceUrl:
-  #    defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
   instance:
     preferIpAddress: true
 
