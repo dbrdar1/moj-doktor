@@ -1,6 +1,5 @@
 package ba.unsa.etf.termini.services;
 
-import ba.unsa.etf.termini.Responses.DoktorResponse;
 import ba.unsa.etf.termini.Responses.PacijentResponse;
 import ba.unsa.etf.termini.models.Pacijent;
 import ba.unsa.etf.termini.repositories.PacijentRepository;

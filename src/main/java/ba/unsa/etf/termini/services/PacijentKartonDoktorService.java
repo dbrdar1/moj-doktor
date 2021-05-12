@@ -1,8 +1,6 @@
 package ba.unsa.etf.termini.services;
 
-import ba.unsa.etf.termini.Responses.PacijentKartonDoktorResponse;
 import ba.unsa.etf.termini.Responses.Response;
-import ba.unsa.etf.termini.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.termini.models.Doktor;
 import ba.unsa.etf.termini.models.Pacijent;
 import ba.unsa.etf.termini.models.PacijentKartonDoktor;

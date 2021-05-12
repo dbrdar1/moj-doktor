@@ -1,10 +1,6 @@
 package ba.unsa.etf.termini.controllers;
 
 import ba.unsa.etf.termini.Responses.DoktorResponse;
-import ba.unsa.etf.termini.Responses.NotifikacijaResponse;
-import ba.unsa.etf.termini.models.Doktor;
-import ba.unsa.etf.termini.models.Korisnik;
-import ba.unsa.etf.termini.models.Notifikacija;
 import ba.unsa.etf.termini.models.PacijentKartonDoktor;
 import ba.unsa.etf.termini.repositories.DoktorRepository;
 import ba.unsa.etf.termini.repositories.KorisnikRepository;
@@ -13,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.CascadeType;

@@ -140,12 +140,12 @@ public class TerminController {
         Response response = terminService.dodajTermin(dodajTerminRequest);
         return ResponseEntity.ok(response);
     }
-    @DeleteMapping("/termini/{id}")
+    @DeleteMapping("/obrisi-termin/{id}")
     public ResponseEntity<Response> obrisiTermin(@PathVariable Long id) {
         Response response = terminService.obrisiTermin(id);
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/termini/{id}")
+    @GetMapping("/dobavi-termin/{id}")
     public ResponseEntity<TerminResponse> dajTermin(@PathVariable Long id){
         TerminResponse response = terminService.dajTermin(id);
         return ResponseEntity.ok(response);
@@ -157,7 +157,7 @@ public class TerminController {
 //        return ResponseEntity.ok(response);
 //    }
 
-    @PutMapping("/termini/{id}")
+    @PutMapping("/uredi-termin/{id}")
     public  ResponseEntity<Response> urediTermin(@RequestBody UrediTerminRequest urediTerminRequest, @PathVariable Long id){
         Response response=terminService.urediTermin(id, urediTerminRequest);
         return ResponseEntity.ok(response);

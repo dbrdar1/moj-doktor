@@ -68,7 +68,7 @@ public class NotifikacijaController {
         return "Spremljene notifikacije!";
     }
 
-    @DeleteMapping("/notifikacije/{id}")
+    @DeleteMapping("/obrisi-notifikaciju/{id}")
     public ResponseEntity<Response> obrisiNotifikaciju(@PathVariable Long id) {
         Response response = notifikacijaService.obrisiNotifikaciju(id);
         return ResponseEntity.ok(response);
@@ -91,7 +91,7 @@ public class NotifikacijaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/notifikacije/{id}")
+    @GetMapping("/dobavi-notifikaciju/{id}")
     public ResponseEntity<NotifikacijaResponse> dajNotifikaciju(@PathVariable Long id){
         NotifikacijaResponse response = null;
         try {

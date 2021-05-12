@@ -1,7 +1,6 @@
 package ba.unsa.etf.termini.services;
 
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
-import ba.unsa.etf.termini.Requests.ObrisiTerminRequest;
 import ba.unsa.etf.termini.Requests.UrediTerminRequest;
 import ba.unsa.etf.termini.Responses.ListaTerminaResponse;
 import ba.unsa.etf.termini.Responses.Response;
