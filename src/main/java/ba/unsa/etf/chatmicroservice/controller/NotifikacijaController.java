@@ -10,6 +10,9 @@ import ba.unsa.etf.chatmicroservice.response.Response;
 import ba.unsa.etf.chatmicroservice.service.NotifikacijaService;
 import ba.unsa.etf.chatmicroservice.util.ErrorHandlingHelper;
 import lombok.AllArgsConstructor;
+import org.json.JSONObject;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,10 @@ public class NotifikacijaController {
     private final NotifikacijaRepository notifikacijaRepository;
 
     private final NotifikacijaService notifikacijaService;
+
+    private final RabbitTemplate template;
+
+    private final Queue queue;
 
     @GetMapping("/notifikacije")
     List<Notifikacija> all() {
@@ -45,6 +52,7 @@ public class NotifikacijaController {
     @PostMapping("/dodaj-notifikaciju")
     public ResponseEntity<Response> dodajNotifikaciju(@RequestBody DodajNotifikacijuRequest dodajNotifikacijuRequest) {
         Response response = notifikacijaService.dodajNotifikaciju(dodajNotifikacijuRequest);
+        sendAddNotificationMessage(dodajNotifikacijuRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -52,6 +60,18 @@ public class NotifikacijaController {
     public ResponseEntity<Response> obrisiNotifikaciju(@PathVariable Long id) {
         Response response = notifikacijaService.obrisiNotifikaciju(id);
         return ResponseEntity.ok(response);
+    }
+
+    public void sendAddNotificationMessage(DodajNotifikacijuRequest dodajNotifikacijuRequest) {
+        JSONObject addNotificationMessageObject = new JSONObject();
+        addNotificationMessageObject.put("naslov", dodajNotifikacijuRequest.getNaslov());
+        addNotificationMessageObject.put("tekst", dodajNotifikacijuRequest.getTekst());
+        addNotificationMessageObject.put("datum", "2020-02-22");
+        addNotificationMessageObject.put("vrijeme", dodajNotifikacijuRequest.getVrijeme());
+        addNotificationMessageObject.put("idKorisnika", dodajNotifikacijuRequest.getIdKorisnika());
+        String message = addNotificationMessageObject.toString();
+        this.template.convertAndSend(queue.getName(), message);
+        System.out.println("Sent: " + message);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
