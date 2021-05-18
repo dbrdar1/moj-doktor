@@ -22,7 +22,7 @@ public class DoktorService {
     private final DoktorRepository doktorRepository;
     private final EdukacijaRepository edukacijaRepository;
     private final CertifikatRepository certifikatRepository;
-    private final KorisnikRepository korisnikRepository;
+
 
     public List<Doktor> getDoktori(FilterRequest filterRequest) {
         List<Doktor> doktori = doktorRepository.findByFilter(filterRequest);
@@ -147,6 +147,7 @@ public class DoktorService {
         if (!d.isPresent()) return new Response("Id doktora nije postojeći!", 400);
         d.get().setTitula(urediPodatkeDoktoraRequest.getTitula());
         d.get().setBiografija(urediPodatkeDoktoraRequest.getBiografija());
+        doktorRepository.save(d.get());
         return new Response("Uspješno ste uredili osnovne podatke doktora!", 200);
     }
 

@@ -6,28 +6,29 @@ spring:
       uri: http://localhost:8888
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: ${DATA_URL}
     username: ${DATA_USER}
     password: ${DATA_PASSWORD}
+server:
+  port : 8081
+
 eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
   instance:
     hostname: localhost
-    prefer-ip-address: true
-  client:
-    fetchRegistry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-    register-with-eureka: true
+
 management:
+  endpoint:
+    refresh:
+      enabled: true
   endpoints:
     web:
       exposure:
         include: "*"
-  endpoint:
-    refresh:
-      enabled: true
-server:
-  port : 8082

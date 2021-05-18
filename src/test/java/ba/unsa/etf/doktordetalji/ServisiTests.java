@@ -7,7 +7,6 @@ import ba.unsa.etf.doktordetalji.repositories.CertifikatRepository;
 import ba.unsa.etf.doktordetalji.repositories.DoktorRepository;
 import ba.unsa.etf.doktordetalji.repositories.EdukacijaRepository;
 import ba.unsa.etf.doktordetalji.requests.*;
-import ba.unsa.etf.doktordetalji.services.KorisnikService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +38,6 @@ class ServisiTests {
     @Autowired
     EdukacijaRepository edukacijaRepository;
 
-    @Autowired
-    KorisnikService korisnikService;
 
     public static String asJsonString(final Object obj) {
         try {

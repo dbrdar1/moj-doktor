@@ -4,21 +4,21 @@ import ba.unsa.etf.doktordetalji.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.doktordetalji.models.Doktor;
 import ba.unsa.etf.doktordetalji.requests.*;
 import ba.unsa.etf.doktordetalji.responses.DoktorCVResponse;
+import ba.unsa.etf.doktordetalji.responses.KorisnikResponse;
 import ba.unsa.etf.doktordetalji.responses.Response;
 import ba.unsa.etf.doktordetalji.services.DoktorService;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.sql.Timestamp;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -27,6 +27,19 @@ import java.util.stream.Collectors;
 public class DoktorController {
 
     private final DoktorService doktorService;
+
+    @Autowired
+    private final RestTemplate restTemplate;
+
+
+    @PostMapping("/povuci-podatke")
+    public ResponseEntity<Response> povuciPodatke(){
+        String fooResourceUrl = "http://zuul-service/korisnici?uloga=doktor";
+        ResponseEntity<KorisnikResponse[]> response = restTemplate.getForEntity(fooResourceUrl, KorisnikResponse[].class);
+        KorisnikResponse[] doktori = response.getBody();
+        String poruka = doktorService.azurirajPodatke(Arrays.asList(doktori));
+        return ResponseEntity.ok(new Response(poruka));
+    }
 
     @GetMapping("/doktori")
     public List<Doktor> getProducts(
@@ -44,7 +57,6 @@ public class DoktorController {
 
     @GetMapping("/doktori/{id}")
     public ResponseEntity<DoktorCVResponse> getDoktor(@PathVariable Long id) {
-        System.out.println(id);
         DoktorCVResponse doktorCVResponse = doktorService.getDoktorCV(id);
         return ResponseEntity.ok(doktorCVResponse);
     }
@@ -91,7 +103,7 @@ public class DoktorController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/uredi-osnovne-podatke-doktora")
+    @PutMapping("/uredi-biografiju-titulu")
     public ResponseEntity<Response> urediPodatkeDoktora(@RequestBody UrediPodatkeDoktoraRequest urediPodatkeDoktoraRequest) {
         Response response = doktorService.urediPodatkeDoktora(urediPodatkeDoktoraRequest);
         return ResponseEntity.ok(response);
