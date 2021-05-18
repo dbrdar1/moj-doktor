@@ -31,11 +31,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
     private final String[] unprotectedRoutes = {
-            "/**",
             "/actuator/refresh",
             "/actuator/**",
-            "/login",
-            "/inicijalizacija-baze",
+            "/registracija",
+            "/prijava",
+            "/korisnici",
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/webjars/**",
@@ -80,7 +80,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/",
-                        "/**",
                         "/favicon.ico",
                         "/**/*.png",
                         "/**/*.gif",
@@ -93,10 +92,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(unprotectedRoutes)
                 .permitAll()
+                .antMatchers("/doktor-detalji/povuci-podatke").hasRole("PACIJENT")
+                .antMatchers("/doktor-detalji/doktori").hasRole("PACIJENT")
+                .antMatchers("/doktor-detalji/doktori/{id}").hasRole("PACIJENT")
+                .antMatchers("/doktor-detalji/ocijeni-doktora").hasRole("PACIJENT")
+                .antMatchers("/doktor-detalji/dodaj-certifikat").hasRole("DOKTOR")
+                .antMatchers("/doktor-detalji/uredi-certifikat").hasRole("DOKTOR")
+                .antMatchers("/doktor-detalji/obrisi-certifikat/{id}").hasRole("DOKTOR")
+                .antMatchers("/doktor-detalji/dodaj-edukaciju").hasRole("DOKTOR")
+                .antMatchers("/doktor-detalji/uredi-edukaciju").hasRole("DOKTOR")
+                .antMatchers("/doktor-detalji/obrisi-edukaciju/{id}").hasRole("DOKTOR")
+                .antMatchers("/doktor-detalji/uredi-biografiju-titulu").hasRole("DOKTOR")
+                .antMatchers("/termini/dodaj-termin").hasRole("DOKTOR")
+                .antMatchers("/termini/uredi-termin/{id}").hasRole("DOKTOR")
+                .antMatchers("/termini/termini-pacijenta/{id}").hasRole("PACIJENT")
+                .antMatchers("/termini/termini-doktora/{id}").hasRole("DOKTOR")
+                .antMatchers("/termini/{id}").hasRole("PACIJENT")
+                .antMatchers("/termini/{id}").hasRole("PACIJENT")
                 .anyRequest()
                 .authenticated();
 
-        // Add our custom JWT security filter
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

@@ -1,6 +1,6 @@
 package ba.unsa.etf.defaultgateway.models;
 
 public enum NazivKorisnickeUloge {
-    DOKTOR,
-    PACIJENT
+    ROLE_DOKTOR,
+    ROLE_PACIJENT
 }

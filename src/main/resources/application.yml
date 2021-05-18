@@ -5,7 +5,7 @@ spring:
     name: zuul-service
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: ${DATA_URL}
@@ -25,22 +25,36 @@ spring:
             enable: true
     protocol: smtp
     test-connection: false
-
+app:
+  jwtSecret: ${JWT_SECRET}
+  jwtExpirationInMs: 604800000
 zuul:
   #Service will be mapped under the /api URI
   host:
     connect-timeout-millis: 500000000
     socket-timeout-millis: 500000000
   routes:
-    hello-client:
-      path: /client/**
-      serviceId: HELLO-CLIENT
-      stripPrefix: true
     doktor-detalji:
       path: /doktor-detalji/**
-      #url: http://localhost:8082
+      url: http://localhost:8081
       serviceId: DOKTOR-DETALJI
       stripPrefix: true
+    pregledi-kartoni:
+      path: /pregledi-kartoni/**
+      url: http://localhost:8082
+      serviceId: PREGLEDI-KARTONI
+      stripPrefix: true
+    termini:
+      path: /termini/**
+      url: http://localhost:8083
+      serviceId: TERMINI
+      stripPrefix: true
+    chat:
+      path: /chat/**
+      url: http://localhost:8084
+      serviceId: CHAT
+      stripPrefix: true
+
   ignored-services: "*"
 eureka:
   client:
@@ -52,4 +66,5 @@ eureka:
     hostname: localhost
 
 server:
-  port: 8079
+  port: 8080
+

@@ -2,13 +2,11 @@ package ba.unsa.etf.defaultgateway.controllers;
 
 import ba.unsa.etf.defaultgateway.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.defaultgateway.models.Korisnik;
-import ba.unsa.etf.defaultgateway.requests.GetResetTokenRequest;
-import ba.unsa.etf.defaultgateway.requests.LoginRequest;
-import ba.unsa.etf.defaultgateway.requests.SpasiLozinkuRequest;
-import ba.unsa.etf.defaultgateway.requests.VerificirajPodatkeRequest;
+import ba.unsa.etf.defaultgateway.requests.*;
 import ba.unsa.etf.defaultgateway.responses.KorisnikResponse;
 import ba.unsa.etf.defaultgateway.responses.LoginResponse;
 import ba.unsa.etf.defaultgateway.responses.Response;
+
 import ba.unsa.etf.defaultgateway.security.CurrentUser;
 import ba.unsa.etf.defaultgateway.security.UserPrincipal;
 import ba.unsa.etf.defaultgateway.services.KorisnikService;
@@ -32,13 +30,25 @@ public class KorisnikController {
 
     private final KorisnikService korisnikService;
 
+    @GetMapping("/")
+    public ResponseEntity<Response> pocetna() {
+        String poruka = korisnikService.pripremiUloge();
+        return ResponseEntity.ok(new Response(poruka));
+    }
+
     @GetMapping("/inicijalizacija-baze")
     public ResponseEntity<Response> inicijalizacija() {
         String poruka = korisnikService.inicijalizirajBazu();
         return ResponseEntity.ok(new Response(poruka));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/registracija")
+    public ResponseEntity<Response> registracijaKorisnika(@Valid @RequestBody RegistracijaRequest registracijaRequest){
+        String odgovor = korisnikService.registrujKorisnika(registracijaRequest);
+        return ResponseEntity.ok(new Response(odgovor));
+    }
+
+    @PostMapping("/prijava")
     public ResponseEntity<LoginResponse> autentificirajKorisnika(@Valid @RequestBody LoginRequest loginRequest) {
         String jwt = korisnikService.autentificirajKorisnika(loginRequest);
         return ResponseEntity.ok(new LoginResponse(jwt));
@@ -62,33 +72,18 @@ public class KorisnikController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/lozinka")
+    @PutMapping("/uredjivanje_lozinke")
     public ResponseEntity<Response> spasiLozinku(@Valid @RequestBody SpasiLozinkuRequest spasiLozinkuRequest) throws MessagingException {
         Response response = korisnikService.promijeniLozinku(spasiLozinkuRequest);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/getKorisnici")
+    @GetMapping("/korisnici")
     public List<KorisnikResponse> getKorisnici(@RequestParam(required = false) String uloga) {
         if (uloga == null) uloga = "";
         return korisnikService.getKorisnici(uloga);
     }
 
-    @GetMapping("/getDoktori")
-    public List<KorisnikResponse> getDoktori() {
-        return korisnikService.getDoktori();
-    }
-
-    @GetMapping("/getPacijenti")
-    public List<KorisnikResponse> getPacijenti() {
-        return korisnikService.getPacijenti();
-    }
-
-    @GetMapping("/korisnici/{id}")
-    public ResponseEntity<KorisnikResponse> getKorisnik(@PathVariable Long id) {
-        KorisnikResponse korisnikResponse = korisnikService.getKorisnik(id);
-        return ResponseEntity.ok(korisnikResponse);
-    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -112,4 +107,3 @@ public class KorisnikController {
         return null;
     }
 }
-
