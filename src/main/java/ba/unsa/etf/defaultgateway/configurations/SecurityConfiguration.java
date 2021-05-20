@@ -40,6 +40,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/swagger-ui/**",
             "/webjars/**",
             "/v3/api-docs",
+            "/uredjivanje_lozinke",
+            "/verifikacijski-podaci",
+            "/reset-token",
     };
 
     @Bean

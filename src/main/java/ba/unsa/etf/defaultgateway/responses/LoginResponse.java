@@ -8,4 +8,6 @@ import lombok.Data;
 public class LoginResponse {
     private final String vrstaTokena = "Bearer";
     private String token;
+   // private String uloga;
+   // private Long id;
 }
