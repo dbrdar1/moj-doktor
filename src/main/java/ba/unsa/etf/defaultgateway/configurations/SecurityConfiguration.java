@@ -33,6 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final String[] unprotectedRoutes = {
             "/actuator/refresh",
             "/actuator/**",
+            "/inicijalizacija-baze",
             "/registracija",
             "/prijava",
             "/korisnici",
@@ -95,7 +96,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(unprotectedRoutes)
                 .permitAll()
-                .antMatchers("/doktor-detalji/povuci-podatke").hasRole("PACIJENT")
                 .antMatchers("/doktor-detalji/doktori").hasRole("PACIJENT")
                 .antMatchers("/doktor-detalji/doktori/{id}").hasRole("PACIJENT")
                 .antMatchers("/doktor-detalji/ocijeni-doktora").hasRole("PACIJENT")

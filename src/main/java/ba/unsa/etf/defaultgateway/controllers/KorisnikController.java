@@ -10,8 +10,10 @@ import ba.unsa.etf.defaultgateway.responses.Response;
 import ba.unsa.etf.defaultgateway.security.CurrentUser;
 import ba.unsa.etf.defaultgateway.security.UserPrincipal;
 import ba.unsa.etf.defaultgateway.services.KorisnikService;
+import ba.unsa.etf.defaultgateway.util.ErrorHandlingHelper;
 import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +52,8 @@ public class KorisnikController {
 
     @PostMapping("/prijava")
     public ResponseEntity<LoginResponse> autentificirajKorisnika(@Valid @RequestBody LoginRequest loginRequest) {
-        String jwt = korisnikService.autentificirajKorisnika(loginRequest);
-        return ResponseEntity.ok(new LoginResponse(jwt));
+        LoginResponse response = korisnikService.autentificirajKorisnika(loginRequest);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/profil")
@@ -73,7 +75,9 @@ public class KorisnikController {
     }
 
     @PutMapping("/uredjivanje_lozinke")
-    public ResponseEntity<Response> spasiLozinku(@Valid @RequestBody SpasiLozinkuRequest spasiLozinkuRequest) throws MessagingException {
+    public ResponseEntity<Response> spasiLozinku(@RequestHeader HttpHeaders headers, @Valid @RequestBody SpasiLozinkuRequest spasiLozinkuRequest) throws MessagingException {
+        String token = headers.getFirst(HttpHeaders.AUTHORIZATION);
+        System.out.println(token);
         Response response = korisnikService.promijeniLozinku(spasiLozinkuRequest);
         return ResponseEntity.ok(response);
     }
@@ -87,23 +91,13 @@ public class KorisnikController {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response handleNoSuchElementFoundException(ConstraintViolationException exception) {
-        StringBuilder message = new StringBuilder();
-        List<String> messages = exception.getConstraintViolations().stream()
-                .map(ConstraintViolation::getMessage).collect(Collectors.toList());
-        for (int i = 0; i < messages.size(); i++)
-            if (i < messages.size() - 1) message.append(messages.get(i)).append("; ");
-            else message.append(messages.get(i));
-        return new Response(message.toString(), 400);
+    public Response handleConstraintViolationException(ConstraintViolationException exception) {
+        return ErrorHandlingHelper.handleConstraintViolationException(exception);
     }
 
-    @ExceptionHandler({ResourceNotFoundException.class})
-    public final Response handleException(Exception e) {
-        if (e instanceof ResourceNotFoundException) {
-            ResourceNotFoundException exception = (ResourceNotFoundException) e;
-            String poruka = exception.getMessage();
-            return new Response(poruka, 400);
-        }
-        return null;
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response handleEntityNotFoundException(ResourceNotFoundException exception) {
+        return ErrorHandlingHelper.handleEntityNotFoundException(exception);
     }
 }

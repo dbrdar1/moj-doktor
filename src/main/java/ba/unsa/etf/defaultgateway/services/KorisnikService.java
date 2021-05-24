@@ -5,6 +5,7 @@ import ba.unsa.etf.defaultgateway.models.*;
 import ba.unsa.etf.defaultgateway.repositories.*;
 import ba.unsa.etf.defaultgateway.requests.*;
 import ba.unsa.etf.defaultgateway.responses.KorisnikResponse;
+import ba.unsa.etf.defaultgateway.responses.LoginResponse;
 import ba.unsa.etf.defaultgateway.responses.Response;
 import ba.unsa.etf.defaultgateway.security.JwtTokenProvider;
 import freemarker.template.TemplateException;
@@ -136,7 +137,7 @@ public class KorisnikService {
         return "Inicijalizacija baze zavrsena!";
     }
 
-    public String autentificirajKorisnika(LoginRequest loginRequest) {
+    public LoginResponse autentificirajKorisnika(LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -146,7 +147,15 @@ public class KorisnikService {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return jwtTokenProvider.generateToken(authentication);
+        String jwt = jwtTokenProvider.generateToken(authentication);
+        Optional<Korisnik> k = korisnikRepository.findByKorisnickoIme(loginRequest.getKorisnickoIme());
+        Set<KorisnickaUloga> korisnickeUloge = k.get().getUloge();
+
+        KorisnickaUloga doktor = korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_DOKTOR);
+        KorisnickaUloga pacijent = korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_PACIJENT);
+
+        if(korisnickeUloge.contains(doktor)) return new LoginResponse(k.get().getId(), "DOKTOR", jwt);
+        return new LoginResponse(k.get().getId(), "PACIJENT", jwt);
     }
 
     public Korisnik getKorisnikByKorisnickoIme(String username) {

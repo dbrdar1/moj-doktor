@@ -8,14 +8,14 @@ spring:
       ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: ${DATA_URL}
-    username: ${DATA_USER}
-    password: ${DATA_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/moj_doktor_user_management
+    username: user
+    password: password
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com
-    username: ${MAIL_USER}
-    password: ${MAIL_PASSWORD}
+    username: MojDoktorWebApp@gmail.com
+    password: MojDoktorWebApp123
     port: 587
     properties:
       mail:
@@ -26,7 +26,7 @@ spring:
     protocol: smtp
     test-connection: false
 app:
-  jwtSecret: ${JWT_SECRET}
+  jwtSecret: ZWRvLXRlbnNlaQ==
   jwtExpirationInMs: 604800000
 zuul:
   #Service will be mapped under the /api URI
@@ -56,6 +56,7 @@ zuul:
       stripPrefix: true
 
   ignored-services: "*"
+  sensitive-headers: Cookie,Set-Cookie
 eureka:
   client:
     serviceUrl:
