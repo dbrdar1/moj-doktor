@@ -1,8 +1,12 @@
 package ba.unsa.etf.doktordetalji.responses;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Response {
     private String poruka;
     private Integer statusniKod;
@@ -10,9 +14,5 @@ public class Response {
     public Response(String poruka) {
         this(poruka, 200);
     }
-
-    public Response(String poruka, Integer statusniKod) {
-        this.poruka = poruka;
-        this.statusniKod = statusniKod;
-    }
+    
 }

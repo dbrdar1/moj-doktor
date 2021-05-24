@@ -1,13 +1,19 @@
 package ba.unsa.etf.doktordetalji.controllers;
 
 import ba.unsa.etf.doktordetalji.exceptions.ResourceNotFoundException;
+import ba.unsa.etf.doktordetalji.exceptions.UnauthorizedException;
 import ba.unsa.etf.doktordetalji.models.Doktor;
 import ba.unsa.etf.doktordetalji.requests.*;
 import ba.unsa.etf.doktordetalji.responses.DoktorCVResponse;
 import ba.unsa.etf.doktordetalji.responses.KorisnikResponse;
 import ba.unsa.etf.doktordetalji.responses.Response;
+import ba.unsa.etf.doktordetalji.security.TrenutniKorisnikSecurity;
 import ba.unsa.etf.doktordetalji.services.DoktorService;
+import ba.unsa.etf.doktordetalji.util.ErrorHandlingHelper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 @AllArgsConstructor
 @RestController
 public class DoktorController {
@@ -30,6 +35,8 @@ public class DoktorController {
 
     @Autowired
     private final RestTemplate restTemplate;
+
+    private final TrenutniKorisnikSecurity trenutniKorisnikSecurity;
 
 
     @PostMapping("/povuci-podatke")
@@ -68,67 +75,77 @@ public class DoktorController {
     }
 
     @PostMapping("/dodaj-certifikat")
-    public ResponseEntity<Response> dodajCertifikat(@RequestBody DodajCertifikatRequest dodajCertifikatRequest) {
+    public ResponseEntity<Response> dodajCertifikat(@RequestHeader HttpHeaders headers, @RequestBody DodajCertifikatRequest dodajCertifikatRequest) {
+
+        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, dodajCertifikatRequest.getIdDoktora()))
+            throw new UnauthorizedException("Neovlašten pristup resursima!");
+
         Response response = doktorService.dodajCertifikat(dodajCertifikatRequest);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/uredi-certifikat")
-    public ResponseEntity<Response> urediCertifikat(@RequestBody UrediCertifikatRequest urediCertifikatRequest) {
-        Response response = doktorService.urediCertifikat(urediCertifikatRequest);
+    public ResponseEntity<Response> urediCertifikat(@RequestHeader HttpHeaders headers, @RequestBody UrediCertifikatRequest urediCertifikatRequest) {
+
+
+        Response response = doktorService.urediCertifikat(headers, urediCertifikatRequest);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/obrisi-certifikat/{id}")
-    public ResponseEntity<Response> obrisiCertifikat(@PathVariable Long id) {
-        Response response = doktorService.obrisiCertifikat(id);
+    public ResponseEntity<Response> obrisiCertifikat(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
+        Response response = doktorService.obrisiCertifikat(headers, id);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/dodaj-edukaciju")
-    public ResponseEntity<Response> dodajEdukaciju(@RequestBody DodajEdukacijuRequest dodajEdukacijuRequest) {
+    public ResponseEntity<Response> dodajEdukaciju(@RequestHeader HttpHeaders headers, @RequestBody DodajEdukacijuRequest dodajEdukacijuRequest) {
+
+        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, dodajEdukacijuRequest.getIdDoktora()))
+            throw new UnauthorizedException("Neovlašten pristup resursima!");
+
         Response response = doktorService.dodajEdukaciju(dodajEdukacijuRequest);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/uredi-edukaciju")
-    public ResponseEntity<Response> urediEdukaciju(@RequestBody UrediEdukacijuRequest urediEdukacijuRequest) {
-        Response response = doktorService.urediEdukaciju(urediEdukacijuRequest);
+    public ResponseEntity<Response> urediEdukaciju(@RequestHeader HttpHeaders headers, @RequestBody UrediEdukacijuRequest urediEdukacijuRequest) {
+        Response response = doktorService.urediEdukaciju(headers, urediEdukacijuRequest);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/obrisi-edukaciju/{id}")
-    public ResponseEntity<Response> obrisiEdukaciju(@PathVariable Long id) {
-        Response response = doktorService.obrisiEdukaciju(id);
+    public ResponseEntity<Response> obrisiEdukaciju(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
+        Response response = doktorService.obrisiEdukaciju(headers, id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/uredi-biografiju-titulu")
-    public ResponseEntity<Response> urediPodatkeDoktora(@RequestBody UrediPodatkeDoktoraRequest urediPodatkeDoktoraRequest) {
+    public ResponseEntity<Response> urediPodatkeDoktora(@RequestHeader HttpHeaders headers, @RequestBody UrediPodatkeDoktoraRequest urediPodatkeDoktoraRequest) {
+
+        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, urediPodatkeDoktoraRequest.getIdDoktora()))
+            throw new UnauthorizedException("Neovlašten pristup resursima!");
+
         Response response = doktorService.urediPodatkeDoktora(urediPodatkeDoktoraRequest);
         return ResponseEntity.ok(response);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response handleNoSuchElementFoundException(ConstraintViolationException exception) {
-        StringBuilder message = new StringBuilder();
-        List<String> messages = exception.getConstraintViolations().stream()
-                .map(ConstraintViolation::getMessage).collect(Collectors.toList());
-        for (int i = 0; i < messages.size(); i++)
-            if (i < messages.size() - 1) message.append(messages.get(i)).append("; ");
-            else message.append(messages.get(i));
-        return new Response(message.toString(), 400);
+    public Response handleConstraintViolationException(ConstraintViolationException exception) {
+        return ErrorHandlingHelper.handleConstraintViolationException(exception);
     }
 
-    @ExceptionHandler({ResourceNotFoundException.class})
-    public final Response handleException(Exception e) {
-        if (e instanceof ResourceNotFoundException) {
-            ResourceNotFoundException exception = (ResourceNotFoundException) e;
-            String poruka = exception.getMessage();
-            return new Response(poruka, 400);
-        }
-        return null;
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response handleEntityNotFoundException(ResourceNotFoundException exception) {
+        return ErrorHandlingHelper.handleEntityNotFoundException(exception);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response handleEntityUnauthorizedxception(UnauthorizedException exception) {
+        return ErrorHandlingHelper.handleEntityUnauthorizedException(exception);
     }
 
 }
