@@ -1,6 +1,7 @@
 package ba.unsa.etf.defaultgateway.controllers;
 
 import ba.unsa.etf.defaultgateway.exceptions.ResourceNotFoundException;
+import ba.unsa.etf.defaultgateway.exceptions.UnauthorizedException;
 import ba.unsa.etf.defaultgateway.models.Korisnik;
 import ba.unsa.etf.defaultgateway.requests.*;
 import ba.unsa.etf.defaultgateway.responses.KorisnikResponse;
@@ -8,15 +9,19 @@ import ba.unsa.etf.defaultgateway.responses.LoginResponse;
 import ba.unsa.etf.defaultgateway.responses.Response;
 
 import ba.unsa.etf.defaultgateway.security.CurrentUser;
+import ba.unsa.etf.defaultgateway.security.TrenutniKorisnikSecurity;
 import ba.unsa.etf.defaultgateway.security.UserPrincipal;
 import ba.unsa.etf.defaultgateway.services.KorisnikService;
 import ba.unsa.etf.defaultgateway.util.ErrorHandlingHelper;
 import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.core.Queue;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.json.JSONObject;
 
 import javax.mail.MessagingException;
 import javax.validation.ConstraintViolation;
@@ -31,6 +36,8 @@ import java.util.stream.Collectors;
 public class KorisnikController {
 
     private final KorisnikService korisnikService;
+
+    private final TrenutniKorisnikSecurity trenutniKorisnikSecurity;
 
     @GetMapping("/")
     public ResponseEntity<Response> pocetna() {
@@ -47,6 +54,16 @@ public class KorisnikController {
     @PostMapping("/registracija")
     public ResponseEntity<Response> registracijaKorisnika(@Valid @RequestBody RegistracijaRequest registracijaRequest){
         String odgovor = korisnikService.registrujKorisnika(registracijaRequest);
+        return ResponseEntity.ok(new Response(odgovor));
+    }
+
+    @PutMapping("/uredjivanje-profila")
+    public ResponseEntity<Response> urediProfil(@RequestHeader HttpHeaders headers, @Valid @RequestBody UredjivanjeProfilaRequest uredjivanjeProfilaRequest){
+
+        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, uredjivanjeProfilaRequest.getId()))
+            throw new UnauthorizedException("Neovlašten pristup resursima!");
+
+        String odgovor = korisnikService.urediProfil(uredjivanjeProfilaRequest);
         return ResponseEntity.ok(new Response(odgovor));
     }
 
@@ -89,6 +106,13 @@ public class KorisnikController {
     }
 
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public final Response handleException(Exception e) {
+        return ErrorHandlingHelper.handleException(e);
+    }
+
+
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response handleConstraintViolationException(ConstraintViolationException exception) {
@@ -99,5 +123,11 @@ public class KorisnikController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response handleEntityNotFoundException(ResourceNotFoundException exception) {
         return ErrorHandlingHelper.handleEntityNotFoundException(exception);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response handleEntityUnauthorizedxception(UnauthorizedException exception) {
+        return ErrorHandlingHelper.handleEntityUnauthorizedException(exception);
     }
 }

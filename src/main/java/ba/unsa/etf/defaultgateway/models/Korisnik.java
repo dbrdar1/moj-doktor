@@ -55,7 +55,8 @@ public class Korisnik {
     @NotBlank(message = "Korisnik mora imati unesen ispravan e-mail.")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Korisničko ime mora biti uneseno.")
+    @Size(min = 2, message = "Korisnicko ime mora biti dugo bar dva znaka")
     private String korisnickoIme;
 
     @JsonIgnore

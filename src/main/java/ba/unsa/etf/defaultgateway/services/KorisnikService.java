@@ -6,10 +6,14 @@ import ba.unsa.etf.defaultgateway.repositories.*;
 import ba.unsa.etf.defaultgateway.requests.*;
 import ba.unsa.etf.defaultgateway.responses.KorisnikResponse;
 import ba.unsa.etf.defaultgateway.responses.LoginResponse;
+import ba.unsa.etf.defaultgateway.responses.AsyncResponse;
 import ba.unsa.etf.defaultgateway.responses.Response;
 import ba.unsa.etf.defaultgateway.security.JwtTokenProvider;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,8 +23,6 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,6 +40,12 @@ public class KorisnikService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
+
+    private final RabbitTemplate template;
+    private final Queue queue1;
+    private final Queue queue2;
+    private final Queue queue3;
+    private final Queue queue4;
 
     public String pripremiUloge() {
         KorisnickaUloga doktor = korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_DOKTOR);
@@ -242,6 +250,15 @@ public class KorisnikService {
         Optional<Korisnik> korisnik1 = korisnikRepository.findByEmail(registracijaRequest.getEmail());
         if(korisnik1.isPresent()) return "Već postoji korisnik s ovim email-om.";
 
+        AsyncResponse response = new AsyncResponse();
+
+        response.setIme(registracijaRequest.getIme());
+        response.setPrezime(registracijaRequest.getPrezime());
+        response.setDatumRodjenja(registracijaRequest.getDatumRodjenja().toString());
+        response.setAdresa(registracijaRequest.getAdresa());
+        response.setBrojTelefona(registracijaRequest.getBrojTelefona());
+        response.setEmail(registracijaRequest.getEmail());
+
         if(registracijaRequest.getUloga().equals("DOKTOR")){
             Doktor d = new Doktor(
                     registracijaRequest.getIme(),
@@ -256,6 +273,7 @@ public class KorisnikService {
             List<KorisnickaUloga> uloge = Collections.singletonList(korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_DOKTOR));
             d.setUloge(new HashSet<>(uloge));
             doktorRepository.save(d);
+            response.setUloga("DOKTOR");
         }
         else{
             Pacijent p = new Pacijent(
@@ -271,8 +289,92 @@ public class KorisnikService {
             List<KorisnickaUloga> uloge = Collections.singletonList(korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_PACIJENT));
             p.setUloge(new HashSet<>(uloge));
             pacijentRepository.save(p);
+            response.setUloga("PACIJENT");
         }
-      return "Uspješna registracija!";
+        Optional<Korisnik> korisnik2 = korisnikRepository.findByKorisnickoIme(registracijaRequest.getKorisnickoIme());
+        response.setId(korisnik2.get().getId());
+        response.setAkcija("POST");
+
+        sendAsync(response);
+
+        return "Uspješna registracija!";
     }
 
+
+
+    public String urediProfil(UredjivanjeProfilaRequest uredjivanjeProfilaRequest) {
+        Optional<Korisnik> korisnik = korisnikRepository.findByKorisnickoIme(uredjivanjeProfilaRequest.getKorisnickoIme());
+        if(korisnik.isPresent() && !korisnik.get().getId().equals(uredjivanjeProfilaRequest.getId())) return "Već postoji korisnik s ovim korisničkim imenom.";
+
+        Optional<Korisnik> korisnik1 = korisnikRepository.findByEmail(uredjivanjeProfilaRequest.getEmail());
+        if(korisnik1.isPresent() && !korisnik1.get().getId().equals(uredjivanjeProfilaRequest.getId())) return "Već postoji korisnik s ovim email-om.";
+
+        Optional<Korisnik> korisnik2 = korisnikRepository.findByBrojTelefona(uredjivanjeProfilaRequest.getBrojTelefona());
+        if(korisnik2.isPresent() && !korisnik2.get().getId().equals(uredjivanjeProfilaRequest.getId())) return "Već postoji korisnik s ovim telefonskim brojem.";
+
+        Optional<Korisnik> k = korisnikRepository.findById(uredjivanjeProfilaRequest.getId());
+
+        if (!k.isPresent()) {
+            return "Ne postoji korisnik s ovim korisničkim imenom!";
+        }
+
+        k.get().setIme(uredjivanjeProfilaRequest.getIme());
+        k.get().setPrezime(uredjivanjeProfilaRequest.getPrezime());
+        k.get().setKorisnickoIme(uredjivanjeProfilaRequest.getKorisnickoIme());
+        k.get().setAdresa(uredjivanjeProfilaRequest.getAdresa());
+        k.get().setEmail(uredjivanjeProfilaRequest.getEmail());
+        k.get().setBrojTelefona(uredjivanjeProfilaRequest.getBrojTelefona());
+
+        KorisnickaUloga doktor = korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_DOKTOR);
+        KorisnickaUloga pacijent = korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_PACIJENT);
+
+        korisnikRepository.save(k.get());
+
+        AsyncResponse response = new AsyncResponse();
+
+        response.setId(uredjivanjeProfilaRequest.getId());
+        response.setIme(uredjivanjeProfilaRequest.getIme());
+        response.setPrezime(uredjivanjeProfilaRequest.getPrezime());
+        response.setDatumRodjenja(uredjivanjeProfilaRequest.getDatumRodjenja().toString());
+        response.setAdresa(uredjivanjeProfilaRequest.getAdresa());
+        response.setBrojTelefona(uredjivanjeProfilaRequest.getBrojTelefona());
+        response.setEmail(uredjivanjeProfilaRequest.getEmail());
+        response.setAkcija("PUT");
+
+        if(k.get().getUloge().contains(doktor)){
+            response.setUloga("DOKTOR");
+        }
+        else {
+            response.setUloga("PACIJENT");
+        }
+
+        sendAsync(response);
+
+        return "Uspješno ste uredili profil!";
+    }
+
+    public void sendAsync(AsyncResponse response) {
+        JSONObject paket = new JSONObject();
+
+        paket.put("id", response.getId());
+        paket.put("ime", response.getIme());
+        paket.put("prezime", response.getPrezime());
+        paket.put("datumRodjenja", response.getDatumRodjenja());
+        paket.put("adresa", response.getAdresa());
+        paket.put("brojTelefona", response.getBrojTelefona());
+        paket.put("email", response.getEmail());
+        paket.put("uloga", response.getUloga());
+        paket.put("akcija", response.getAkcija());
+
+        String message = paket.toString();
+        this.template.convertAndSend(queue1.getName(), message);
+        this.template.convertAndSend(queue2.getName(), message);
+        this.template.convertAndSend(queue3.getName(), message);
+        this.template.convertAndSend(queue4.getName(), message);
+
+        System.out.println("Sent: " + queue1.getName() + message);
+        System.out.println("Sent: " + queue2.getName() + message);
+        System.out.println("Sent: " + queue3.getName() + message);
+        System.out.println("Sent: " + queue4.getName() + message);
+    }
 }

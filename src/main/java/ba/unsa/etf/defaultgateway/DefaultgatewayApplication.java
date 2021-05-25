@@ -7,12 +7,16 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 @EnableEurekaClient
 @SpringBootApplication
 @EnableZuulProxy
+@EnableScheduling
 public class DefaultgatewayApplication {
 
     @Bean
@@ -20,6 +24,7 @@ public class DefaultgatewayApplication {
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
+
 
     public static void main(String[] args) {
         SpringApplication.run(DefaultgatewayApplication.class, args);

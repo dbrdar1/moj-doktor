@@ -68,4 +68,9 @@ eureka:
 
 server:
   port: 8080
-
+logging:
+  level:
+    org: ERROR
+tutorial:
+  client:
+    duration: 10000

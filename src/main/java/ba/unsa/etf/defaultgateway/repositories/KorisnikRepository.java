@@ -13,10 +13,14 @@ public interface KorisnikRepository extends JpaRepository<Korisnik, Long>{
 
     Optional<Korisnik> findByEmail(String email);
 
+    Optional<Korisnik> findByBrojTelefona(String broj);
+
     Optional<Korisnik> findById(Long id);
 
     Boolean existsByEmail(String email);
 
     Boolean existsByKorisnickoIme(String username);
+
+    Boolean existsByBrojTelefona(String broj);
 
 }
