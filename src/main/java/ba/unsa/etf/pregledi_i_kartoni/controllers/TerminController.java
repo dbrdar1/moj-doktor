@@ -49,12 +49,14 @@ public class TerminController {
         return ResponseEntity.ok(trazeniTermini);
     }
 
+    /*
     // prikaz termina na osnovu id
-    @GetMapping("/termin/{idTermina}")
+    @GetMapping("/termini/{idTermina}")
         public ResponseEntity<TerminResponse> dajTermin(@PathVariable(value = "idTermina") Long idTermina){
         TerminResponse trazeniTermin = terminService.dajTerminNaOsnovuId(idTermina);
         return ResponseEntity.ok(trazeniTermin);
     }
+     */
 
 
     // pohrana termina
@@ -65,17 +67,17 @@ public class TerminController {
     }
 
     // brisanje termina
-    @DeleteMapping("/termin/{idTermina}")
+    @DeleteMapping("/obrisi-termin/{idTermina}")
     public ResponseEntity<Response> obrisiTermin(@PathVariable(value = "idTermina") Long idTermina) {
         Response response = terminService.obrisiTermin(idTermina);
         return ResponseEntity.ok(response);
     }
 
     // Ruta koja poziva "termini" mikroservis
-    @GetMapping("/termini-pacijenta/{idPacijenta}")
-    public ResponseEntity<String> dajTerminePacijenta(@PathVariable(value = "idPacijenta") Long idPacijenta) {
-        String trazeniTerminiPacijenta = terminService.dajTerminePacijenta(idPacijenta);
-        return ResponseEntity.ok(trazeniTerminiPacijenta);
+    @GetMapping("/termini/{idTermin}")
+    public ResponseEntity<String> dajTermine(@PathVariable(value = "idTermin") Long idTermin) {
+        String trazeniTermin = terminService.dajTermin(idTermin);
+        return ResponseEntity.ok(trazeniTermin);
 
     }
 

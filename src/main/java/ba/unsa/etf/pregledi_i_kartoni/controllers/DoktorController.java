@@ -27,7 +27,7 @@ public class DoktorController {
 
 
     // prikaz jednog doktora na osnovu id
-    @GetMapping("/doktor/{idDoktora}")
+    @GetMapping("/doktori/{idDoktora}")
     public ResponseEntity<DoktorResponse> dajDoktora(@PathVariable(value = "idDoktora") Long idDoktora){
         DoktorResponse trazeniDoktor = doktorService.dajDoktoraNaOsnovuId(idDoktora);
         return ResponseEntity.ok(trazeniDoktor);

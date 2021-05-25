@@ -92,9 +92,9 @@ public class TerminService {
     }
 
     // Komunikacija sa "termini" mikroservisom
-    public String dajTerminePacijenta(Long idPacijenta) {
+    public String dajTermin(Long idTermina) {
 
-        String fooResourceUrl = "http://termini/termini-pacijenta/" + idPacijenta.toString();
+        String fooResourceUrl = "http://termini/dobavi-termin/" + idTermina.toString();
         ResponseEntity<String> responseString = restTemplate.getForEntity(fooResourceUrl, String.class);
         ResponseEntity<ListaTerminaResponse> response = restTemplate.getForEntity(fooResourceUrl, ListaTerminaResponse.class);
         return responseString.getStatusCode() == HttpStatus.OK ? responseString.getBody() : null;

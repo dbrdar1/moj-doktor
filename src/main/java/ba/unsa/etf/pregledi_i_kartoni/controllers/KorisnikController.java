@@ -41,7 +41,7 @@ public class KorisnikController {
 
     // prikaz jednog korisnika na osnovu id
     // slanje zahtjeva System Event servisu
-    @GetMapping("/korisnik/{idKorisnika}")
+    @GetMapping("/korisnici/{idKorisnika}")
     public ResponseEntity<KorisnikResponse> dajKorisnika(@PathVariable(value = "idKorisnika") Long idKorisnika){
         
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8866)
@@ -56,7 +56,7 @@ public class KorisnikController {
                     ZoneId.of("Europe/Sarajevo")
             ).toInstant()).toString())
             .setNazivMikroservisa("pregledi-i-kartoni")
-            .setResurs("/korisnik/" + idKorisnika.toString())
+            .setResurs("/korisnici/" + idKorisnika.toString())
             .setTipAkcije(ActionRequest.TipAkcije.GET)
             .setTipOdgovoraNaAkciju(ActionRequest.TipOdgovoraNaAkciju.USPJEH)
             .build());

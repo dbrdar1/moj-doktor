@@ -32,7 +32,7 @@ public class PacijentController {
 
 
     // prikaz pacijenta na osnovu id
-    @GetMapping("/pacijent/{idPacijenta}")
+    @GetMapping("/pacijenti/{idPacijenta}")
     public ResponseEntity<PacijentResponse> dajPacijenta(@PathVariable(value = "idPacijenta") Long idPacijenta){
         PacijentResponse trazeniPacijent = pacijentService.dajPacijentaNaOsnovuId(idPacijenta);
         return ResponseEntity.ok(trazeniPacijent);
@@ -47,7 +47,7 @@ public class PacijentController {
 
 
     // prikaz kartona na osnovu id pacijenta
-    @GetMapping("/karton/{idPacijenta}")
+    @GetMapping("/kartoni/{idPacijenta}")
     public ResponseEntity<KartonResponse> dajKarton(@PathVariable(value = "idPacijenta") Long idPacijenta){
         KartonResponse trazeniKarton = pacijentService.dajKartonNaOsnovuId(idPacijenta);
         return ResponseEntity.ok(trazeniKarton);
@@ -61,7 +61,7 @@ public class PacijentController {
     }
 
     // filtriranje kartona
-    @GetMapping("/karton")
+    @GetMapping("/kartoni-filtrirano")
     public ResponseEntity<List<KartonResponse>> filtrirajKartone(@RequestParam(name = "ime", required = false) String ime,
                                                      @RequestParam(name = "prezime", required = false) String prezime,
                                                      @RequestParam(name = "spol", required = false) String spol,
@@ -74,7 +74,7 @@ public class PacijentController {
 
 
     // filtriranje pacijenta
-    @GetMapping("/pacijent")
+    @GetMapping("/pacijenti-filtrirano")
     public ResponseEntity<List<PacijentResponse>> filtrirajPacijente(@RequestParam(name = "ime", required = false) String ime,
                                                                  @RequestParam(name = "prezime", required = false) String prezime) {
         List<PacijentResponse> trazeniPacijenti = pacijentService.filtrirajPacijente(ime, prezime);
@@ -91,7 +91,7 @@ public class PacijentController {
     }
 
     // uredjivanje kartona
-    @PutMapping("/karton/{id}")
+    @PutMapping("/uredi-karton/{id}")
     public  ResponseEntity<Response> urediKarton(@RequestBody UrediKartonRequest urediKartonRequest, @PathVariable Long id){
         Response response = pacijentService.urediKarton(id, urediKartonRequest);
         return ResponseEntity.ok(response);

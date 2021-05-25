@@ -52,14 +52,14 @@ public class PregledController {
     }
 
     // Prikaz pregleda na osnovu id pregleda
-    @GetMapping("/pregled/{idPregleda}")
+    @GetMapping("/pregledi/{idPregleda}")
     public ResponseEntity<PregledResponse> dajPregled(@PathVariable(value = "idPregleda") Long idPregleda){
         PregledResponse trazeniPregled = pregledService.dajPregledNaOsonvuId(idPregleda);
         return ResponseEntity.ok(trazeniPregled);
     }
 
     // filtriranje pregleda (na osnovu id doktora, id pacijenta, id termina)
-    @GetMapping("/pregled")
+    @GetMapping("/pregledi-filtrirano")
     public ResponseEntity<List<PregledResponse>> filtrirajPreglede(@RequestParam(value = "idDoktor", required = false) Long idDoktor, @RequestParam(value = "idPacijent", required = false) Long idPacijent, @RequestParam(value = "idTermin", required = false) Long idTermin) {
         List<PregledResponse> trazeniPregledi = pregledService.filtrirajPreglede(idDoktor, idPacijent, idTermin);
         return ResponseEntity.ok(trazeniPregledi);
@@ -73,7 +73,7 @@ public class PregledController {
     }
 
     // brisanje pregleda
-    @DeleteMapping("/pregled/{idPregleda}")
+    @DeleteMapping("/obrisi-pregled/{idPregleda}")
     public ResponseEntity<Response> obrisiPregled(@PathVariable(value = "idPregleda") Long idPregleda) {
         Response response = pregledService.obrisiPregled(idPregleda);
         return ResponseEntity.ok(response);
