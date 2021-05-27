@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -38,8 +39,13 @@ public class DoktorController {
 
     private final TrenutniKorisnikSecurity trenutniKorisnikSecurity;
 
+    @PostMapping("/async")
+    public ResponseEntity<Response> asyncKorisnici(@RequestBody AsyncRequest asyncRequest) throws ParseException {
+        String poruka = doktorService.asyncKorisnici(asyncRequest);
+        return ResponseEntity.ok(new Response(poruka));
+    }
 
-    @PostMapping("/povuci-podatke")
+    @PostMapping("/sync")
     public ResponseEntity<Response> povuciPodatke(){
         String fooResourceUrl = "http://zuul-service/korisnici?uloga=doktor";
         ResponseEntity<KorisnikResponse[]> response = restTemplate.getForEntity(fooResourceUrl, KorisnikResponse[].class);
@@ -86,7 +92,6 @@ public class DoktorController {
 
     @PutMapping("/uredi-certifikat")
     public ResponseEntity<Response> urediCertifikat(@RequestHeader HttpHeaders headers, @RequestBody UrediCertifikatRequest urediCertifikatRequest) {
-
 
         Response response = doktorService.urediCertifikat(headers, urediCertifikatRequest);
         return ResponseEntity.ok(response);

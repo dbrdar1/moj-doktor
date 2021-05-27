@@ -6,7 +6,7 @@ spring:
       uri: http://localhost:8888
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: jdbc:postgresql://localhost:5432/moj_doktor_doktor_detalji
@@ -34,3 +34,9 @@ management:
         include: "*"
 app:
   jwtSecret: ZWRvLXRlbnNlaQ==
+logging:
+  level:
+    org: ERROR
+tutorial:
+  client:
+    duration: 10000

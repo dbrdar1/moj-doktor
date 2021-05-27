@@ -14,6 +14,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -199,7 +203,38 @@ public class DoktorService {
                 doktorRepository.save(d.get());
             }
         }
-        return "Sinhronizacija završena. Podaci su ažurirani!";
+        System.out.println("Sync...");
+        return "Sync...";
     }
+
+    public String asyncKorisnici(AsyncRequest asyncRequest) throws ParseException {
+
+        Date date = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy").parse(asyncRequest.getDatumRodjenja());
+
+        if(asyncRequest.getAkcija().equals("POST") && asyncRequest.getUloga().equals("DOKTOR")){
+            Optional<Doktor> doktor = doktorRepository.findById(asyncRequest.getId());
+            if(doktor.isPresent()) return "Async...";
+
+            Doktor novi = new Doktor(asyncRequest.getId(), asyncRequest.getIme(),
+                    asyncRequest.getPrezime(), date, asyncRequest.getAdresa(),
+                    asyncRequest.getBrojTelefona(), asyncRequest.getEmail(), "", "");
+            doktorRepository.save(novi);
+        }
+        else if(asyncRequest.getAkcija().equals("PUT") && asyncRequest.getUloga().equals("DOKTOR")){
+            Optional<Doktor> doktor = doktorRepository.findById(asyncRequest.getId());
+            if(doktor.isPresent()){
+                doktor.get().setIme(asyncRequest.getIme());
+                doktor.get().setPrezime(asyncRequest.getPrezime());
+                doktor.get().setDatumRodjenja(date);
+                doktor.get().setAdresa(asyncRequest.getAdresa());
+                doktor.get().setEmail(asyncRequest.getEmail());
+                doktor.get().setBrojTelefona(asyncRequest.getBrojTelefona());
+                doktorRepository.save(doktor.get());
+            }
+        }
+        System.out.println("Async...");
+        return "Async...";
+    }
+
 }
 
