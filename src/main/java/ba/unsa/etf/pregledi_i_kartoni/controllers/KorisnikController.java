@@ -3,6 +3,7 @@ package ba.unsa.etf.pregledi_i_kartoni.controllers;
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.pregledi_i_kartoni.models.Doktor;
 import ba.unsa.etf.pregledi_i_kartoni.models.Korisnik;
+import ba.unsa.etf.pregledi_i_kartoni.requests.AsyncRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajDoktoraRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajKorisnikaRequest;
 import ba.unsa.etf.pregledi_i_kartoni.responses.KorisnikResponse;
@@ -16,6 +17,24 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -38,6 +57,13 @@ import io.grpc.ManagedChannelBuilder;
 public class KorisnikController {
 
     private final KorisnikService korisnikService;
+
+    @PostMapping("/async")
+    public ResponseEntity<Response> asyncKorisnici(@RequestBody AsyncRequest asyncRequest) throws ParseException {
+        String poruka = korisnikService.asyncKorisnici(asyncRequest);
+        return ResponseEntity.ok(new Response(poruka));
+
+    }
 
     // prikaz jednog korisnika na osnovu id
     // slanje zahtjeva System Event servisu

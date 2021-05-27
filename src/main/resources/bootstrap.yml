@@ -46,6 +46,9 @@ management:
 server:
   port: 8082
 
+app:
+  jwtSecret: ZWRvLXRlbnNlaQ==
+
 
 #spring:
 #  jpa:

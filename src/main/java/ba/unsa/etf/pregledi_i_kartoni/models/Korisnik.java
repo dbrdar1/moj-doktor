@@ -29,7 +29,7 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Korisnik {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Size(min = 2, message = "Ime mora biti dugo bar dva znaka")
@@ -62,6 +62,19 @@ public class Korisnik {
         this.brojTelefona = brojTelefona;
         this.email = email;
     }
+    /*
+
+    public Korisnik(Long id, String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona, String email) {
+        this.id = id;
+        this.ime = ime;
+        this.prezime = prezime;
+        this.datumRodjenja = datumRodjenja;
+        this.adresa = adresa;
+        this.brojTelefona = brojTelefona;
+        this.email = email;
+    }
+
+     */
 
 }
 

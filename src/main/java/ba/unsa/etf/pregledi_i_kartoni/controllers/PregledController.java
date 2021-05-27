@@ -9,6 +9,7 @@ import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.services.PregledService;
 import ba.unsa.etf.pregledi_i_kartoni.util.ErrorHandlingHelper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,8 +68,8 @@ public class PregledController {
 
     // pohrana pregleda
     @PostMapping("/dodaj-pregled")
-    public ResponseEntity<Response> dodajPregled(@RequestBody DodajPregledRequest dodajPregledRequest) {
-        Response response = pregledService.dodajPregled(dodajPregledRequest);
+    public ResponseEntity<Response> dodajPregled(@RequestHeader HttpHeaders headers, @RequestBody DodajPregledRequest dodajPregledRequest) {
+        Response response = pregledService.dodajPregled(headers, dodajPregledRequest);
         return ResponseEntity.ok(response);
     }
 

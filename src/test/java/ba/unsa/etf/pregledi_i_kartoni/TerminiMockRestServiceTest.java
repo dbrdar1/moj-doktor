@@ -43,7 +43,7 @@ public class TerminiMockRestServiceTest {
                         "http://termini/termini-pacijenta/11", String.class))
           .thenReturn(new ResponseEntity(termini, HttpStatus.OK));
 
-        String dobiveniTermini = terminService.dajTerminePacijenta(11L);
+        String dobiveniTermini = terminService.dajTermin(11L);
 
         Assert.assertEquals(termini, dobiveniTermini);
     }

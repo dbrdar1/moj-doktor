@@ -59,6 +59,13 @@ public class Pacijent extends Korisnik{
         super(ime, prezime, datumRodjenja, adresa, brojTelefona, mail);
     }
 
+
+    public Pacijent(Long id, String ime, String prezime, Date datumRodjenja, String adresa,
+                    String brojTelefona, String mail) {
+        super(id, ime, prezime, datumRodjenja, adresa, brojTelefona, mail);
+    }
+
+
     @OneToMany(mappedBy = "pacijent", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<PacijentDoktor> vezeSaDoktorima = new ArrayList<>();

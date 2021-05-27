@@ -1,6 +1,7 @@
 package ba.unsa.etf.pregledi_i_kartoni.services;
 
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
+import ba.unsa.etf.pregledi_i_kartoni.exceptions.UnauthorizedException;
 import ba.unsa.etf.pregledi_i_kartoni.models.*;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.*;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajPregledRequest;
@@ -8,7 +9,9 @@ import ba.unsa.etf.pregledi_i_kartoni.responses.DoktorResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.PacijentResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.PregledResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
+import ba.unsa.etf.pregledi_i_kartoni.security.TrenutniKorisnikSecurity;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -24,6 +27,7 @@ public class PregledService {
     private final KorisnikRepository korisnikRepository;
     private final PacijentDoktorRepository pacijentDoktorRepository;
     private final TerminRepository terminRepository;
+    private final TrenutniKorisnikSecurity trenutniKorisnikSecurity;
 
     public String incijalizirajBazu() {
 
@@ -170,7 +174,9 @@ public class PregledService {
 
 
 
-    public Response dodajPregled(DodajPregledRequest dodajPregledRequest) {
+    public Response dodajPregled(HttpHeaders headers, DodajPregledRequest dodajPregledRequest) {
+
+
         if(dodajPregledRequest.getTerminId() == null) {
             throw new ResourceNotFoundException("Nije moguce dodati pregled bez termina!");
         }
@@ -180,6 +186,11 @@ public class PregledService {
 
         Optional<List<Pregled>> pregledi = pregledRepository.findByQueryPregled(null, null, terminPregleda.get());
         if(!pregledi.get().isEmpty()) throw new ResourceNotFoundException("Već postoji pregled za dati termin!");
+
+        Doktor trazeniDoktor = terminPregleda.get().getPacijentDoktor().getDoktor();
+        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, trazeniDoktor.getId())) {
+            throw new UnauthorizedException("Neovlašten pristup resursima!");
+        }
 
         Pregled noviPregled = new Pregled(
                 dodajPregledRequest.getSimptomi(), dodajPregledRequest.getFizikalniPregled(), dodajPregledRequest.getDijagnoza(),
