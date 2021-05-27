@@ -123,11 +123,17 @@ public class KorisnikService {
         p.setLozinka(passwordEncoder.encode(p.getLozinka()));
         p2.setLozinka(passwordEncoder.encode(p2.getLozinka()));
 
-        KorisnickaUloga u1 = new KorisnickaUloga(0L, NazivKorisnickeUloge.ROLE_DOKTOR);
-        KorisnickaUloga u2 = new KorisnickaUloga(1L, NazivKorisnickeUloge.ROLE_PACIJENT);
+        KorisnickaUloga doktor = korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_DOKTOR);
+        KorisnickaUloga pacijent = korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_PACIJENT);
 
-        korisnickaUlogaRepository.save(u1);
-        korisnickaUlogaRepository.save(u2);
+        if(doktor == null){
+            KorisnickaUloga u1 = new KorisnickaUloga(1L, NazivKorisnickeUloge.ROLE_DOKTOR);
+            korisnickaUlogaRepository.save(u1);
+        }
+        if(pacijent == null){
+            KorisnickaUloga u2 = new KorisnickaUloga(3L, NazivKorisnickeUloge.ROLE_PACIJENT);
+            korisnickaUlogaRepository.save(u2);
+        }
 
         List<KorisnickaUloga> uloge = Collections.singletonList(korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_DOKTOR));
         d.setUloge(new HashSet<>(uloge));

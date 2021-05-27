@@ -20,11 +20,11 @@ class InicijalizacijaTest{
     private MockMvc mockMvc;
 
     @Test
-    public void inicijalizacijaTest() throws Exception {
-        this.mockMvc.perform(get("/inicijalizacija-baze"))
+    public void pripremaBaze() throws Exception {
+        this.mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.poruka", is("Inicijalizacija baze zavrsena!")));
+                .andExpect(jsonPath("$.poruka", is("Baza spremna!")));
     }
 
 }

@@ -67,7 +67,7 @@ class ServisiTest {
     @Test
     public void unauthorizedLoginTest() throws Exception {
         this.mockMvc.perform(post("/login")
-                .content(asJsonString(new LoginRequest("spusina", "password")))
+                .content(asJsonString(new LoginRequest("t", "t")))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -77,32 +77,8 @@ class ServisiTest {
     @Test
     public void resetTokenTest() throws Exception {
         Korisnik korisnik = new Korisnik();
-        korisnik.setKorisnickoIme("spusina1");
-        korisnik.setLozinka("password");
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        korisnik.getKorisnickoIme(),
-                        korisnik.getLozinka()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtTokenProvider.generateToken(authentication);
-
-        this.mockMvc.perform(post("/reset-token")
-                .header("Authorization", "Bearer " + token)
-                .content(asJsonString(new GetResetTokenRequest("spusina1")))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.poruka", is("Token je poslan!")));
-    }
-
-    @Test
-    public void resetTokenPogresniPodaciTest() throws Exception {
-        Korisnik korisnik = new Korisnik();
-        korisnik.setKorisnickoIme("spusina1");
-        korisnik.setLozinka("password");
+        korisnik.setKorisnickoIme("test");
+        korisnik.setLozinka("test");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         korisnik.getKorisnickoIme(),
@@ -119,14 +95,38 @@ class ServisiTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.poruka", is("Token je poslan!")));
+    }
+
+    @Test
+    public void resetTokenPogresniPodaciTest() throws Exception {
+        Korisnik korisnik = new Korisnik();
+        korisnik.setKorisnickoIme("t");
+        korisnik.setLozinka("t");
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        korisnik.getKorisnickoIme(),
+                        korisnik.getLozinka()
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtTokenProvider.generateToken(authentication);
+
+        this.mockMvc.perform(post("/reset-token")
+                .header("Authorization", "Bearer " + token)
+                .content(asJsonString(new GetResetTokenRequest("t")))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.poruka", is("Korisničko ime ili email koji ste unijeli nije validan. Provjerite i pokušajte ponovo!")));
     }
 
     @Test
     public void verifikacijskiPodaciTest() throws Exception {
         Korisnik korisnik = new Korisnik();
-        korisnik.setKorisnickoIme("spusina1");
-        korisnik.setLozinka("password");
+        korisnik.setKorisnickoIme("test");
+        korisnik.setLozinka("test");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         korisnik.getKorisnickoIme(),
@@ -138,7 +138,7 @@ class ServisiTest {
 
         this.mockMvc.perform(post("/verifikacijski-podaci")
                 .header("Authorization", "Bearer " + token)
-                .content(asJsonString(new VerificirajPodatkeRequest("spusina1", "123")))
+                .content(asJsonString(new VerificirajPodatkeRequest("test", "123")))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -148,8 +148,8 @@ class ServisiTest {
     @Test
     public void lozinkaTest() throws Exception {
         Korisnik korisnik = new Korisnik();
-        korisnik.setKorisnickoIme("spusina1");
-        korisnik.setLozinka("password");
+        korisnik.setKorisnickoIme("test");
+        korisnik.setLozinka("test");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         korisnik.getKorisnickoIme(),
@@ -161,7 +161,7 @@ class ServisiTest {
 
         this.mockMvc.perform(put("/lozinka")
                 .header("Authorization", "Bearer " + token)
-                .content(asJsonString(new SpasiLozinkuRequest("spusina1", "password")))
+                .content(asJsonString(new SpasiLozinkuRequest("test", "test")))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -171,8 +171,8 @@ class ServisiTest {
     @Test
     public void lozinkaPogresniPodaciTest() throws Exception {
         Korisnik korisnik = new Korisnik();
-        korisnik.setKorisnickoIme("spusina1");
-        korisnik.setLozinka("password");
+        korisnik.setKorisnickoIme("test");
+        korisnik.setLozinka("test");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         korisnik.getKorisnickoIme(),
@@ -184,7 +184,7 @@ class ServisiTest {
 
         this.mockMvc.perform(put("/lozinka")
                 .header("Authorization", "Bearer " + token)
-                .content(asJsonString(new SpasiLozinkuRequest("test", "password")))
+                .content(asJsonString(new SpasiLozinkuRequest("t", "t")))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
