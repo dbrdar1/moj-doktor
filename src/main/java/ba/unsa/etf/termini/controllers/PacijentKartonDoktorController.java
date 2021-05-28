@@ -21,21 +21,6 @@ public class PacijentKartonDoktorController {
 
     private PacijentKartonDoktorService pacijentKartonDoktorService;
 
-    private final Pacijent p1 = new Pacijent(
-            "Samra",
-            "Pusina",
-            new Date(),
-            "NekaAdresa",
-            "061456321","samra@mail.com");
-    private final Doktor d1 = new Doktor(
-            "Dzavid",
-            "Brdar",
-            new Date(),
-            "NekaAdresa",
-            "061456321",
-            "dzavid@mail.com",
-            "Doktor opce prakse");
-
     @PostMapping("/dodaj-vezu-pkd")
     @ResponseBody
     public ResponseEntity<Response>  spasiVezuDoktorPacijent(@RequestBody DodajPacijentKartonDoktorRequest dodajPacijentKartonDoktorRequest) {

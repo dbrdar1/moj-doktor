@@ -1,2 +1,12 @@
-package ba.unsa.etf.termini.exceptions;public class UnauthorizedException {
+package ba.unsa.etf.termini.exceptions;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+public class UnauthorizedException extends RuntimeException {
+
+    public UnauthorizedException(String message) {
+        super(message);
+    }
 }

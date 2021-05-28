@@ -26,7 +26,6 @@ import java.util.List;
 @JsonIgnoreProperties({"notifikacije"})
 public class Korisnik {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Size(min = 2, message = "Ime mora biti dugo bar dva znaka")
@@ -51,7 +50,8 @@ public class Korisnik {
     @Email(message = "Korisnik mora imati unesen ispravan e-mail")
     private String email;
 
-    public Korisnik(String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona,  String email) {
+    public Korisnik(Long id, String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona,  String email) {
+        this.id = id;
         this.ime = ime;
         this.prezime = prezime;
         this.datumRodjenja = datumRodjenja;

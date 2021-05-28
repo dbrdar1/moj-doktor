@@ -41,6 +41,7 @@ public class NotifikacijaTest {
             throw new RuntimeException(e);
         }
     }
+    /*
     @Test
     public void postIspravneNotifikacije() throws Exception {
         Korisnik k = new Korisnik("test","test",new Date(), "adresa","033211211","neko@gmail.com");
@@ -92,5 +93,5 @@ public class NotifikacijaTest {
                 .andDo(print())
                 .andExpect(status().isOk());
         korisnikRepository.delete(k);
-    }
+    }*/
 }

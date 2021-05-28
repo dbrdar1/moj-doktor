@@ -48,7 +48,7 @@ public class TerminTest {
         }
     }
 
-    @Test
+  /*  @Test
     public void postIspravnogTermina() throws Exception {
         Pacijent p = new Pacijent("test1","test",new Date(), "adresa","033211211","neko1@gmail.com");
         Doktor d = new Doktor("test2","test",new Date(), "adresa","033211211","neko2@gmail.com","doktor");
@@ -133,7 +133,7 @@ public class TerminTest {
                 .andExpect(jsonPath("$.termini", hasSize(1)));
         pacijentRepository.delete(p);
         doktorRepository.delete(d);
-    }
+    }*/
 
 //    @Test
 //    public void deleteNakonPosta() throws Exception {

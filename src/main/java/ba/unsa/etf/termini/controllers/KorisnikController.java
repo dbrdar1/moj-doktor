@@ -1,5 +1,6 @@
 package ba.unsa.etf.termini.controllers;
 
+import ba.unsa.etf.termini.Requests.AsyncRequest;
 import ba.unsa.etf.termini.Requests.DodajKorisnikaRequest;
 import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.models.Korisnik;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.ConstraintViolationException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -27,19 +29,6 @@ public class KorisnikController {
     private RestTemplate restTemplate;
 
     private final List<Korisnik> korisnici;
-    private final Korisnik k1 = new Korisnik(
-            "Samra",
-            "Pusina",
-            new Date(),
-            "NekaAdresa","061456321",
-            "samra@mail.com");
-
-    private final Korisnik k2 = new Korisnik(
-            "Esmina",
-            "Radusic",
-            new Date(),
-            "NekaAdresa","061456321",
-            "esmina@mail.com");
 
     @GetMapping("/korisnici")
     List<Korisnik> all() {
@@ -53,18 +42,18 @@ public class KorisnikController {
                 .orElseThrow(() -> new Exception("Korisnik nije pronađen"));
     }
 
-    @PostMapping("/korisnici")
-    public ResponseEntity<Response> dodajKorisnika(@RequestBody DodajKorisnikaRequest dodajKorisnikaRequest){
-        Response response = korisnikService.dodajKorisnika(dodajKorisnikaRequest);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("/dobavi-korisnike")
     public ResponseEntity<String> postKorisnici(){
 
         String fooResourceUrl = "http://user-management/getKorisnici";
         ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl, String.class);
         return response;
+    }
+
+    @PostMapping("/async")
+    public ResponseEntity<Response> asyncKorisnici(@RequestBody AsyncRequest asyncRequest) throws ParseException {
+        String poruka = korisnikService.asyncKorisnici(asyncRequest);
+        return ResponseEntity.ok(new Response(poruka));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
