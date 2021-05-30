@@ -3,6 +3,7 @@ package ba.unsa.etf.pregledi_i_kartoni.controllers;
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.UnauthorizedException;
 import ba.unsa.etf.pregledi_i_kartoni.models.*;
+import ba.unsa.etf.pregledi_i_kartoni.requests.AsyncTerminiRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajTerminRequest;
 import ba.unsa.etf.pregledi_i_kartoni.responses.ListaTerminaResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
@@ -27,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +43,11 @@ public class TerminController {
 
     private final TerminService terminService;
 
+    @PostMapping("/asyncTermini")
+    public ResponseEntity<Response> asyncKorisnici(@RequestBody AsyncTerminiRequest asyncRequest) throws ParseException {
+        String poruka = terminService.asyncTermini(asyncRequest);
+        return ResponseEntity.ok(new Response(poruka));
+    }
 
 
     // prikaz svih termina

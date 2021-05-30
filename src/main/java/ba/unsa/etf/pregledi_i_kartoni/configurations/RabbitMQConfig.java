@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue queue1() {
-        return new Queue("korisnikQueue1");
+    public NoviKorisnikMessageReceiver receiver() {
+        return new NoviKorisnikMessageReceiver();
     }
 
     @Bean
-    public NoviKorisnikMessageReceiver receiver() {
-        return new NoviKorisnikMessageReceiver();
+    public TerminiMessageReceiver terminiMessageReceiver() {
+        return new TerminiMessageReceiver();
     }
 }

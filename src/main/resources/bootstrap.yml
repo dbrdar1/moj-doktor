@@ -6,12 +6,12 @@ spring:
       uri: http://localhost:8888
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: jdbc:postgresql://localhost:5432/pregledi_i_kartoni #${DATA_URL}
-    username: ${DATA_USER}
-    password: ${DATA_PASSWORD}
+    username: user
+    password: password
 
 eureka:
   client:
