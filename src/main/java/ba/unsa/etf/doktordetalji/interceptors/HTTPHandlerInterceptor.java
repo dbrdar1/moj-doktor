@@ -41,28 +41,33 @@ public class HTTPHandlerInterceptor implements HandlerInterceptor {
             tipOdgovoraNaAkciju = ActionRequest.TipOdgovoraNaAkciju.GRESKA;
         if (request.getMethod().equals("GET")) {
             ActionRequest.TipAkcije tipAkcijeGet = ActionRequest.TipAkcije.GET;
-            if (request.getServletPath().contains("/korisnici"))
-                saveEventUsingGRPC("korisnici", tipAkcijeGet, tipOdgovoraNaAkciju);
             if (request.getServletPath().contains("/doktori"))
                 saveEventUsingGRPC("doktori", tipAkcijeGet, tipOdgovoraNaAkciju);
-            if (request.getServletPath().contains("/pacijenti"))
-                saveEventUsingGRPC("pacijenti", tipAkcijeGet, tipOdgovoraNaAkciju);
-            if (request.getServletPath().contains("/notifikacije"))
-                saveEventUsingGRPC("notifikacije", tipAkcijeGet, tipOdgovoraNaAkciju);
-            if (request.getServletPath().contains("/poruke"))
-                saveEventUsingGRPC("poruke", tipAkcijeGet, tipOdgovoraNaAkciju);
         }
         if (request.getMethod().equals("POST")) {
             ActionRequest.TipAkcije tipAkcijeCreate = ActionRequest.TipAkcije.CREATE;
-            if (request.getServletPath().contains("/dodaj-notifikaciju"))
-                saveEventUsingGRPC("notifikacije", tipAkcijeCreate, tipOdgovoraNaAkciju);
-            if (request.getServletPath().contains("/dodaj-poruku"))
-                saveEventUsingGRPC("poruke", tipAkcijeCreate, tipOdgovoraNaAkciju);
+            if (request.getServletPath().contains("/dodaj-certifikat"))
+                saveEventUsingGRPC("certifikat", tipAkcijeCreate, tipOdgovoraNaAkciju);
+            if (request.getServletPath().contains("/dodaj-edukaciju"))
+                saveEventUsingGRPC("edukacija", tipAkcijeCreate, tipOdgovoraNaAkciju);
+        }
+        if (request.getMethod().equals("PUT")) {
+            ActionRequest.TipAkcije tipAkcijeCreate = ActionRequest.TipAkcije.UPDATE;
+            if (request.getServletPath().contains("/ocijeni-doktora"))
+                saveEventUsingGRPC("ocjenjivanje", tipAkcijeCreate, tipOdgovoraNaAkciju);
+            if (request.getServletPath().contains("/uredi-certifikat"))
+                saveEventUsingGRPC("certifikat", tipAkcijeCreate, tipOdgovoraNaAkciju);
+            if (request.getServletPath().contains("/uredi-edukaciju"))
+                saveEventUsingGRPC("edukacija", tipAkcijeCreate, tipOdgovoraNaAkciju);
+            if (request.getServletPath().contains("/uredi-biografiju-titulu"))
+                saveEventUsingGRPC("biografija-titula", tipAkcijeCreate, tipOdgovoraNaAkciju);
         }
         if (request.getMethod().equals("DELETE")) {
             ActionRequest.TipAkcije tipAkcijeDelete = ActionRequest.TipAkcije.DELETE;
-            if (request.getServletPath().contains("/notifikacije"))
-                saveEventUsingGRPC("notifikacije", tipAkcijeDelete, tipOdgovoraNaAkciju);
+            if (request.getServletPath().contains("/obrisi-certifikat"))
+                saveEventUsingGRPC("certifikat", tipAkcijeDelete, tipOdgovoraNaAkciju);
+            if (request.getServletPath().contains("/obrisi-edukaciju"))
+                saveEventUsingGRPC("edukacija", tipAkcijeDelete, tipOdgovoraNaAkciju);
         }
     }
 

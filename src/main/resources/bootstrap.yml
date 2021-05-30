@@ -34,9 +34,3 @@ management:
         include: "*"
 app:
   jwtSecret: ZWRvLXRlbnNlaQ==
-logging:
-  level:
-    org: ERROR
-tutorial:
-  client:
-    duration: 10000

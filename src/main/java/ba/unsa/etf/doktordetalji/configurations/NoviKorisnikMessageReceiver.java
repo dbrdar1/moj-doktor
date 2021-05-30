@@ -1,21 +1,13 @@
 package ba.unsa.etf.doktordetalji.configurations;
 
-import ba.unsa.etf.doktordetalji.repositories.DoktorRepository;
-import ba.unsa.etf.doktordetalji.responses.KorisnikResponse;
-import ba.unsa.etf.doktordetalji.services.DoktorService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 
 @RabbitListener(queues = "korisnikQueue1")
 public class NoviKorisnikMessageReceiver {
