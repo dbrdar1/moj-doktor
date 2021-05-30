@@ -1,16 +1,13 @@
 package ba.unsa.etf.pregledi_i_kartoni.services;
 
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
-import ba.unsa.etf.pregledi_i_kartoni.models.PacijentDoktor;
-import ba.unsa.etf.pregledi_i_kartoni.models.Pregled;
-import ba.unsa.etf.pregledi_i_kartoni.models.Termin;
+import ba.unsa.etf.pregledi_i_kartoni.models.*;
 import ba.unsa.etf.pregledi_i_kartoni.models.Termin;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.PacijentDoktorRepository;
+import ba.unsa.etf.pregledi_i_kartoni.repositories.PacijentRepository;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.TerminRepository;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajTerminRequest;
-import ba.unsa.etf.pregledi_i_kartoni.responses.ListaTerminaResponse;
-import ba.unsa.etf.pregledi_i_kartoni.responses.TerminResponse;
-import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
+import ba.unsa.etf.pregledi_i_kartoni.responses.*;
 import ba.unsa.etf.pregledi_i_kartoni.responses.TerminResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,7 @@ public class TerminService {
 
     private final TerminRepository terminRepository;
     private final PacijentDoktorRepository pacijentDoktorRepository;
+    private final PacijentRepository pacijentRepository;
 
 
     @Autowired
@@ -98,6 +96,21 @@ public class TerminService {
         ResponseEntity<String> responseString = restTemplate.getForEntity(fooResourceUrl, String.class);
         ResponseEntity<ListaTerminaResponse> response = restTemplate.getForEntity(fooResourceUrl, ListaTerminaResponse.class);
         return responseString.getStatusCode() == HttpStatus.OK ? responseString.getBody() : null;
+
+    }
+
+    public List<TerminResponse> dajTerminePacijenta(Long id) {
+        Pacijent p = pacijentRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Ne postoji pacijent sa id = " + id.toString() + "!"));
+        if(!terminRepository.findByPacijent(p).isPresent()) {
+            throw new ResourceNotFoundException("Pacijent nema nijedan zakazan termin!");
+        }
+        List<Termin> terminiPacijenta = terminRepository.findByPacijent(p).get();
+        List<TerminResponse> listaTerminResponse = new ArrayList<>();
+        for (Termin t : terminiPacijenta) {
+            listaTerminResponse.add(new TerminResponse(t.getId(), t.getDatumPregleda(), t.getVrijemePregleda(), t.getPacijentDoktor().getId()));
+        }
+        return listaTerminResponse;
 
     }
 

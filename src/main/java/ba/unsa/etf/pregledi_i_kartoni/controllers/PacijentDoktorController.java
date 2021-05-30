@@ -8,6 +8,7 @@ import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.services.PacijentDoktorService;
 import ba.unsa.etf.pregledi_i_kartoni.util.ErrorHandlingHelper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,14 +29,14 @@ public class PacijentDoktorController {
 
 
     @PostMapping("/dodaj-vezu-pacijent-doktor")
-    public ResponseEntity<Response> spasiVezuPacijentDoktor(@RequestBody DodajPacijentDoktorRequest dodajPacijentDoktorRequest) {
+    public ResponseEntity<Response> spasiVezuPacijentDoktor(@RequestHeader HttpHeaders headers, @RequestBody DodajPacijentDoktorRequest dodajPacijentDoktorRequest) {
 
-        Response response = pacijentDoktorService.spasiVezuPacijentDoktor(dodajPacijentDoktorRequest.getPacijentId(),
+        Response response = pacijentDoktorService.spasiVezuPacijentDoktor(headers, dodajPacijentDoktorRequest.getPacijentId(),
                                                                           dodajPacijentDoktorRequest.getDoktorId()
                                                                          );
         return ResponseEntity.ok(response);
 
-        }
+    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

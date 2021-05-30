@@ -1,6 +1,7 @@
 package ba.unsa.etf.pregledi_i_kartoni.services;
 
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
+import ba.unsa.etf.pregledi_i_kartoni.exceptions.UnauthorizedException;
 import ba.unsa.etf.pregledi_i_kartoni.models.Doktor;
 import ba.unsa.etf.pregledi_i_kartoni.models.Pacijent;
 import ba.unsa.etf.pregledi_i_kartoni.models.PacijentDoktor;
@@ -8,7 +9,9 @@ import ba.unsa.etf.pregledi_i_kartoni.repositories.DoktorRepository;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.PacijentDoktorRepository;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.PacijentRepository;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
+import ba.unsa.etf.pregledi_i_kartoni.security.TrenutniKorisnikSecurity;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +24,10 @@ public class PacijentDoktorService {
     private final PacijentDoktorRepository pacijentDoktorRepository;
     private final PacijentRepository pacijentRepository;
     private final DoktorRepository doktorRepository;
+    private final TrenutniKorisnikSecurity trenutniKorisnikSecurity;
 
-    public Response spasiVezuPacijentDoktor(Long idPacijenta, Long idDoktora) {
+
+    public Response spasiVezuPacijentDoktor(HttpHeaders headers, Long idPacijenta, Long idDoktora) {
 
         String errorMessageDoktor = String.format("Ne postoji doktor sa id = '%d'!", idDoktora);
         String errorMessagePacijent = String.format("Ne postoji pacijent sa id = '%d'!", idPacijenta);
@@ -31,6 +36,10 @@ public class PacijentDoktorService {
         if(!trazeniPacijent.isPresent()) throw new ResourceNotFoundException(errorMessagePacijent);
         Optional<Doktor> trazeniDoktor = doktorRepository.findById(idDoktora);
         if(!trazeniDoktor.isPresent()) throw new ResourceNotFoundException(errorMessageDoktor);
+
+        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, trazeniDoktor.get().getId())) {
+            throw new UnauthorizedException("Neovlašten pristup resursima!");
+        }
 
         PacijentDoktor pacijentDoktorVeza = new PacijentDoktor(trazeniDoktor.get(), trazeniPacijent.get());
         //PacijentDoktor pacijentDoktorVeza = new PacijentDoktor();

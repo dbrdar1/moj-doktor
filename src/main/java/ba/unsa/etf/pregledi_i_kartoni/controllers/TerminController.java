@@ -82,6 +82,12 @@ public class TerminController {
 
     }
 
+    @GetMapping("/termini-pacijenta/{id}")
+    public  ResponseEntity<List<TerminResponse>> dajTerminePacijenta(@PathVariable Long id){
+        List<TerminResponse> trazeniTermini = terminService.dajTerminePacijenta(id);
+        return ResponseEntity.ok(trazeniTermini);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response handleConstraintViolationException(ConstraintViolationException exception) {
