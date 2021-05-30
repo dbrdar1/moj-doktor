@@ -1,6 +1,7 @@
 package ba.unsa.etf.pregledi_i_kartoni.controllers;
 
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
+import ba.unsa.etf.pregledi_i_kartoni.exceptions.UnauthorizedException;
 import ba.unsa.etf.pregledi_i_kartoni.models.*;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajPacijentaRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajPregledRequest;
@@ -75,8 +76,8 @@ public class PregledController {
 
     // brisanje pregleda
     @DeleteMapping("/obrisi-pregled/{idPregleda}")
-    public ResponseEntity<Response> obrisiPregled(@PathVariable(value = "idPregleda") Long idPregleda) {
-        Response response = pregledService.obrisiPregled(idPregleda);
+    public ResponseEntity<Response> obrisiPregled(@RequestHeader HttpHeaders headers, @PathVariable(value = "idPregleda") Long idPregleda) {
+        Response response = pregledService.obrisiPregled(headers, idPregleda);
         return ResponseEntity.ok(response);
     }
 
@@ -90,6 +91,12 @@ public class PregledController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response handleEntityNotFoundException(ResourceNotFoundException exception) {
         return ErrorHandlingHelper.handleEntityNotFoundException(exception);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response handleEntityUnauthorizedxception(UnauthorizedException exception) {
+        return ErrorHandlingHelper.handleEntityUnauthorizedException(exception);
     }
 
 }

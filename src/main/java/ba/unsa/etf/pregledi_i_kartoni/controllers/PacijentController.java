@@ -1,6 +1,7 @@
 package ba.unsa.etf.pregledi_i_kartoni.controllers;
 
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
+import ba.unsa.etf.pregledi_i_kartoni.exceptions.UnauthorizedException;
 import ba.unsa.etf.pregledi_i_kartoni.models.Korisnik;
 import ba.unsa.etf.pregledi_i_kartoni.models.Pacijent;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajPacijentaRequest;
@@ -10,7 +11,9 @@ import ba.unsa.etf.pregledi_i_kartoni.responses.PacijentResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.services.PacijentService;
 import ba.unsa.etf.pregledi_i_kartoni.util.ErrorHandlingHelper;
+import com.google.api.Http;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +35,8 @@ public class PacijentController {
 
 
     // prikaz pacijenta na osnovu id
-    @GetMapping("/pacijenti/{idPacijenta}")
-    public ResponseEntity<PacijentResponse> dajPacijenta(@PathVariable(value = "idPacijenta") Long idPacijenta){
+    @GetMapping("/pacijenti/{idPacijent}")
+    public ResponseEntity<PacijentResponse> dajPacijenta(@PathVariable(value = "idPacijent") Long idPacijenta){
         PacijentResponse trazeniPacijent = pacijentService.dajPacijentaNaOsnovuId(idPacijenta);
         return ResponseEntity.ok(trazeniPacijent);
     }
@@ -46,10 +49,17 @@ public class PacijentController {
     }
 
 
-    // prikaz kartona na osnovu id pacijenta
-    @GetMapping("/kartoni/{idPacijenta}")
-    public ResponseEntity<KartonResponse> dajKarton(@PathVariable(value = "idPacijenta") Long idPacijenta){
-        KartonResponse trazeniKarton = pacijentService.dajKartonNaOsnovuId(idPacijenta);
+    // prikaz kartona na osnovu id pacijenta - uloga pacijent
+    @GetMapping("/kartoni-uloga-pacijent/{idPacijent}")
+    public ResponseEntity<KartonResponse> dajKartonPacijentUloga(@RequestHeader HttpHeaders headers,  @PathVariable(value = "idPacijent") Long idPacijenta){
+        KartonResponse trazeniKarton = pacijentService.dajKartonNaOsnovuIdPacijentUloga(headers, idPacijenta);
+        return ResponseEntity.ok(trazeniKarton);
+    }
+
+    // prikaz kartona na osnovu id pacijenta - uloga doktor
+    @GetMapping("/kartoni-uloga-doktor/{idPacijent}")
+    public ResponseEntity<KartonResponse> dajKartonDoktorUloga(@RequestHeader HttpHeaders headers, @PathVariable(value = "idPacijent") Long idPacijenta){
+        KartonResponse trazeniKarton = pacijentService.dajKartonNaOsnovuIdDoktorUloga(headers, idPacijenta);
         return ResponseEntity.ok(trazeniKarton);
     }
 
@@ -72,14 +82,32 @@ public class PacijentController {
         return ResponseEntity.ok(trazeniKartoni);
     }
 
-
     // filtriranje pacijenta
     @GetMapping("/pacijenti-filtrirano")
     public ResponseEntity<List<PacijentResponse>> filtrirajPacijente(@RequestParam(name = "ime", required = false) String ime,
-                                                                 @RequestParam(name = "prezime", required = false) String prezime) {
+                                                                     @RequestParam(name = "prezime", required = false) String prezime) {
         List<PacijentResponse> trazeniPacijenti = pacijentService.filtrirajPacijente(ime, prezime);
         return ResponseEntity.ok(trazeniPacijenti);
     }
+
+    // lista pacijenata doktora
+    @GetMapping("/pacijenti-doktora/{idDoktor}")
+    public ResponseEntity<List<PacijentResponse>> pacijentiDoktora(@RequestHeader HttpHeaders headers,
+                                                                   @PathVariable(value = "idDoktor") Long idDoktor) {
+        List<PacijentResponse> trazeniPacijenti = pacijentService.dajPacijenteDoktora(headers, idDoktor);
+        return ResponseEntity.ok(trazeniPacijenti);
+    }
+
+    // lista pacijenata doktora filtrirano
+    @GetMapping("/pacijenti-doktora-filtrirano/{idDoktor}")
+    public ResponseEntity<List<PacijentResponse>> pacijentiDoktora(@RequestHeader HttpHeaders headers,
+                                                                   @PathVariable(value = "idDoktor") Long idDoktor,
+                                                                   @RequestParam(name = "ime", required = false) String ime,
+                                                                   @RequestParam(name = "prezime", required = false) String prezime) {
+        List<PacijentResponse> trazeniPacijenti = pacijentService.filtrirajPacijenteDoktora(headers, idDoktor, ime, prezime);
+        return ResponseEntity.ok(trazeniPacijenti);
+    }
+
 
 
 
@@ -91,11 +119,12 @@ public class PacijentController {
     }
 
     // uredjivanje kartona
-    @PutMapping("/uredi-karton/{id}")
-    public  ResponseEntity<Response> urediKarton(@RequestBody UrediKartonRequest urediKartonRequest, @PathVariable Long id){
-        Response response = pacijentService.urediKarton(id, urediKartonRequest);
+    @PutMapping("/uredi-karton/{idPacijent}")
+    public  ResponseEntity<Response> urediKarton(@RequestHeader HttpHeaders headers, @RequestBody UrediKartonRequest urediKartonRequest, @PathVariable Long idPacijent){
+        Response response = pacijentService.urediKarton(headers, idPacijent, urediKartonRequest);
         return ResponseEntity.ok(response);
     }
+
 
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -108,6 +137,12 @@ public class PacijentController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response handleEntityNotFoundException(ResourceNotFoundException exception) {
         return ErrorHandlingHelper.handleEntityNotFoundException(exception);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response handleEntityUnauthorizedxception(UnauthorizedException exception) {
+        return ErrorHandlingHelper.handleEntityUnauthorizedException(exception);
     }
 
 

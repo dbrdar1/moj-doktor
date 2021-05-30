@@ -32,13 +32,13 @@ public class PacijentDoktorService {
         Optional<Doktor> trazeniDoktor = doktorRepository.findById(idDoktora);
         if(!trazeniDoktor.isPresent()) throw new ResourceNotFoundException(errorMessageDoktor);
 
-        //PacijentDoktor pacijentDoktorVeza = new PacijentDoktor(trazeniDoktor.get(), trazeniPacijent.get());
-        PacijentDoktor pacijentDoktorVeza = new PacijentDoktor();
-        trazeniPacijent.get().getVezeSaDoktorima().add(pacijentDoktorVeza);
-        pacijentRepository.save(trazeniPacijent.get());
+        PacijentDoktor pacijentDoktorVeza = new PacijentDoktor(trazeniDoktor.get(), trazeniPacijent.get());
+        //PacijentDoktor pacijentDoktorVeza = new PacijentDoktor();
+        //trazeniPacijent.get().getVezeSaDoktorima().add(pacijentDoktorVeza);
+        //pacijentRepository.save(trazeniPacijent.get());
         //pacijentDoktorVeza.setDoktor(trazeniDoktor.get());
         //pacijentDoktorVeza.setPacijent(trazeniPacijent.get());
-        //pacijentDoktorRepository.save(pacijentDoktorVeza);
+        pacijentDoktorRepository.save(pacijentDoktorVeza);
         return new Response("Uspješno ste dodali vezu pacijent-doktor!", 200);
     }
 }

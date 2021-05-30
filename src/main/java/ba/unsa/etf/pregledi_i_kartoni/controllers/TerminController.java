@@ -1,6 +1,7 @@
 package ba.unsa.etf.pregledi_i_kartoni.controllers;
 
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
+import ba.unsa.etf.pregledi_i_kartoni.exceptions.UnauthorizedException;
 import ba.unsa.etf.pregledi_i_kartoni.models.*;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajTerminRequest;
 import ba.unsa.etf.pregledi_i_kartoni.responses.ListaTerminaResponse;
@@ -91,6 +92,12 @@ public class TerminController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response handleEntityNotFoundException(ResourceNotFoundException exception) {
         return ErrorHandlingHelper.handleEntityNotFoundException(exception);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response handleEntityUnauthorizedxception(UnauthorizedException exception) {
+        return ErrorHandlingHelper.handleEntityUnauthorizedException(exception);
     }
 
 }

@@ -200,12 +200,19 @@ public class PregledService {
         return new Response("Uspješno ste dodali pregled!", 200);
     }
 
-    public Response obrisiPregled(Long id) {
+    public Response obrisiPregled(HttpHeaders headers, Long id) {
         String errorBrisanjePregleda = String.format("Ne postoji pregled sa id = '%d'", id);
         Optional<Pregled> trazeniPregled = pregledRepository.findById(id);
         if(!trazeniPregled.isPresent()) {
             throw new ResourceNotFoundException(errorBrisanjePregleda);
         }
+
+        Doktor trazeniDoktor = trazeniPregled.get().getTermin().getPacijentDoktor().getDoktor();
+        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, trazeniDoktor.getId())) {
+            throw new UnauthorizedException("Neovlašten pristup resursima!");
+        }
+
+
         pregledRepository.deleteById(id);
         return new Response("Uspješno ste obrisali pregled!", 200);
     }

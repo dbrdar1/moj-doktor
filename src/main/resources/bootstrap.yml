@@ -12,20 +12,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/pregledi_i_kartoni #${DATA_URL}
     username: ${DATA_USER}
     password: ${DATA_PASSWORD}
-  #mail:
-  #  default-encoding: UTF-8
-  #  host: smtp.gmail.com
-  #  username: ${MAIL_USER}
-  #  password: ${MAIL_PASSWORD}
-  #  port: 587
-  #  properties:
-  #    mail:
-  #      smtp:
-  #        auth: true
-  #        starttls:
-  #          enable: true
-  #  protocol: smtp
-  #  test-connection: false
+
 eureka:
   client:
     serviceUrl:
@@ -48,22 +35,3 @@ server:
 
 app:
   jwtSecret: ZWRvLXRlbnNlaQ==
-
-
-#spring:
-#  jpa:
-#    hibernate:
-#      ddl-auto: create
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
-#  datasource:
-#    url: "jdbc:postgresql://localhost:5432/pregledi_i_kartoni"
-#    username: postgres
-#    password: root
-#  application:
-#    name: eureka-client-pregledi-i-kartoni
-#eureka:
-#  client:
-#    serviceUrl:
-#      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
-#    instance:
-#      preferIpAddress: true

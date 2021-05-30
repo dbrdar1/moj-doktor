@@ -29,6 +29,21 @@ public interface PacijentRepository extends JpaRepository<Pacijent, Long> {
             "(SELECT k.id FROM Korisnik k WHERE (:ime IS NULL OR k.ime = :ime) AND " +
             "(:prezime IS NULL OR k.prezime = :prezime))";
 
+    String filterPacijentiDoktoraUpit = "SELECT p FROM Pacijent p, PacijentDoktor pd WHERE " +
+            "p.id IN " +
+            "(" +
+            "SELECT k.id FROM Korisnik k WHERE " +
+            "(:ime IS NULL OR k.ime = :ime) AND " +
+            "(:prezime IS NULL OR k.prezime = :prezime)" +
+            ")" +
+            " AND " +
+            "(p.id IN " +
+            "(" +
+            "SELECT pd.pacijent.id FROM PacijentDoktor pd WHERE " +
+            "(:idDoktor IS NULL OR pd.doktor.id = :idDoktor)" +
+            ")" +
+            ")";
+
 
 
     Optional<Pacijent> findById(Long id);
@@ -48,5 +63,13 @@ public interface PacijentRepository extends JpaRepository<Pacijent, Long> {
     Optional<List<Pacijent>> findByQueryPacijent(@Param("ime") String ime,
                                                  @Param("prezime") String prezime
     );
+
+    @Query(value = filterPacijentiDoktoraUpit)
+    Optional<List<Pacijent>> findPacijentiDoktoraFiltrirano(@Param("idDoktor") Long idDoktor,
+                                                            @Param("ime") String ime,
+                                                            @Param("prezime") String prezime
+    );
+
+
 
 }

@@ -1,6 +1,7 @@
 package ba.unsa.etf.pregledi_i_kartoni.util;
 
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
+import ba.unsa.etf.pregledi_i_kartoni.exceptions.UnauthorizedException;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 
 import javax.validation.ConstraintViolation;
@@ -22,5 +23,9 @@ public class ErrorHandlingHelper {
 
     public static Response handleEntityNotFoundException(ResourceNotFoundException exception) {
         return new Response(exception.getMessage(),404);
+    }
+
+    public static Response handleEntityUnauthorizedException(UnauthorizedException exception) {
+        return new Response(exception.getMessage(),401);
     }
 }
