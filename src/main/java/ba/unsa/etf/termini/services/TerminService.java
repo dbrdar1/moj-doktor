@@ -2,10 +2,7 @@ package ba.unsa.etf.termini.services;
 
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
 import ba.unsa.etf.termini.Requests.UrediTerminRequest;
-import ba.unsa.etf.termini.Responses.ListaTerminaResponse;
-import ba.unsa.etf.termini.Responses.PacijentKartonDoktorResponse;
-import ba.unsa.etf.termini.Responses.Response;
-import ba.unsa.etf.termini.Responses.TerminResponse;
+import ba.unsa.etf.termini.Responses.*;
 import ba.unsa.etf.termini.dto.TerminProjection;
 import ba.unsa.etf.termini.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.termini.models.*;
@@ -14,6 +11,9 @@ import ba.unsa.etf.termini.repositories.PacijentKartonDoktorRepository;
 import ba.unsa.etf.termini.repositories.PacijentRepository;
 import ba.unsa.etf.termini.repositories.TerminRepository;
 import lombok.AllArgsConstructor;
+import org.json.JSONObject;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,6 +29,9 @@ public class TerminService {
     private DoktorRepository doktorRepository;
     private PacijentKartonDoktorService pacijentKartonDoktorService;
 
+    private final RabbitTemplate template;
+    private final Queue termini;
+
     public Response dodajTermin(DodajTerminRequest dodajTerminRequest) {
         PacijentKartonDoktorResponse pkdRes = pacijentKartonDoktorService.dajVezuDoktorPacijent(dodajTerminRequest.getIdDoktora(),dodajTerminRequest.getIdPacijenta());
         Optional<PacijentKartonDoktor> pkd = pacijentKartonDoktorRepository.findById(pkdRes.getId());
@@ -36,7 +39,28 @@ public class TerminService {
         Termin termin= new Termin(dodajTerminRequest.getDatum(), dodajTerminRequest.getVrijeme(), pkd.get());
         pkd.get().getTermini().add(termin);
         pacijentKartonDoktorRepository.save(pkd.get());
+
+        AsyncTerminiResponse asyncTerminiResponse = new AsyncTerminiResponse(
+                dodajTerminRequest.getIdDoktora(),
+                dodajTerminRequest.getIdPacijenta(),
+                dodajTerminRequest.getDatum().toString(),
+                dodajTerminRequest.getVrijeme());
+        sendAsync(asyncTerminiResponse);
+
         return new Response("Uspješno ste dodali termin!", 200);
+    }
+
+    public void sendAsync(AsyncTerminiResponse response) {
+        JSONObject paket = new JSONObject();
+        paket.put("idDoktora", response.getIdDoktora());
+        paket.put("idPacijenta", response.getIdPacijenta());
+        paket.put("datum", response.getDatum());
+        paket.put("vrijeme", response.getVrijeme());
+
+        String message = paket.toString();
+        this.template.convertAndSend(termini.getName(), message);
+
+        System.out.println("Sent: " + termini.getName() + message);
     }
 
     public Response obrisiTermin(Long id) {
