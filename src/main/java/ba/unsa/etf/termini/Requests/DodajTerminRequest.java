@@ -10,7 +10,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DodajTerminRequest {
-    private Long idPkd;
+    private Long idPacijenta;
+    private Long idDoktora;
     private Date datum;
     private String vrijeme;
 }

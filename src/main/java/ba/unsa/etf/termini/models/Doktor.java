@@ -1,5 +1,7 @@
 package ba.unsa.etf.termini.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "doktor")
+@JsonIgnoreProperties({"vezeSaPacijentima"})
 public class Doktor extends Korisnik{
     private String titula;
 
@@ -26,5 +29,6 @@ public class Doktor extends Korisnik{
 
     @OneToMany(mappedBy = "doktor", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private List<PacijentKartonDoktor> vezeSaPacijentima = new ArrayList<>();
 }

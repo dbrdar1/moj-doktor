@@ -31,4 +31,8 @@ public class PacijentKartonDoktor {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Termin> termini = new ArrayList<>();
 
+    public PacijentKartonDoktor(Doktor doktor, Pacijent pacijent) {
+        this.doktor = doktor;
+        this.pacijent = pacijent;
+    }
 }

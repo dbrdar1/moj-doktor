@@ -1,5 +1,6 @@
 package ba.unsa.etf.termini.Responses;
 
+import ba.unsa.etf.termini.dto.TerminProjection;
 import ba.unsa.etf.termini.models.Termin;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,5 +17,5 @@ import java.util.List;
 @RequestMapping(method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
 @ResponseBody
 public class ListaTerminaResponse {
-    List<Termin> termini = new ArrayList<>();
+    List<TerminProjection> termini = new ArrayList<>();
 }

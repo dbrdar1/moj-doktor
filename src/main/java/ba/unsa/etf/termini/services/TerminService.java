@@ -3,8 +3,10 @@ package ba.unsa.etf.termini.services;
 import ba.unsa.etf.termini.Requests.DodajTerminRequest;
 import ba.unsa.etf.termini.Requests.UrediTerminRequest;
 import ba.unsa.etf.termini.Responses.ListaTerminaResponse;
+import ba.unsa.etf.termini.Responses.PacijentKartonDoktorResponse;
 import ba.unsa.etf.termini.Responses.Response;
 import ba.unsa.etf.termini.Responses.TerminResponse;
+import ba.unsa.etf.termini.dto.TerminProjection;
 import ba.unsa.etf.termini.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.termini.models.*;
 import ba.unsa.etf.termini.repositories.DoktorRepository;
@@ -25,9 +27,11 @@ public class TerminService {
     private PacijentKartonDoktorRepository pacijentKartonDoktorRepository;
     private PacijentRepository pacijentRepository;
     private DoktorRepository doktorRepository;
+    private PacijentKartonDoktorService pacijentKartonDoktorService;
 
     public Response dodajTermin(DodajTerminRequest dodajTerminRequest) {
-        Optional<PacijentKartonDoktor> pkd = pacijentKartonDoktorRepository.findById(dodajTerminRequest.getIdPkd());
+        PacijentKartonDoktorResponse pkdRes = pacijentKartonDoktorService.dajVezuDoktorPacijent(dodajTerminRequest.getIdDoktora(),dodajTerminRequest.getIdPacijenta());
+        Optional<PacijentKartonDoktor> pkd = pacijentKartonDoktorRepository.findById(pkdRes.getId());
         if(!pkd.isPresent()) return new Response("Id veze nije postojeći!", 400);
         Termin termin= new Termin(dodajTerminRequest.getDatum(), dodajTerminRequest.getVrijeme(), pkd.get());
         pkd.get().getTermini().add(termin);
@@ -55,9 +59,9 @@ public class TerminService {
         Pacijent p = pacijentRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Ne postoji pacijent s ovim id-om!"));
         List<PacijentKartonDoktor> veze = pacijentKartonDoktorRepository.findAllByPacijent(p);
-        List<Termin> sviTermini = new ArrayList<>();
+        List<TerminProjection> sviTermini = new ArrayList<>();
         for (int i =0; i< veze.size();i++){
-            List<Termin> t = terminRepository.findAllByPacijentKartonDoktor(veze.get(i));
+            List<TerminProjection> t = terminRepository.findAllByPacijentKartonDoktor(veze.get(i));
             sviTermini.addAll(t);
         }
         return  new ListaTerminaResponse(sviTermini);
@@ -67,9 +71,9 @@ public class TerminService {
         Doktor d = doktorRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Ne postoji doktor s ovim id-om!"));
         List<PacijentKartonDoktor> veze = pacijentKartonDoktorRepository.findAllByDoktor(d);
-        List<Termin> sviTermini = new ArrayList<>();
+        List<TerminProjection> sviTermini = new ArrayList<>();
         for (int i =0; i< veze.size();i++){
-            List<Termin> t = terminRepository.findAllByPacijentKartonDoktor(veze.get(i));
+            List<TerminProjection> t = terminRepository.findAllByPacijentKartonDoktor(veze.get(i));
             sviTermini.addAll(t);
         }
         return  new ListaTerminaResponse(sviTermini);

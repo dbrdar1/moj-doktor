@@ -25,7 +25,15 @@ public class PacijentKartonDoktorController {
     @ResponseBody
     public ResponseEntity<Response>  spasiVezuDoktorPacijent(@RequestBody DodajPacijentKartonDoktorRequest dodajPacijentKartonDoktorRequest) {
         Response response = pacijentKartonDoktorService.spasiVezuDoktorPacijent(dodajPacijentKartonDoktorRequest.getPacijentId(),dodajPacijentKartonDoktorRequest.getDoktorId());
-        return ResponseEntity.ok(response);    }
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/daj-vezu-pkd")
+    @ResponseBody
+    public ResponseEntity<PacijentKartonDoktorResponse>  dajVezuDoktorPacijent(@RequestParam Long idDoktora, @RequestParam Long idPacijenta) {
+        PacijentKartonDoktorResponse response = pacijentKartonDoktorService.dajVezuDoktorPacijent(idDoktora, idPacijenta);
+        return ResponseEntity.ok(response);
+    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
