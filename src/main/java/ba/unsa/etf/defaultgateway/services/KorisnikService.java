@@ -256,6 +256,10 @@ public class KorisnikService {
         Optional<Korisnik> korisnik1 = korisnikRepository.findByEmail(registracijaRequest.getEmail());
         if(korisnik1.isPresent()) return "Već postoji korisnik s ovim email-om.";
 
+        Optional<Korisnik> korisnik3 = korisnikRepository.findByBrojTelefona(registracijaRequest.getBrojTelefona());
+        if(korisnik3.isPresent()) return "Već postoji korisnik s ovim brojem telefona.";
+
+
         AsyncResponse response = new AsyncResponse();
 
         response.setIme(registracijaRequest.getIme());
