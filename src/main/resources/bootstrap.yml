@@ -3,6 +3,9 @@ spring:
     active: default
   application:
     name: zuul-service
+  cloud:
+    config:
+      uri: http://localhost:8888
   jpa:
     hibernate:
       ddl-auto: create
@@ -65,12 +68,13 @@ eureka:
     register-with-eureka: true
   instance:
     hostname: localhost
-
+management:
+  endpoint:
+    refresh:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 server:
   port: 8080
-logging:
-  level:
-    org: ERROR
-tutorial:
-  client:
-    duration: 10000

@@ -330,6 +330,7 @@ public class KorisnikService {
         k.get().setAdresa(uredjivanjeProfilaRequest.getAdresa());
         k.get().setEmail(uredjivanjeProfilaRequest.getEmail());
         k.get().setBrojTelefona(uredjivanjeProfilaRequest.getBrojTelefona());
+        k.get().setDatumRodjenja(uredjivanjeProfilaRequest.getDatumRodjenja());
 
         KorisnickaUloga doktor = korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_DOKTOR);
         KorisnickaUloga pacijent = korisnickaUlogaRepository.findByNazivKorisnickeUloge(NazivKorisnickeUloge.ROLE_PACIJENT);
