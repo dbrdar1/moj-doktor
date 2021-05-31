@@ -148,9 +148,14 @@ public class TerminService {
         if(!p.isPresent()) return new Response("Id pacijenta nije postojeći!", 400);
         Optional<Doktor> d = doktorRepository.findById(doktor);
         if(!d.isPresent()) return new Response("Id doktora nije postojeći!", 400);
-        PacijentDoktor pkd = new PacijentDoktor(d.get(),p.get());
-        p.get().getVezeSaDoktorima().add(pkd);
-        pacijentRepository.save(p.get());
+
+        PacijentDoktor pkd1;
+        Optional<PacijentDoktor> pkd = pacijentDoktorRepository.findByPacijentAndDoktor(p.get(),d.get());
+        if (!pkd.isPresent()) {
+            pkd1 = new PacijentDoktor(d.get(), p.get());
+            p.get().getVezeSaDoktorima().add(pkd1);
+            pacijentRepository.save(p.get());
+        }
         return new Response("Uspješno ste dodali vezu pacijent-doktor!", 200);
     }
 }
