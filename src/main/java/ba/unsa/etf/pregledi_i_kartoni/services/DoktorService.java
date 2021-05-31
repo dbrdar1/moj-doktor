@@ -1,6 +1,7 @@
 package ba.unsa.etf.pregledi_i_kartoni.services;
 
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
+import ba.unsa.etf.pregledi_i_kartoni.exceptions.UnauthorizedException;
 import ba.unsa.etf.pregledi_i_kartoni.models.Doktor;
 import ba.unsa.etf.pregledi_i_kartoni.models.Pacijent;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.DoktorRepository;
@@ -9,7 +10,9 @@ import ba.unsa.etf.pregledi_i_kartoni.requests.DodajPacijentaRequest;
 import ba.unsa.etf.pregledi_i_kartoni.responses.DoktorResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.PacijentResponse;
 import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
+import ba.unsa.etf.pregledi_i_kartoni.security.TrenutniKorisnikSecurity;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +24,8 @@ import java.util.Optional;
 public class DoktorService {
 
     private final DoktorRepository doktorRepository;
+    private final TrenutniKorisnikSecurity trenutniKorisnikSecurity;
+
 
     public Response dodajDoktora(DodajDoktoraRequest dodajDoktoraRequest) {
         Doktor noviDoktor = new Doktor(
@@ -57,5 +62,28 @@ public class DoktorService {
         }
 
         return listaDoktorResponse;
+    }
+
+    // svi doktori nekog pacijenta
+    public List<DoktorResponse> dajDoktorePacijenta(HttpHeaders headers, Long idPacijent) {
+
+        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, idPacijent)) {
+            throw new UnauthorizedException("Neovlašten pristup resursima!");
+        }
+
+        List<Doktor> trazeniDoktori = doktorRepository.findDoktoriPacijenta(idPacijent).get();
+        List<DoktorResponse> listaDoktorResponse = new ArrayList<>();
+
+        for (Doktor d : trazeniDoktori) {
+            listaDoktorResponse.add(new DoktorResponse(d.getId(), d.getIme(), d.getPrezime(),
+                            d.getDatumRodjenja(), d.getAdresa(), d.getBrojTelefona(),
+                            d.getEmail()
+                    )
+            );
+
+        }
+
+        return listaDoktorResponse;
+
     }
 }

@@ -9,6 +9,7 @@ import ba.unsa.etf.pregledi_i_kartoni.responses.Response;
 import ba.unsa.etf.pregledi_i_kartoni.services.DoktorService;
 import ba.unsa.etf.pregledi_i_kartoni.util.ErrorHandlingHelper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,14 @@ public class DoktorController {
     @GetMapping("/svi-doktori")
     public ResponseEntity<List<DoktorResponse>> dajSveDoktore(){
         List<DoktorResponse> trazeniDoktori = doktorService.dajSveDoktore();
+        return ResponseEntity.ok(trazeniDoktori);
+    }
+
+    // prikaz doktora pacijenta
+    @GetMapping("/doktori-pacijenta/{idPacijent}")
+    public ResponseEntity<List<DoktorResponse>> dajDoktorePacijenta(@RequestHeader HttpHeaders header,
+                                                                    @PathVariable(value = "idPacijent") Long idPacijent){
+        List<DoktorResponse> trazeniDoktori = doktorService.dajDoktorePacijenta(header, idPacijent);
         return ResponseEntity.ok(trazeniDoktori);
     }
 
