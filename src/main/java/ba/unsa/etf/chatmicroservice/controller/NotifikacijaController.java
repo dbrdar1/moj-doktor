@@ -1,18 +1,18 @@
 package ba.unsa.etf.chatmicroservice.controller;
 
 import ba.unsa.etf.chatmicroservice.exception.ResourceNotFoundException;
+import ba.unsa.etf.chatmicroservice.exception.UnauthorizedException;
 import ba.unsa.etf.chatmicroservice.model.Notifikacija;
 import ba.unsa.etf.chatmicroservice.repository.NotifikacijaRepository;
 import ba.unsa.etf.chatmicroservice.request.DodajNotifikacijuRequest;
 import ba.unsa.etf.chatmicroservice.response.NotifikacijaResponse;
 import ba.unsa.etf.chatmicroservice.response.NotifikacijeKorisnikaResponse;
 import ba.unsa.etf.chatmicroservice.response.Response;
+import ba.unsa.etf.chatmicroservice.security.TrenutniKorisnikSecurity;
 import ba.unsa.etf.chatmicroservice.service.NotifikacijaService;
 import ba.unsa.etf.chatmicroservice.util.ErrorHandlingHelper;
 import lombok.AllArgsConstructor;
-import org.json.JSONObject;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +28,7 @@ public class NotifikacijaController {
 
     private final NotifikacijaService notifikacijaService;
 
-    private final RabbitTemplate template;
-
-    private final Queue queue;
+    private final TrenutniKorisnikSecurity trenutniKorisnikSecurity;
 
     @GetMapping("/notifikacije")
     List<Notifikacija> all() {
@@ -38,7 +36,10 @@ public class NotifikacijaController {
     }
 
     @GetMapping("/notifikacije/{id}")
-    public ResponseEntity<NotifikacijaResponse> one(@PathVariable Long id) {
+    public ResponseEntity<NotifikacijaResponse> one(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
+        if (!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, id))
+            throw new UnauthorizedException("Neovlašten pristup resursima!");
+
         NotifikacijaResponse notifikacijaResponse = notifikacijaService.dajNotifikaciju(id);
         return ResponseEntity.ok(notifikacijaResponse);
     }
@@ -52,7 +53,6 @@ public class NotifikacijaController {
     @PostMapping("/dodaj-notifikaciju")
     public ResponseEntity<Response> dodajNotifikaciju(@RequestBody DodajNotifikacijuRequest dodajNotifikacijuRequest) {
         Response response = notifikacijaService.dodajNotifikaciju(dodajNotifikacijuRequest);
-        sendAddNotificationMessage(dodajNotifikacijuRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -60,18 +60,6 @@ public class NotifikacijaController {
     public ResponseEntity<Response> obrisiNotifikaciju(@PathVariable Long id) {
         Response response = notifikacijaService.obrisiNotifikaciju(id);
         return ResponseEntity.ok(response);
-    }
-
-    public void sendAddNotificationMessage(DodajNotifikacijuRequest dodajNotifikacijuRequest) {
-        JSONObject addNotificationMessageObject = new JSONObject();
-        addNotificationMessageObject.put("naslov", dodajNotifikacijuRequest.getNaslov());
-        addNotificationMessageObject.put("tekst", dodajNotifikacijuRequest.getTekst());
-        addNotificationMessageObject.put("datum", "2020-02-22");
-        addNotificationMessageObject.put("vrijeme", dodajNotifikacijuRequest.getVrijeme());
-        addNotificationMessageObject.put("idKorisnika", dodajNotifikacijuRequest.getIdKorisnika());
-        String message = addNotificationMessageObject.toString();
-        this.template.convertAndSend(queue.getName(), message);
-        System.out.println("Sent: " + message);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -84,6 +72,12 @@ public class NotifikacijaController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response handleEntityNotFoundException(ResourceNotFoundException exception) {
         return ErrorHandlingHelper.handleEntityNotFoundException(exception);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response handleUnauthorizedException(UnauthorizedException exception) {
+        return ErrorHandlingHelper.handleUnauthorizedException(exception);
     }
 }
 

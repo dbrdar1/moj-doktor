@@ -6,6 +6,9 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -15,7 +18,19 @@ import java.util.Date;
 @JsonIgnoreProperties({"notifikacijas", "razgovors1", "razgovors2"})
 public class Pacijent extends Korisnik {
 
-    public Pacijent(String ime, String prezime, Date datumRodjenja, String adresa, String email, String brojTelefona) {
-        super(ime, prezime, datumRodjenja, adresa, email, brojTelefona);
+    public Pacijent(String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona, String email) {
+        super(ime, prezime, datumRodjenja, adresa, brojTelefona, email);
+    }
+
+    public Pacijent(
+            Long id,
+            @NotBlank(message = "Korisnik mora imati ime") String ime,
+            @NotBlank(message = "Korisnik mora imati prezime") String prezime,
+            @NotNull(message = "Korisnik mora imati datum rodjenja") Date datumRodjenja,
+            @NotBlank(message = "Korisnik mora imati adresu") String adresa,
+            @NotBlank(message = "Korisnik mora imati broj telefona") String brojTelefona,
+            @NotBlank(message = "Korisnik mora imati email") @Email(message = "Email mora biti validan") String email
+    ) {
+        super(id, ime, prezime, datumRodjenja, adresa, brojTelefona, email);
     }
 }

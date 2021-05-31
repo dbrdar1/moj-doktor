@@ -12,6 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
@@ -93,13 +96,15 @@ public class NotifikacijaTest {
                 "14:00",
                 pacijent);
 
+        String timestampAkcijeNow =
+                Timestamp.from(ZonedDateTime.now(ZoneId.of("Europe/Sarajevo")).toInstant()).toString();
+
         Poruka poruka = new Poruka(
                 "dje si",
-                0,
-                date,
-                "13:00",
+                timestampAkcijeNow,
                 doktor,
-                pacijent);
+                pacijent
+        );
 
         doktorRepository.save(doktor);
         pacijentRepository.save(pacijent);

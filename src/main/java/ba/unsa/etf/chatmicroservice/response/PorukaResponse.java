@@ -16,9 +16,7 @@ import java.util.Date;
 public class PorukaResponse {
     private Long id;
     private String sadrzaj;
-    private Integer procitana;
-    private Date datum;
-    private String vrijeme;
+    private String timestamp;
     private Long posiljalacId;
     private Long primalacId;
 }

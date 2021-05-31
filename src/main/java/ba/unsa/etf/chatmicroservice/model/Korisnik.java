@@ -29,7 +29,6 @@ import java.util.List;
 @JsonIgnoreProperties({"notifikacije", "poslanePoruke", "primljenePoruke"})
 public class Korisnik {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotBlank(message = "Korisnik mora imati ime")
@@ -66,7 +65,25 @@ public class Korisnik {
     @JsonIgnore
     private List<Poruka> primljenePoruke = new ArrayList<>();
 
-    public Korisnik(String ime, String prezime, Date datumRodjenja, String adresa, String email, String brojTelefona) {
+    public Korisnik(String ime, String prezime, Date datumRodjenja, String adresa, String brojTelefona, String email) {
+        this.ime = ime;
+        this.prezime = prezime;
+        this.datumRodjenja = datumRodjenja;
+        this.adresa = adresa;
+        this.brojTelefona = brojTelefona;
+        this.email = email;
+    }
+
+    public Korisnik(
+            Long id,
+            @NotBlank(message = "Korisnik mora imati ime") String ime,
+            @NotBlank(message = "Korisnik mora imati prezime") String prezime,
+            @NotNull(message = "Korisnik mora imati datum rodjenja") Date datumRodjenja,
+            @NotBlank(message = "Korisnik mora imati adresu") String adresa,
+            @NotBlank(message = "Korisnik mora imati broj telefona") String brojTelefona,
+            @NotBlank(message = "Korisnik mora imati email") @Email(message = "Email mora biti validan") String email
+    ) {
+        this.id = id;
         this.ime = ime;
         this.prezime = prezime;
         this.datumRodjenja = datumRodjenja;

@@ -26,8 +26,7 @@ public class PorukaService {
     public PorukaResponse dajPoruku(Long id) {
         Poruka poruka = porukaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ne postoji poruka s ovim id-om!"));
-        return new PorukaResponse(poruka.getId(), poruka.getSadrzaj(), poruka.getProcitana(), poruka.getDatum(),
-                poruka.getVrijeme(), poruka.getPosiljalac().getId(), poruka.getPrimalac().getId());
+        return new PorukaResponse(poruka.getId(), poruka.getSadrzaj(), poruka.getTimestamp(), poruka.getPosiljalac().getId(), poruka.getPrimalac().getId());
     }
 
     public PorukePosiljaocaIPrimaocaResponse dajPorukePosiljaocaIPrimaoca(Long idPosiljaoca, Long idPrimaoca) {
@@ -46,9 +45,7 @@ public class PorukaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Ne postoji primalac s ovim id-om!"));
         Poruka poruka = new Poruka(
                 dodajPorukuRequest.getSadrzaj(),
-                0,
-                new Date(),
-                dodajPorukuRequest.getVrijeme(),
+                dodajPorukuRequest.getTimestamp(),
                 posiljalac,
                 primalac
         );

@@ -7,11 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 @Entity
 @Data
@@ -26,15 +22,8 @@ public class Poruka {
     @NotBlank(message = "Poruka mora imati sadrzaj")
     private String sadrzaj;
 
-    @Min(value = 0, message = "Vrijednost Procitana moze biti 0 ili 1")
-    @Max(value = 1, message = "Vrijednost Procitana moze biti 0 ili 1")
-    private Integer procitana;
-
-    @NotNull(message = "Poruka mora imati datum")
-    private Date datum;
-
-    @NotBlank(message = "Poruka mora imati vrijeme")
-    private String vrijeme;
+    @NotBlank(message = "Poruka mora imati datum i vrijeme")
+    private String timestamp;
 
     @ManyToOne
     @JoinColumn(name = "posiljalac_id")
@@ -46,11 +35,9 @@ public class Poruka {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Korisnik primalac;
 
-    public Poruka(String sadrzaj, Integer procitana, Date datum, String vrijeme, Korisnik posiljalac, Korisnik primalac) {
+    public Poruka(String sadrzaj, String timestamp, Korisnik posiljalac, Korisnik primalac) {
         this.sadrzaj = sadrzaj;
-        this.procitana = procitana;
-        this.datum = datum;
-        this.vrijeme = vrijeme;
+        this.timestamp = timestamp;
         this.posiljalac = posiljalac;
         this.primalac = primalac;
     }

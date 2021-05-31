@@ -1,6 +1,7 @@
 package ba.unsa.etf.chatmicroservice.util;
 
 import ba.unsa.etf.chatmicroservice.exception.ResourceNotFoundException;
+import ba.unsa.etf.chatmicroservice.exception.UnauthorizedException;
 import ba.unsa.etf.chatmicroservice.response.Response;
 
 import javax.validation.ConstraintViolation;
@@ -22,5 +23,9 @@ public class ErrorHandlingHelper {
 
     public static Response handleEntityNotFoundException(ResourceNotFoundException exception) {
         return new Response(exception.getMessage(),404);
+    }
+
+    public static Response handleUnauthorizedException(UnauthorizedException exception) {
+        return new Response(exception.getMessage(),401);
     }
 }

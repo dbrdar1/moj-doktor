@@ -15,6 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
@@ -45,6 +48,9 @@ public class PorukaTest {
 
     @Autowired
     PorukaRepository porukaRepository;
+
+    String timestampAkcijeNow =
+            Timestamp.from(ZonedDateTime.now(ZoneId.of("Europe/Sarajevo")).toInstant()).toString();
 
     public static String asJsonString(final Object obj) {
         try {
@@ -98,9 +104,7 @@ public class PorukaTest {
 
         Poruka poruka = new Poruka(
                 "dje si",
-                0,
-                date,
-                "13:00",
+                timestampAkcijeNow,
                 doktor,
                 pacijent);
 
@@ -140,7 +144,7 @@ public class PorukaTest {
         primalac = korisnikRepository.save(primalac);
         this.mockMvc.perform(post("/dodaj-poruku")
                 .content(asJsonString(new DodajPorukuRequest
-                        ("Neka poruka test.", new Date(), "11:35", posiljalac.getId(), primalac.getId())))
+                        ("Neka poruka test.", timestampAkcijeNow, posiljalac.getId(), primalac.getId())))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -154,7 +158,7 @@ public class PorukaTest {
         inicijalizirajBazu();
         this.mockMvc.perform(post("/dodaj-poruku")
                 .content(asJsonString(new DodajPorukuRequest
-                        ("Neka poruka test.", new Date(), "11:35", 10L, 11L)))
+                        ("Neka poruka test.", timestampAkcijeNow, 10L, 11L)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -171,7 +175,7 @@ public class PorukaTest {
         primalac = korisnikRepository.save(primalac);
         this.mockMvc.perform(post("/dodaj-poruku")
                 .content(asJsonString(new DodajPorukuRequest
-                        ("", new Date(), "11:35", posiljalac.getId(), primalac.getId())))
+                        ("", timestampAkcijeNow, posiljalac.getId(), primalac.getId())))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())

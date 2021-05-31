@@ -1,39 +1,6 @@
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: create
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-  datasource:
-    url: jdbc:postgresql://localhost:5432/chatmicroservice
-    username: postgres
-    password: root
   application:
     name: chat
   cloud:
     config:
       uri: http://localhost:8888
-  profiles:
-    active: usage_message
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
-  instance:
-    preferIpAddress: true
-message: stara poruka
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    refresh:
-      enabled: true
-server:
-  port: 8084
-logging:
-  level:
-    org: ERROR
-tutorial:
-  client:
-    duration: 10000

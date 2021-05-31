@@ -12,8 +12,7 @@ import java.util.Date;
 public class DodajPorukuRequest {
 
     private String sadrzaj;
-    private Date datum;
-    private String vrijeme;
+    private String timestamp;
     private Long idPosiljaoca;
     private Long idPrimaoca;
 }

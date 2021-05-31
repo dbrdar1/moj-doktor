@@ -8,9 +8,7 @@ public interface PorukaProjection {
 
     Long getId();
     String getSadrzaj();
-    Integer getProcitana();
-    Date getDatum();
-    String getVrijeme();
+    String getTimestamp();
 
     @Value("#{target.getPosiljalac().getId()}")
     Long getPosiljalacId();
