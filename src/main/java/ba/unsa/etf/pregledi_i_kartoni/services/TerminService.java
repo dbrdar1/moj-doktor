@@ -3,9 +3,11 @@ package ba.unsa.etf.pregledi_i_kartoni.services;
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.pregledi_i_kartoni.models.*;
 import ba.unsa.etf.pregledi_i_kartoni.models.Termin;
+import ba.unsa.etf.pregledi_i_kartoni.repositories.DoktorRepository;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.PacijentDoktorRepository;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.PacijentRepository;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.TerminRepository;
+import ba.unsa.etf.pregledi_i_kartoni.requests.AsyncTerminiRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajTerminRequest;
 import ba.unsa.etf.pregledi_i_kartoni.responses.*;
 import ba.unsa.etf.pregledi_i_kartoni.responses.TerminResponse;
@@ -16,7 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +32,7 @@ public class TerminService {
     private final TerminRepository terminRepository;
     private final PacijentDoktorRepository pacijentDoktorRepository;
     private final PacijentRepository pacijentRepository;
+    private final DoktorRepository doktorRepository;
 
 
     @Autowired
@@ -114,4 +120,37 @@ public class TerminService {
 
     }
 
+    public String asyncTermini(AsyncTerminiRequest asyncRequest) throws ParseException {
+
+        Date date = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy").parse(asyncRequest.getDatum());
+
+        Pacijent p = pacijentRepository.findById(asyncRequest.getIdPacijenta())
+                .orElseThrow(() -> new ResourceNotFoundException("Ne postoji pacijent s ovim id-om!"));
+        Doktor d = doktorRepository.findById(asyncRequest.getIdDoktora())
+                .orElseThrow(() -> new ResourceNotFoundException("Ne postoji doktor s ovim id-om!"));
+
+        Response response = spasiVezuDoktorPacijent(asyncRequest.getIdDoktora(), asyncRequest.getIdPacijenta());
+        System.out.println(response.getPoruka());
+
+        Optional<PacijentDoktor> pkd = pacijentDoktorRepository.findByPacijentAndDoktor(p,d);
+        if(!pkd.isPresent()) System.out.println("Greska. Id veze nije postojeći!");
+
+        Termin termin= new Termin(date, asyncRequest.getVrijeme(), pkd.get());
+        pkd.get().getTermini().add(termin);
+        pacijentDoktorRepository.save(pkd.get());
+
+        System.out.println("Async...");
+        return "Async...";
+    }
+
+    public Response spasiVezuDoktorPacijent(Long doktor, Long pacijent) {
+        Optional<Pacijent> p = pacijentRepository.findById(pacijent);
+        if(!p.isPresent()) return new Response("Id pacijenta nije postojeći!", 400);
+        Optional<Doktor> d = doktorRepository.findById(doktor);
+        if(!d.isPresent()) return new Response("Id doktora nije postojeći!", 400);
+        PacijentDoktor pkd = new PacijentDoktor(d.get(),p.get());
+        p.get().getVezeSaDoktorima().add(pkd);
+        pacijentRepository.save(p.get());
+        return new Response("Uspješno ste dodali vezu pacijent-doktor!", 200);
+    }
 }

@@ -14,4 +14,6 @@ public interface PacijentDoktorRepository extends JpaRepository<PacijentDoktor, 
     Optional<PacijentDoktor> findById(Long id);
     Optional<PacijentDoktor> findByDoktor(Doktor doktor);
     Optional<PacijentDoktor> findByPacijent(Pacijent pacijent);
+
+    Optional<PacijentDoktor>  findByPacijentAndDoktor(Pacijent pacijent, Doktor doktor);
 }
