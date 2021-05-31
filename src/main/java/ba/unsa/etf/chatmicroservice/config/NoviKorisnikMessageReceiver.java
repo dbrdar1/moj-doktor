@@ -8,18 +8,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
-@RabbitListener(queues = "addNotificationTerminiToChat")
-public class AddNotificationMessageReceiver {
+@RabbitListener(queues = "korisnikQueue4")
+public class NoviKorisnikMessageReceiver {
 
     @RabbitHandler
     public void receive(String receivedMessage) {
         System.out.println("Received: " + receivedMessage);
-        /*String post_url = "http://localhost:8084/dodaj-notifikaciju";
+        String post_url = "http://localhost:8084/async";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         JSONObject jsonObject = new JSONObject(receivedMessage);
         HttpEntity<String> httpEntity = new HttpEntity<>(jsonObject.toString(), headers);
-        restTemplate.postForObject(post_url, httpEntity, String.class);*/
+        restTemplate.postForObject(post_url, httpEntity, String.class);
     }
 }
