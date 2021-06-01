@@ -8,8 +8,13 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue termini() {
-        return new Queue("termini");
+    public Queue terminiDodavanje() {
+        return new Queue("terminiDodavanje");
+    }
+
+    @Bean
+    public Queue terminiBrisanje() {
+        return new Queue("terminiBrisanje");
     }
 
     @Bean

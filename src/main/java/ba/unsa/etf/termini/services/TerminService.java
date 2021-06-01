@@ -30,7 +30,8 @@ public class TerminService {
     private PacijentKartonDoktorService pacijentKartonDoktorService;
 
     private final RabbitTemplate template;
-    private final Queue termini;
+    private final Queue terminiDodavanje;
+    private final Queue terminiBrisanje;
 
     public Response dodajTermin(DodajTerminRequest dodajTerminRequest) {
         PacijentKartonDoktorResponse pkdRes = pacijentKartonDoktorService.dajVezuDoktorPacijent(dodajTerminRequest.getIdDoktora(),dodajTerminRequest.getIdPacijenta());
@@ -40,7 +41,10 @@ public class TerminService {
         pkd.get().getTermini().add(termin);
         pacijentKartonDoktorRepository.save(pkd.get());
 
+        Termin termin1 = terminRepository.findByPacijentKartonDoktorAndDatumAndVrijeme(pkd.get(), dodajTerminRequest.getDatum(), dodajTerminRequest.getVrijeme());
+
         AsyncTerminiResponse asyncTerminiResponse = new AsyncTerminiResponse(
+                termin1.getId(),
                 dodajTerminRequest.getIdDoktora(),
                 dodajTerminRequest.getIdPacijenta(),
                 dodajTerminRequest.getDatum().toString(),
@@ -52,21 +56,29 @@ public class TerminService {
 
     public void sendAsync(AsyncTerminiResponse response) {
         JSONObject paket = new JSONObject();
+        paket.put("id", response.getId());
         paket.put("idDoktora", response.getIdDoktora());
         paket.put("idPacijenta", response.getIdPacijenta());
         paket.put("datum", response.getDatum());
         paket.put("vrijeme", response.getVrijeme());
 
         String message = paket.toString();
-        this.template.convertAndSend(termini.getName(), message);
+        this.template.convertAndSend(terminiDodavanje.getName(), message);
 
-        System.out.println("Sent: " + termini.getName() + message);
+        System.out.println("Sent: " + terminiDodavanje.getName() + message);
     }
 
     public Response obrisiTermin(Long id) {
         Termin termin = terminRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Ne postoji termin s ovim id-om!"));
         terminRepository.deleteById(id);
+
+        JSONObject paket = new JSONObject();
+        paket.put("id", id);
+        String message = paket.toString();
+        this.template.convertAndSend(terminiBrisanje.getName(), message);
+        System.out.println("Sent: " + terminiBrisanje.getName() + message);
+
         return new Response("Uspješno ste obrisali termin!", 200);
     }
 

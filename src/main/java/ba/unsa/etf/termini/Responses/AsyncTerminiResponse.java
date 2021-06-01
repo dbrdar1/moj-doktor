@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AsyncTerminiResponse {
+    private Long id;
     private Long idDoktora;
     private Long idPacijenta;
     private String datum;

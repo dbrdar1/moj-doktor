@@ -14,4 +14,5 @@ public interface TerminRepository extends JpaRepository<Termin, Long> {
     List<TerminProjection> findAllByPacijentKartonDoktor(PacijentKartonDoktor pkd);
     Termin findByDatumAndVrijeme(Date d, String s);
     Termin getByVrijeme(String s);
+    Termin findByPacijentKartonDoktorAndDatumAndVrijeme(PacijentKartonDoktor p, Date d, String v);
 }
