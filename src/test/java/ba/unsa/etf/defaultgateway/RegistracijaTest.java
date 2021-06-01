@@ -41,7 +41,7 @@ public class RegistracijaTest {
                 new Date(),
                 "Test",
                 "000000000",
-                "test@test.ba",
+                "pusina.samra@gmail.com",
                 "test",
                 "test",
                 "DOKTOR");

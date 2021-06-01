@@ -98,7 +98,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(unprotectedRoutes)
                 .permitAll()
                 .antMatchers("/doktor-detalji/doktori").hasRole("PACIJENT")
-                .antMatchers("/doktor-detalji/doktori/{id}").hasRole("PACIJENT")
                 .antMatchers("/doktor-detalji/ocijeni-doktora").hasRole("PACIJENT")
                 .antMatchers("/doktor-detalji/dodaj-certifikat").hasRole("DOKTOR")
                 .antMatchers("/doktor-detalji/uredi-certifikat").hasRole("DOKTOR")

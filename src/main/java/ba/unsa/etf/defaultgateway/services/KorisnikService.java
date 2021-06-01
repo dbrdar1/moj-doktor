@@ -2,11 +2,14 @@ package ba.unsa.etf.defaultgateway.services;
 
 import ba.unsa.etf.defaultgateway.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.defaultgateway.models.*;
-import ba.unsa.etf.defaultgateway.repositories.*;
+import ba.unsa.etf.defaultgateway.repositories.DoktorRepository;
+import ba.unsa.etf.defaultgateway.repositories.KorisnickaUlogaRepository;
+import ba.unsa.etf.defaultgateway.repositories.KorisnikRepository;
+import ba.unsa.etf.defaultgateway.repositories.PacijentRepository;
 import ba.unsa.etf.defaultgateway.requests.*;
+import ba.unsa.etf.defaultgateway.responses.AsyncResponse;
 import ba.unsa.etf.defaultgateway.responses.KorisnikResponse;
 import ba.unsa.etf.defaultgateway.responses.LoginResponse;
-import ba.unsa.etf.defaultgateway.responses.AsyncResponse;
 import ba.unsa.etf.defaultgateway.responses.Response;
 import ba.unsa.etf.defaultgateway.security.JwtTokenProvider;
 import freemarker.template.TemplateException;
@@ -249,15 +252,15 @@ public class KorisnikService {
     }
 
 
-    public String registrujKorisnika(RegistracijaRequest registracijaRequest) {
+    public Response registrujKorisnika(RegistracijaRequest registracijaRequest) {
         Optional<Korisnik> korisnik = korisnikRepository.findByKorisnickoIme(registracijaRequest.getKorisnickoIme());
-        if(korisnik.isPresent()) return "Već postoji korisnik s ovim korisničkim imenom.";
+        if(korisnik.isPresent()) return new Response("Već postoji korisnik s ovim korisničkim imenom.", 409);
 
         Optional<Korisnik> korisnik1 = korisnikRepository.findByEmail(registracijaRequest.getEmail());
-        if(korisnik1.isPresent()) return "Već postoji korisnik s ovim email-om.";
+        if(korisnik1.isPresent()) return new Response("Već postoji korisnik s ovim email-om.", 409);
 
         Optional<Korisnik> korisnik3 = korisnikRepository.findByBrojTelefona(registracijaRequest.getBrojTelefona());
-        if(korisnik3.isPresent()) return "Već postoji korisnik s ovim brojem telefona.";
+        if(korisnik3.isPresent()) return new Response("Već postoji korisnik s ovim brojem telefona.", 409);
 
 
         AsyncResponse response = new AsyncResponse();
@@ -307,25 +310,25 @@ public class KorisnikService {
 
         sendAsync(response);
 
-        return "Uspješna registracija!";
+        return new Response("Uspješna registracija!", 200);
     }
 
 
 
-    public String urediProfil(UredjivanjeProfilaRequest uredjivanjeProfilaRequest) {
+    public Response urediProfil(UredjivanjeProfilaRequest uredjivanjeProfilaRequest) {
         Optional<Korisnik> korisnik = korisnikRepository.findByKorisnickoIme(uredjivanjeProfilaRequest.getKorisnickoIme());
-        if(korisnik.isPresent() && !korisnik.get().getId().equals(uredjivanjeProfilaRequest.getId())) return "Već postoji korisnik s ovim korisničkim imenom.";
+        if(korisnik.isPresent() && !korisnik.get().getId().equals(uredjivanjeProfilaRequest.getId())) return new Response("Već postoji korisnik s ovim korisničkim imenom.", 409);
 
         Optional<Korisnik> korisnik1 = korisnikRepository.findByEmail(uredjivanjeProfilaRequest.getEmail());
-        if(korisnik1.isPresent() && !korisnik1.get().getId().equals(uredjivanjeProfilaRequest.getId())) return "Već postoji korisnik s ovim email-om.";
+        if(korisnik1.isPresent() && !korisnik1.get().getId().equals(uredjivanjeProfilaRequest.getId())) return new Response("Već postoji korisnik s ovim email-om.", 409);
 
         Optional<Korisnik> korisnik2 = korisnikRepository.findByBrojTelefona(uredjivanjeProfilaRequest.getBrojTelefona());
-        if(korisnik2.isPresent() && !korisnik2.get().getId().equals(uredjivanjeProfilaRequest.getId())) return "Već postoji korisnik s ovim telefonskim brojem.";
+        if(korisnik2.isPresent() && !korisnik2.get().getId().equals(uredjivanjeProfilaRequest.getId())) return new Response("Već postoji korisnik s ovim telefonskim brojem.", 409);
 
         Optional<Korisnik> k = korisnikRepository.findById(uredjivanjeProfilaRequest.getId());
 
         if (!k.isPresent()) {
-            return "Ne postoji korisnik s ovim korisničkim imenom!";
+            return new Response("Ne postoji korisnik s ovim korisničkim imenom!", 404);
         }
 
         k.get().setIme(uredjivanjeProfilaRequest.getIme());
@@ -361,7 +364,7 @@ public class KorisnikService {
 
         sendAsync(response);
 
-        return "Uspješno ste uredili profil!";
+        return new Response("Uspješno ste uredili profil!", 200);
     }
 
     public void sendAsync(AsyncResponse response) {

@@ -1,8 +1,8 @@
 package ba.unsa.etf.defaultgateway.configurations;
 
+import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.amqp.core.Queue;
 
 @Configuration
 public class RabbitMQConfig {

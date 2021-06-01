@@ -7,7 +7,6 @@ import ba.unsa.etf.defaultgateway.requests.*;
 import ba.unsa.etf.defaultgateway.responses.KorisnikResponse;
 import ba.unsa.etf.defaultgateway.responses.LoginResponse;
 import ba.unsa.etf.defaultgateway.responses.Response;
-
 import ba.unsa.etf.defaultgateway.security.CurrentUser;
 import ba.unsa.etf.defaultgateway.security.TrenutniKorisnikSecurity;
 import ba.unsa.etf.defaultgateway.security.UserPrincipal;
@@ -15,21 +14,16 @@ import ba.unsa.etf.defaultgateway.services.KorisnikService;
 import ba.unsa.etf.defaultgateway.util.ErrorHandlingHelper;
 import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.core.Queue;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.json.JSONObject;
 
 import javax.mail.MessagingException;
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -53,8 +47,8 @@ public class KorisnikController {
 
     @PostMapping("/registracija")
     public ResponseEntity<Response> registracijaKorisnika(@Valid @RequestBody RegistracijaRequest registracijaRequest){
-        String odgovor = korisnikService.registrujKorisnika(registracijaRequest);
-        return ResponseEntity.ok(new Response(odgovor));
+        Response odgovor = korisnikService.registrujKorisnika(registracijaRequest);
+        return ResponseEntity.ok(odgovor);
     }
 
     @PutMapping("/uredjivanje-profila")
@@ -63,8 +57,8 @@ public class KorisnikController {
         if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, uredjivanjeProfilaRequest.getId()))
             throw new UnauthorizedException("Neovlašten pristup resursima!");
 
-        String odgovor = korisnikService.urediProfil(uredjivanjeProfilaRequest);
-        return ResponseEntity.ok(new Response(odgovor));
+        Response odgovor = korisnikService.urediProfil(uredjivanjeProfilaRequest);
+        return ResponseEntity.ok(odgovor);
     }
 
     @PostMapping("/prijava")

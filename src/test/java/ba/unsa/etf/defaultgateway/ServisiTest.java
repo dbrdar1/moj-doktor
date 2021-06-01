@@ -55,8 +55,8 @@ class ServisiTest {
 
     @Test
     public void loginTest() throws Exception {
-        this.mockMvc.perform(post("/login")
-                .content(asJsonString(new LoginRequest("spusina1", "password")))
+        this.mockMvc.perform(post("/prijava")
+                .content(asJsonString(new LoginRequest("test", "test")))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -101,8 +101,8 @@ class ServisiTest {
     @Test
     public void resetTokenPogresniPodaciTest() throws Exception {
         Korisnik korisnik = new Korisnik();
-        korisnik.setKorisnickoIme("t");
-        korisnik.setLozinka("t");
+        korisnik.setKorisnickoIme("test");
+        korisnik.setLozinka("test");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         korisnik.getKorisnickoIme(),
@@ -159,7 +159,7 @@ class ServisiTest {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);
 
-        this.mockMvc.perform(put("/lozinka")
+        this.mockMvc.perform(put("/uredjivanje_lozinke")
                 .header("Authorization", "Bearer " + token)
                 .content(asJsonString(new SpasiLozinkuRequest("test", "test")))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -182,7 +182,7 @@ class ServisiTest {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);
 
-        this.mockMvc.perform(put("/lozinka")
+        this.mockMvc.perform(put("/uredjivanje_lozinke")
                 .header("Authorization", "Bearer " + token)
                 .content(asJsonString(new SpasiLozinkuRequest("t", "t")))
                 .contentType(MediaType.APPLICATION_JSON)
