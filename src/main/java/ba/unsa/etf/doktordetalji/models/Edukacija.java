@@ -55,5 +55,4 @@ public class Edukacija {
     @JsonIgnore
     @ManyToOne
     private Doktor doktor;
-
 }

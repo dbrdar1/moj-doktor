@@ -8,7 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
-
 @RabbitListener(queues = "korisnikQueue1")
 public class NoviKorisnikMessageReceiver {
 

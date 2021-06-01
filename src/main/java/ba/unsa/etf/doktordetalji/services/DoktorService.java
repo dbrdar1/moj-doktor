@@ -1,20 +1,19 @@
 package ba.unsa.etf.doktordetalji.services;
 
 import ba.unsa.etf.doktordetalji.exceptions.ResourceNotFoundException;
-import ba.unsa.etf.doktordetalji.exceptions.UnauthorizedException;
 import ba.unsa.etf.doktordetalji.models.*;
 import ba.unsa.etf.doktordetalji.repositories.CertifikatRepository;
 import ba.unsa.etf.doktordetalji.repositories.DoktorRepository;
 import ba.unsa.etf.doktordetalji.repositories.EdukacijaRepository;
-import ba.unsa.etf.doktordetalji.repositories.KorisnikRepository;
-import ba.unsa.etf.doktordetalji.requests.*;
+import ba.unsa.etf.doktordetalji.requests.AsyncRequest;
+import ba.unsa.etf.doktordetalji.requests.FilterRequest;
+import ba.unsa.etf.doktordetalji.requests.OcjenaRequest;
+import ba.unsa.etf.doktordetalji.requests.UrediPodatkeDoktoraRequest;
 import ba.unsa.etf.doktordetalji.responses.*;
 import ba.unsa.etf.doktordetalji.security.TrenutniKorisnikSecurity;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -79,90 +78,6 @@ public class DoktorService {
             suma += ocjena.getVrijednost();
         }
         return suma / ocjene.size();
-    }
-
-    public Response dodajCertifikat(DodajCertifikatRequest dodajCertifikatRequest) {
-        Optional<Doktor> d = doktorRepository.findById(dodajCertifikatRequest.getIdDoktora());
-        if (!d.isPresent()) return new Response("Id doktora nije postojeći!", 400);
-        Certifikat c = new Certifikat(dodajCertifikatRequest.getInstitucija(), dodajCertifikatRequest.getNaziv(), dodajCertifikatRequest.getGodinaIzdavanja());
-        c.setDoktor(d.get());
-        d.get().getCertifikati().add(c);
-        doktorRepository.save(d.get());
-        return new Response("Uspješno ste dodali certifikat!", 200);
-
-    }
-
-    public Response urediCertifikat(HttpHeaders headers, UrediCertifikatRequest urediCertifikatRequest) {
-        Optional<Certifikat> c = certifikatRepository.findById(urediCertifikatRequest.getId());
-        if (!c.isPresent()) return new Response("Nepostojeći Id certifikata!", 400);
-
-        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, c.get().getDoktor().getId()))
-            throw new UnauthorizedException("Neovlašten pristup resursima!");
-
-        c.get().setInstitucija(urediCertifikatRequest.getInstitucija());
-        c.get().setNaziv(urediCertifikatRequest.getNaziv());
-        c.get().setGodinaIzdavanja(urediCertifikatRequest.getGodinaIzdavanja());
-        certifikatRepository.save(c.get());
-        return new Response("Uspješno ste uredili certifikat!", 200);
-    }
-
-    public Response obrisiCertifikat(HttpHeaders headers, Long id) {
-        Optional<Certifikat> c = certifikatRepository.findById(id);
-        if (!c.isPresent()) return new Response("Nepostojeći Id certifikata!", 400);
-
-        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, c.get().getDoktor().getId()))
-            throw new UnauthorizedException("Neovlašten pristup resursima!");
-
-        certifikatRepository.delete(c.get());
-        return new Response("Uspješno ste obrisali certifikat!", 200);
-    }
-
-    public Response dodajEdukaciju(DodajEdukacijuRequest dodajEdukacijuRequest) {
-        Optional<Doktor> d = doktorRepository.findById(dodajEdukacijuRequest.getIdDoktora());
-        if (!d.isPresent()) return new Response("Id doktora nije postojeći!", 400);
-        Edukacija c = new Edukacija
-                (
-                        dodajEdukacijuRequest.getInstitucija(),
-                        dodajEdukacijuRequest.getOdsjek(),
-                        dodajEdukacijuRequest.getStepen(),
-                        dodajEdukacijuRequest.getGodinaPocetka(),
-                        dodajEdukacijuRequest.getGodinaZavrsetka(),
-                        dodajEdukacijuRequest.getGrad(),
-                        dodajEdukacijuRequest.getDrzava()
-                );
-        c.setDoktor(d.get());
-        d.get().getEdukacije().add(c);
-        doktorRepository.save(d.get());
-        return new Response("Uspješno ste dodali edukaciju!", 200);
-    }
-
-    public Response urediEdukaciju(HttpHeaders headers, UrediEdukacijuRequest urediEdukacijuRequest) {
-        Optional<Edukacija> c = edukacijaRepository.findById(urediEdukacijuRequest.getId());
-        if (!c.isPresent()) return new Response("Nepostojeći Id edukacije!", 400);
-
-        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, c.get().getDoktor().getId()))
-            throw new UnauthorizedException("Neovlašten pristup resursima!");
-
-        c.get().setInstitucija(urediEdukacijuRequest.getInstitucija());
-        c.get().setOdsjek(urediEdukacijuRequest.getOdsjek());
-        c.get().setStepen(urediEdukacijuRequest.getStepen());
-        c.get().setGodinaPocetka(urediEdukacijuRequest.getGodinaPocetka());
-        c.get().setGodinaZavrsetka(urediEdukacijuRequest.getGodinaZavrsetka());
-        c.get().setGrad(urediEdukacijuRequest.getGrad());
-        c.get().setDrzava(urediEdukacijuRequest.getDrzava());
-        edukacijaRepository.save(c.get());
-        return new Response("Uspješno ste uredili edukaciju!", 200);
-    }
-
-    public Response obrisiEdukaciju(HttpHeaders headers, Long id) {
-        Optional<Edukacija> c = edukacijaRepository.findById(id);
-        if (!c.isPresent()) return new Response("Nepostojeći Id edukacije!", 400);
-
-        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, c.get().getDoktor().getId()))
-            throw new UnauthorizedException("Neovlašten pristup resursima!");
-
-        edukacijaRepository.delete(c.get());
-        return new Response("Uspješno ste obrisali edukaciju!", 200);
     }
 
     public Response urediPodatkeDoktora(UrediPodatkeDoktoraRequest urediPodatkeDoktoraRequest) {
@@ -235,6 +150,5 @@ public class DoktorService {
         System.out.println("Async...");
         return "Async...";
     }
-
 }
 

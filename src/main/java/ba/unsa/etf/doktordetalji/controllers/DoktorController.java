@@ -3,30 +3,28 @@ package ba.unsa.etf.doktordetalji.controllers;
 import ba.unsa.etf.doktordetalji.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.doktordetalji.exceptions.UnauthorizedException;
 import ba.unsa.etf.doktordetalji.models.Doktor;
-import ba.unsa.etf.doktordetalji.requests.*;
+import ba.unsa.etf.doktordetalji.requests.AsyncRequest;
+import ba.unsa.etf.doktordetalji.requests.FilterRequest;
+import ba.unsa.etf.doktordetalji.requests.OcjenaRequest;
+import ba.unsa.etf.doktordetalji.requests.UrediPodatkeDoktoraRequest;
 import ba.unsa.etf.doktordetalji.responses.DoktorCVResponse;
 import ba.unsa.etf.doktordetalji.responses.KorisnikResponse;
 import ba.unsa.etf.doktordetalji.responses.Response;
 import ba.unsa.etf.doktordetalji.security.TrenutniKorisnikSecurity;
 import ba.unsa.etf.doktordetalji.services.DoktorService;
 import ba.unsa.etf.doktordetalji.util.ErrorHandlingHelper;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.text.ParseException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -77,51 +75,6 @@ public class DoktorController {
     @PutMapping("/ocijeni-doktora")
     public ResponseEntity<Response> ocijeniDoktora(@RequestBody OcjenaRequest ocjenaRequest) {
         Response response = doktorService.ocjeni(ocjenaRequest);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/dodaj-certifikat")
-    public ResponseEntity<Response> dodajCertifikat(@RequestHeader HttpHeaders headers, @RequestBody DodajCertifikatRequest dodajCertifikatRequest) {
-
-        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, dodajCertifikatRequest.getIdDoktora()))
-            throw new UnauthorizedException("Neovlašten pristup resursima!");
-
-        Response response = doktorService.dodajCertifikat(dodajCertifikatRequest);
-        return ResponseEntity.ok(response);
-    }
-
-    @PutMapping("/uredi-certifikat")
-    public ResponseEntity<Response> urediCertifikat(@RequestHeader HttpHeaders headers, @RequestBody UrediCertifikatRequest urediCertifikatRequest) {
-
-        Response response = doktorService.urediCertifikat(headers, urediCertifikatRequest);
-        return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping("/obrisi-certifikat/{id}")
-    public ResponseEntity<Response> obrisiCertifikat(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
-        Response response = doktorService.obrisiCertifikat(headers, id);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/dodaj-edukaciju")
-    public ResponseEntity<Response> dodajEdukaciju(@RequestHeader HttpHeaders headers, @RequestBody DodajEdukacijuRequest dodajEdukacijuRequest) {
-
-        if(!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, dodajEdukacijuRequest.getIdDoktora()))
-            throw new UnauthorizedException("Neovlašten pristup resursima!");
-
-        Response response = doktorService.dodajEdukaciju(dodajEdukacijuRequest);
-        return ResponseEntity.ok(response);
-    }
-
-    @PutMapping("/uredi-edukaciju")
-    public ResponseEntity<Response> urediEdukaciju(@RequestHeader HttpHeaders headers, @RequestBody UrediEdukacijuRequest urediEdukacijuRequest) {
-        Response response = doktorService.urediEdukaciju(headers, urediEdukacijuRequest);
-        return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping("/obrisi-edukaciju/{id}")
-    public ResponseEntity<Response> obrisiEdukaciju(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
-        Response response = doktorService.obrisiEdukaciju(headers, id);
         return ResponseEntity.ok(response);
     }
 
