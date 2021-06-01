@@ -112,6 +112,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/termini/termini-doktora/{id}").hasRole("DOKTOR")
                 .antMatchers("/termini/{id}").hasRole("PACIJENT")
                 .antMatchers("/termini/{id}").hasRole("PACIJENT")
+                .antMatchers("/pregledi-kartoni/pacijenti-doktora/{idDoktor}").hasRole("DOKTOR")
+                .antMatchers("/pregledi-kartoni/pacijenti-doktora-filtrirano/{idDoktor}").hasRole("DOKTOR")
+                .antMatchers("/pregledi-kartoni/kartoni-uloga-pacijent/{idPacijent}").hasRole("PACIJENT")
+                .antMatchers("/pregledi-kartoni/kartoni-uloga-doktor/{idPacijent}").hasRole("DOKTOR")
+                .antMatchers("/pregledi-kartoni/uredi-karton/{id}").hasRole("DOKTOR")
+                .antMatchers("/pregledi-kartoni/obrisi-pregled/{idPregleda}").hasRole("DOKTOR")
+                .antMatchers("/pregledi-kartoni/dodaj-pregled").hasRole("DOKTOR")
+                .antMatchers("/pregledi-kartoni/dodaj-vezu-pacijent-doktor").hasRole("DOKTOR")
+                .antMatchers("/pregledi-kartoni/obrisi-termin/{idTermina}").hasRole("DOKTOR")
+                .antMatchers("/pregledi-kartoni/dodaj-termin").hasRole("DOKTOR")
+
                 .anyRequest()
                 .authenticated();
 
