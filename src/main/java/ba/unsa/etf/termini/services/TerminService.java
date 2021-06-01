@@ -17,6 +17,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,16 @@ public class TerminService {
     private final Queue terminiBrisanje;
 
     public Response dodajTermin(DodajTerminRequest dodajTerminRequest) {
+
+        String[] dijelovi = dodajTerminRequest.getVrijeme().split(":");
+        int sat = Integer.parseInt(dijelovi[0]);
+
+        System.out.println(dijelovi[0]);
+
+        if(sat>=22 || sat<6) return new Response("Termin nije moguće zakazati u vremenu od 22h do 6h", 400);
+
+        if(dodajTerminRequest.getDatum().before(new Date())) return new Response("Termin nije moguće zakazati u prošlom vremenu", 400);
+
         PacijentKartonDoktorResponse pkdRes = pacijentKartonDoktorService.dajVezuDoktorPacijent(dodajTerminRequest.getIdDoktora(),dodajTerminRequest.getIdPacijenta());
         Optional<PacijentKartonDoktor> pkd = pacijentKartonDoktorRepository.findById(pkdRes.getId());
         if(!pkd.isPresent()) return new Response("Id veze nije postojeći!", 400);
