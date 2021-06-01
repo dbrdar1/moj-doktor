@@ -57,6 +57,22 @@ public class DoktorController {
         return ResponseEntity.ok(response);
     }
 
+    // doktor na osnovu id pregleda
+    @GetMapping("/doktor-pregleda-uloga-doktor/{idPregled}")
+    public ResponseEntity<DoktorResponse> dajDoktoraPregledaDoktorUloga(@RequestHeader HttpHeaders headers,
+                                                             @PathVariable(value = "idPregled") Long idPregled){
+        DoktorResponse trazeniDoktor = doktorService.dajDoktoraKojiJeObavioPregledDoktorUloga(headers, idPregled);
+        return ResponseEntity.ok(trazeniDoktor);
+    }
+
+    // doktor na osnovu id pregleda
+    @GetMapping("/doktor-pregleda-uloga-pacijent/{idPregled}")
+    public ResponseEntity<DoktorResponse> dajDoktoraPregledaPacijentUloga(@RequestHeader HttpHeaders headers,
+                                                             @PathVariable(value = "idPregled") Long idPregled){
+        DoktorResponse trazeniDoktor = doktorService.dajDoktoraKojiJeObavioPregledPacijentUloga(headers, idPregled);
+        return ResponseEntity.ok(trazeniDoktor);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response handleConstraintViolationException(ConstraintViolationException exception) {

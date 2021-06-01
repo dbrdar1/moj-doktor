@@ -4,7 +4,9 @@ import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.UnauthorizedException;
 import ba.unsa.etf.pregledi_i_kartoni.models.Doktor;
 import ba.unsa.etf.pregledi_i_kartoni.models.Pacijent;
+import ba.unsa.etf.pregledi_i_kartoni.models.Pregled;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.DoktorRepository;
+import ba.unsa.etf.pregledi_i_kartoni.repositories.PregledRepository;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajDoktoraRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajPacijentaRequest;
 import ba.unsa.etf.pregledi_i_kartoni.responses.DoktorResponse;
@@ -25,6 +27,7 @@ public class DoktorService {
 
     private final DoktorRepository doktorRepository;
     private final TrenutniKorisnikSecurity trenutniKorisnikSecurity;
+    private final PregledRepository pregledRepository;
 
 
     public Response dodajDoktora(DodajDoktoraRequest dodajDoktoraRequest) {
@@ -84,6 +87,70 @@ public class DoktorService {
         }
 
         return listaDoktorResponse;
+
+    }
+
+    // doktor koji je obavio pregled, uloga: doktor
+    public DoktorResponse dajDoktoraKojiJeObavioPregledDoktorUloga(HttpHeaders headers, Long idPregled) {
+
+        Optional<Pregled> p = pregledRepository.findById(idPregled);
+
+        if(!p.isPresent()) {
+            throw new ResourceNotFoundException(String.format("Ne postoji pregled sa id = '%d'!", idPregled));
+        }
+
+        Pregled pregled = p.get();
+
+        Long idPacijent = pregled.getTermin().getPacijentDoktor().getPacijent().getId();
+        Long idDoktor = pregled.getTermin().getPacijentDoktor().getDoktor().getId();
+
+        List<Doktor> doktoriPacijenta = doktorRepository.findDoktoriPacijenta(idPacijent).get();
+
+        boolean doktorPacijenta = false;
+
+        for(Doktor d : doktoriPacijenta) {
+            if (trenutniKorisnikSecurity.isTrenutniKorisnik(headers, d.getId())) {
+                doktorPacijenta = true;
+                break;
+            }
+        }
+
+        if(!doktorPacijenta)
+            throw new UnauthorizedException("Neovlašten pristup resursima!");
+
+        Doktor trazeniDoktor = doktorRepository.findById(idDoktor).orElseThrow(() -> new ResourceNotFoundException("Ne postoji doktor za dati pregled!"));
+
+        return new DoktorResponse(trazeniDoktor.getId(), trazeniDoktor.getIme(), trazeniDoktor.getPrezime(),
+                trazeniDoktor.getDatumRodjenja(), trazeniDoktor.getAdresa(), trazeniDoktor.getBrojTelefona(),
+                trazeniDoktor.getEmail()
+        );
+
+    }
+
+    // doktor koji je obavio pregled, uloga: pacijent
+    public DoktorResponse dajDoktoraKojiJeObavioPregledPacijentUloga(HttpHeaders headers, Long idPregled) {
+
+        Optional<Pregled> p = pregledRepository.findById(idPregled);
+
+        if(!p.isPresent()) {
+            throw new ResourceNotFoundException(String.format("Ne postoji pregled sa id = '%d'!", idPregled));
+        }
+
+        Pregled pregled = p.get();
+
+        Long idPacijent = pregled.getTermin().getPacijentDoktor().getPacijent().getId();
+        Long idDoktor = pregled.getTermin().getPacijentDoktor().getDoktor().getId();
+
+        if (!trenutniKorisnikSecurity.isTrenutniKorisnik(headers, idPacijent)) {
+            throw new UnauthorizedException("Neovlašten pristup resursima!");
+        }
+
+        Doktor trazeniDoktor = doktorRepository.findById(idDoktor).orElseThrow(() -> new ResourceNotFoundException("Ne postoji doktor za dati pregled!"));
+
+        return new DoktorResponse(trazeniDoktor.getId(), trazeniDoktor.getIme(), trazeniDoktor.getPrezime(),
+                trazeniDoktor.getDatumRodjenja(), trazeniDoktor.getAdresa(), trazeniDoktor.getBrojTelefona(),
+                trazeniDoktor.getEmail()
+        );
 
     }
 }
