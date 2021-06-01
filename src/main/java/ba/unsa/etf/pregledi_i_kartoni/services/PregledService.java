@@ -31,7 +31,7 @@ public class PregledService {
 
     public String incijalizirajBazu() {
 
-        korisnikRepository.deleteAllInBatch();
+ /*       korisnikRepository.deleteAllInBatch();
         korisnikRepository.flush();
 
         doktorRepository.deleteAllInBatch();
@@ -91,7 +91,7 @@ public class PregledService {
 
 
         pregledRepository.save(pregled1);
-        pregledRepository.save(pregled2);
+        pregledRepository.save(pregled2);*/
 
         return "Inicijalizacija baze podataka završena!";
     }

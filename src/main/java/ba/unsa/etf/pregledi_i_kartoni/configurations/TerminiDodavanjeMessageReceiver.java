@@ -8,8 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
-@RabbitListener(queues = "termini")
-public class TerminiMessageReceiver {
+@RabbitListener(queues = "terminiDodavanje")
+public class TerminiDodavanjeMessageReceiver {
 
     @RabbitHandler
     public void receive(String receivedMessage) {

@@ -61,7 +61,7 @@ public class KartonTest {
     //@BeforeEach
     public void inicijalizirajBazu() {
 
-        korisnikRepository.deleteAllInBatch();
+/*        korisnikRepository.deleteAllInBatch();
         korisnikRepository.flush();
 
         doktorRepository.deleteAllInBatch();
@@ -120,7 +120,7 @@ public class KartonTest {
 
 
         pregledRepository.save(pregled1);
-        pregledRepository.save(pregled2);
+        pregledRepository.save(pregled2);*/
 
     }
 

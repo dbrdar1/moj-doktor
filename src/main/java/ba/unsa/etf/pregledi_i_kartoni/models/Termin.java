@@ -17,8 +17,8 @@ import java.util.Date;
 @Table(name = "termin")
 @NoArgsConstructor
 public class Termin {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull(message = "Termin mora imati datum")
@@ -39,7 +39,8 @@ public class Termin {
     private Pregled pregled;
 
 
-    public Termin(Date datumPregleda, String vrijemePregleda, PacijentDoktor pacijentDoktor) {
+    public Termin(Long id, Date datumPregleda, String vrijemePregleda, PacijentDoktor pacijentDoktor) {
+        this.id = id;
         this.datumPregleda = datumPregleda;
         this.vrijemePregleda = vrijemePregleda;
         this.pacijentDoktor = pacijentDoktor;

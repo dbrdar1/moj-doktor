@@ -3,6 +3,7 @@ package ba.unsa.etf.pregledi_i_kartoni.controllers;
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.ResourceNotFoundException;
 import ba.unsa.etf.pregledi_i_kartoni.exceptions.UnauthorizedException;
 import ba.unsa.etf.pregledi_i_kartoni.models.*;
+import ba.unsa.etf.pregledi_i_kartoni.requests.AsyncObrisiTerminRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.AsyncTerminiRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajTerminRequest;
 import ba.unsa.etf.pregledi_i_kartoni.responses.ListaTerminaResponse;
@@ -44,8 +45,15 @@ public class TerminController {
     private final TerminService terminService;
 
     @PostMapping("/asyncTermini")
-    public ResponseEntity<Response> asyncKorisnici(@RequestBody AsyncTerminiRequest asyncRequest) throws ParseException {
+    public ResponseEntity<Response> asyncTermini(@RequestBody AsyncTerminiRequest asyncRequest) throws ParseException {
         String poruka = terminService.asyncTermini(asyncRequest);
+        return ResponseEntity.ok(new Response(poruka));
+    }
+
+
+    @PostMapping("/asyncObrisiTermin")
+    public ResponseEntity<Response> asyncObrisiTermin(@RequestBody AsyncObrisiTerminRequest asyncRequest) throws ParseException {
+        String poruka = terminService.asyncObrisiTermin(asyncRequest);
         return ResponseEntity.ok(new Response(poruka));
     }
 

@@ -7,10 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AsyncTerminiRequest {
+public class AsyncObrisiTerminRequest {
     private Long id;
-    private Long idDoktora;
-    private Long idPacijenta;
-    private String datum;
-    private String vrijeme;
 }

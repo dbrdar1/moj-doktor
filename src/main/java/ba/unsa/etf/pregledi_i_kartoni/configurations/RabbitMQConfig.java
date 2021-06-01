@@ -1,6 +1,5 @@
 package ba.unsa.etf.pregledi_i_kartoni.configurations;
 
-import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +12,12 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public TerminiMessageReceiver terminiMessageReceiver() {
-        return new TerminiMessageReceiver();
+    public TerminiDodavanjeMessageReceiver terminiDodavanjeMessageReceiver() {
+        return new TerminiDodavanjeMessageReceiver();
+    }
+
+    @Bean
+    public TerminiBrisanjeMessageReceiver terminiBrisanjeMessageReceiver() {
+        return new TerminiBrisanjeMessageReceiver();
     }
 }

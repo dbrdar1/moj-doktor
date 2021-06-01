@@ -59,6 +59,7 @@ public class PregledTest {
 
     //@BeforeEach
     public void inicijalizirajBazu() {
+/*
 
         korisnikRepository.deleteAllInBatch();
         korisnikRepository.flush();
@@ -120,6 +121,7 @@ public class PregledTest {
 
         pregledRepository.save(pregled1);
         pregledRepository.save(pregled2);
+*/
 
     }
 

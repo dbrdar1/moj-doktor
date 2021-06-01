@@ -7,6 +7,7 @@ import ba.unsa.etf.pregledi_i_kartoni.repositories.DoktorRepository;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.PacijentDoktorRepository;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.PacijentRepository;
 import ba.unsa.etf.pregledi_i_kartoni.repositories.TerminRepository;
+import ba.unsa.etf.pregledi_i_kartoni.requests.AsyncObrisiTerminRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.AsyncTerminiRequest;
 import ba.unsa.etf.pregledi_i_kartoni.requests.DodajTerminRequest;
 import ba.unsa.etf.pregledi_i_kartoni.responses.*;
@@ -74,7 +75,7 @@ public class TerminService {
     public Response dodajTermin(DodajTerminRequest dodajTerminRequest) {
         Optional<PacijentDoktor> pacijentDoktorVeza = pacijentDoktorRepository.findById(dodajTerminRequest.getPacijentDoktorId());
         if(!pacijentDoktorVeza.isPresent()) throw new ResourceNotFoundException("Ne postoji veza pacijent-doktor za dati termin!");
-        Termin noviTermin = new Termin(
+        Termin noviTermin = new Termin(1L,
                 dodajTerminRequest.getDatumPregleda(), dodajTerminRequest.getVrijemePregleda(), pacijentDoktorVeza.get()
         );
         pacijentDoktorVeza.get().getTermini().add(noviTermin);
@@ -135,7 +136,7 @@ public class TerminService {
         Optional<PacijentDoktor> pkd = pacijentDoktorRepository.findByPacijentAndDoktor(p,d);
         if(!pkd.isPresent()) System.out.println("Greska. Id veze nije postojeći!");
 
-        Termin termin= new Termin(date, asyncRequest.getVrijeme(), pkd.get());
+        Termin termin= new Termin(asyncRequest.getId(), date, asyncRequest.getVrijeme(), pkd.get());
         pkd.get().getTermini().add(termin);
         pacijentDoktorRepository.save(pkd.get());
 
@@ -157,5 +158,12 @@ public class TerminService {
             pacijentRepository.save(p.get());
         }
         return new Response("Uspješno ste dodali vezu pacijent-doktor!", 200);
+    }
+
+    public String asyncObrisiTermin(AsyncObrisiTerminRequest asyncRequest) {
+        Optional<Termin> termin = terminRepository.findById(asyncRequest.getId());
+        if(!termin.isPresent()) return "Nepostojeći termin!";
+        terminRepository.delete(termin.get());
+        return "Termin uspješno obrisan!";
     }
 }
