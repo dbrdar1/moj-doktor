@@ -5,6 +5,7 @@ import ba.unsa.etf.chatmicroservice.model.Poruka;
 import ba.unsa.etf.chatmicroservice.repository.PorukaRepository;
 import ba.unsa.etf.chatmicroservice.request.DodajPorukuRequest;
 import ba.unsa.etf.chatmicroservice.response.PorukaResponse;
+import ba.unsa.etf.chatmicroservice.response.PorukePoUcesnicimaResponse;
 import ba.unsa.etf.chatmicroservice.response.PorukePosiljaocaIPrimaocaResponse;
 import ba.unsa.etf.chatmicroservice.response.Response;
 import ba.unsa.etf.chatmicroservice.service.PorukaService;
@@ -42,6 +43,14 @@ public class PorukaController {
         PorukePosiljaocaIPrimaocaResponse porukePosiljaocaIPrimaocaResponse =
                 porukaService.dajPorukePosiljaocaIPrimaoca(idPosiljaoca, idPrimaoca);
         return ResponseEntity.ok(porukePosiljaocaIPrimaocaResponse);
+    }
+
+    @GetMapping("/poruke-po-ucesnicima")
+    public ResponseEntity<PorukePoUcesnicimaResponse> dajPorukePoUcesnicima
+            (@RequestParam Long idPrvogUcesnika, @RequestParam Long idDrugogUcesnika) {
+        PorukePoUcesnicimaResponse porukePoUcesnicimaResponse =
+                porukaService.dajPorukePoUcesnicima(idPrvogUcesnika, idDrugogUcesnika);
+        return ResponseEntity.ok(porukePoUcesnicimaResponse);
     }
 
     @PostMapping("/dodaj-poruku")

@@ -12,5 +12,7 @@ import java.util.List;
 public interface PorukaRepository extends JpaRepository<Poruka, Long> {
 
     List<PorukaProjection> findAllByPosiljalacAndPrimalac(Korisnik posiljalac, Korisnik primalac);
+    List<PorukaProjection> findAllByPosiljalacAndPrimalacOrPrimalacAndPosiljalac
+            (Korisnik posiljalac1, Korisnik primalac1, Korisnik posiljalac2, Korisnik primalac2);
     PorukaProjection findBySadrzaj(String sadrzaj);
 }

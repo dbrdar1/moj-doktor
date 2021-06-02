@@ -8,6 +8,7 @@ import ba.unsa.etf.chatmicroservice.repository.KorisnikRepository;
 import ba.unsa.etf.chatmicroservice.repository.PorukaRepository;
 import ba.unsa.etf.chatmicroservice.request.DodajPorukuRequest;
 import ba.unsa.etf.chatmicroservice.response.PorukaResponse;
+import ba.unsa.etf.chatmicroservice.response.PorukePoUcesnicimaResponse;
 import ba.unsa.etf.chatmicroservice.response.PorukePosiljaocaIPrimaocaResponse;
 import ba.unsa.etf.chatmicroservice.response.Response;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,16 @@ public class PorukaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Ne postoji primalac s ovim id-om!"));
         List<PorukaProjection> poruke = porukaRepository.findAllByPosiljalacAndPrimalac(posiljalac, primalac);
         return new PorukePosiljaocaIPrimaocaResponse(poruke);
+    }
+
+    public PorukePoUcesnicimaResponse dajPorukePoUcesnicima(Long idPrvogUcesnika, Long idDrugogUcesnika) {
+        Korisnik prviUcesnik = korisnikRepository.findById(idPrvogUcesnika)
+                .orElseThrow(() -> new ResourceNotFoundException("Ne postoji korisnik s ovim id-om!"));
+        Korisnik drugiUcesnik = korisnikRepository.findById(idDrugogUcesnika)
+                .orElseThrow(() -> new ResourceNotFoundException("Ne postoji korisnik s ovim id-om!"));
+        List<PorukaProjection> poruke = porukaRepository.findAllByPosiljalacAndPrimalacOrPrimalacAndPosiljalac
+                (prviUcesnik, drugiUcesnik, drugiUcesnik, prviUcesnik);
+        return new PorukePoUcesnicimaResponse(poruke);
     }
 
     public Response dodajPoruku(DodajPorukuRequest dodajPorukuRequest) {
