@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  systemevents-db:
+    image: 'postgres:12'
+    container_name: systemevents-db
+    environment:
+      - POSTGRES_DB=systemevents
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+
+  chatmicroservice-db:
+    image: 'postgres:12'
+    container_name: chatmicroservice-db
+    environment:
+      - POSTGRES_DB=chatmicroservice
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+
+  discovery:
+    image: eureka-server-image
+    build:
+      context: .
+    container_name: discovery
+    depends_on:
+      - rabbitmq
+      - systemevents-db
+      - chatmicroservice-db
+    expose:
+      - 8761
+    ports:
+      - 8761:8761
+
+  config:
+    image: config-server-image
+    build:
+      context: .
+    container_name: config
+    depends_on:
+      - rabbitmq
+      - systemevents-db
+      - chatmicroservice-db
+    environment:
+      - CONFIG_REPO_URI=https://github.com/dbrdar1/moj-doktor-config-repo
+    expose:
+      - 8888
+    ports:
+      - 8888:8888
+
+  system-events:
+    image: system-events-image
+    container_name: system-events
+    build:
+      context: .
+    depends_on:
+      - rabbitmq
+      - systemevents-db
+      - chatmicroservice-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://systemevents-db:5432/systemevents
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    expose:
+      - 8867
+    ports:
+      - 8867:8867
+
+  chat-microservice:
+    image: chat-microservice-image
+    build:
+      context: .
+    container_name: chat-microservice
+    depends_on:
+      - rabbitmq
+      - systemevents-db
+      - chatmicroservice-db
+      - discovery
+      - config
+      - system-events
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://chatmicroservice-db:5432/chatmicroservice
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - eureka.client.serviceUrl.defaultZone=http://discovery:8761/eureka/
+    expose:
+      - 8084
+    ports:
+      - 8084:8084

@@ -1,2 +1,3 @@
-# moj-doktor
-ETF Sarajevo - Napredne teb tehnologije (Advanced Web Technologies) - Projekat
+# Moj Doktor
+Elektrotehnički fakultet Sarajevo - Napredne Web Tehnologije - Projekat
+Faculty of Electrical Engineering Sarajevo - Advanced Web Technologies - Project)
