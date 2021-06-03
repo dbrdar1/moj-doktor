@@ -13,6 +13,6 @@ public class DodajNotifikacijuRequest {
     private Long idKorisnika;
     private String naslov;
     private String tekst;
-    private Date datum;
+    private String datum;
     private String vrijeme;
 }
