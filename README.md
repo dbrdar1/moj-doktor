@@ -15,7 +15,7 @@ MojDoktor web aplikacija služi za komunikaciju između pacijenta i doktora. Osn
 * Upravljanje terminima pacijenta
 * Izvještaj o ljekarskom pregledu
 * Upravljanje rezimeom doktora
-* Notifikacije o terminima
+* Notifikacije o otkazanim terminima
 
 ### Arhitektura
 ![arhitektura](https://github.com/dbrdar1/moj-doktor/blob/684f41cb7b2f99491a1e178abbcf64b6f86b5110/AdditionalFiles/Dijagram%201.png)
@@ -43,7 +43,7 @@ MyDoctor web application is used for communication between a patient and a docto
 * Patient Appointment Scheduling
 * Medical Examination Report 
 * Doctor Resume Management
-* Appointment Notifications
+* Appointment Cancellation Notifications
 
 ### Arhitecture
 ![arhitecture](https://github.com/dbrdar1/moj-doktor/blob/684f41cb7b2f99491a1e178abbcf64b6f86b5110/AdditionalFiles/Dijagram%202.png)
