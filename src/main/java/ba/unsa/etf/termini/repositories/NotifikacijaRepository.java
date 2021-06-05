@@ -10,5 +10,4 @@ import java.util.List;
 @Repository
 public interface NotifikacijaRepository extends JpaRepository<Notifikacija, Long> {
     List<Notifikacija> findAllByKorisnik(Korisnik korisnik);
-    Notifikacija findByNaslov(String naslov);
 }

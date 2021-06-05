@@ -25,10 +25,13 @@ public class NotifikacijaService {
     public Response dodajNotifikaciju(DodajNotifikacijuRequest dodajNotifikacijuRequest) {
         Optional<Korisnik> k = korisnikRepository.findById(dodajNotifikacijuRequest.getIdKorisnika());
         if(!k.isPresent()) return new Response("Id korisnika nije postojeći!", 400);
-        Notifikacija n = new Notifikacija(dodajNotifikacijuRequest.getNaslov(), dodajNotifikacijuRequest.getTekst(),
-                dodajNotifikacijuRequest.getDatum(),dodajNotifikacijuRequest.getVrijeme(),k.get());
+        Notifikacija n = new Notifikacija(dodajNotifikacijuRequest.getTekst(),
+                dodajNotifikacijuRequest.getDatum(),k.get());
         k.get().getNotifikacije().add(n);
         korisnikRepository.save(k.get());
+        System.out.println("dodaje notifikaciju u bazu");
+        System.out.println(k.toString());
+        System.out.println(n.toString());
         return new Response("Uspješno ste dodali notifikaciju!", 200);
     }
 
@@ -38,14 +41,4 @@ public class NotifikacijaService {
         return new NotifikacijeKorisnikaResponse(notifikacije);
     }
 
-    public Response obrisiNotifikaciju(Long id){
-        Notifikacija d = notifikacijaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ne postoji notifikacija s ovim id-om!"));;
-        notifikacijaRepository.deleteById(id);
-        return new Response("Uspješno ste obrisali notifikaciju!", 200);
-    }
-
-    public NotifikacijaResponse dajNotifikaciju(Long id) {
-        Notifikacija n = notifikacijaRepository.findById(id).orElseThrow(() -> new ba.unsa.etf.termini.exceptions.ResourceNotFoundException("Ne postoji notifikacija s ovim id-om!"));
-        return new NotifikacijaResponse(n.getNaslov(),n.getTekst(),n.getDatum(),n.getVrijeme());
-    }
 }
