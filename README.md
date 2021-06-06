@@ -1,5 +1,6 @@
 # Moj Doktor
 Elektrotehnički fakultet Sarajevo - Napredne Web Tehnologije - Projekat
+* [Link na video snimke](https://drive.google.com/drive/folders/1dCAwMHv8Zar51gwxdf39_XN2qBV7FPC1?usp=sharing)
 
 ### Članovi tima
 * [Brdar Džavid](https://github.com/dbrdar1)
