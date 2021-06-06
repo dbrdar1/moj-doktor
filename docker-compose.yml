@@ -128,7 +128,7 @@ services:
       - config
       - system-events
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://api-gateway-db:5432/moj_doktor_chat
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://api-gateway-db:5432/moj_doktor_user_management
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create
