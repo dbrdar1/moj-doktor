@@ -80,7 +80,7 @@ const NaslovnaPregledKartica = (props) => {
             <img className="profilna" src="https://hancroft.co.nz/wp-content/uploads/2019/05/profile-placeholder.png" alt="slika profila" />
             {!props.doktor ?
                 <React.Fragment>
-                    <h3>Ime i prezime: {props.podaciDoktora.ime} {props.podaciDoktora.prezime}</h3>
+                    <h3>{props.podaciDoktora.ime} {props.podaciDoktora.prezime}</h3>
                     <h3>Adresa: {props.podaciDoktora.adresa}</h3>
                     <h3>Broj telefona: {props.podaciDoktora.brojTelefona}</h3>
                     <div>
@@ -94,7 +94,7 @@ const NaslovnaPregledKartica = (props) => {
                 </React.Fragment>
                 :
                 <React.Fragment>
-                    <h3>Ime i prezime: {props.pacijent.ime} {props.pacijent.prezime}</h3>
+                    <h3>{props.pacijent.ime} {props.pacijent.prezime}</h3>
                     <h3>Adresa: {props.pacijent.adresa}</h3>
                     <h3>Broj telefona: {props.pacijent.brojTelefona}</h3>
                     <button className="dugme-za-karticu" onClick={pregledKartonaClick}>Pregled kartona</button>

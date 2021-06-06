@@ -11,8 +11,10 @@ import PacijentSideBar from './PacijentSideBar';
 import Loader from './Loader';
 
 const SERVER_URL = 'http://localhost:8084/ws';
+const SERVER_URL_NOTIFICATIONS = 'http://localhost:8083/ws';
 
 let stompClient;
+let stompClientNotifications;
 
 let typingTimeout = null;
 
@@ -26,8 +28,6 @@ const ChatUIPacijent = (props) => {
     const [imePrezimeSagovornika, setImePrezimeSagovornika] = useState('');
     const [messages, setMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState('');
-    const [currentUser, setCurrentUser] = useState('');
-    const [otherUser, setOtherUser] = useState('');
     const [isTyping, setIsTyping] = useState(false);
 
     const divRef = useRef();
@@ -66,14 +66,18 @@ const ChatUIPacijent = (props) => {
                 });
                 localStorage.setItem("messages", JSON.stringify(messagesArray));
                 setMessages(messagesArray);
-                scrollChatToBottom();
                 setLoading(false);
                 connectToWebSocket();
+                connectToWebSocketNotifications();
+                scrollChatToBottom();
             })
             .catch(() => {
                 message.error("Došlo je do greške pri učitavanju podataka. Pokušajte ponovo.");
             });
-            return () => { disconnectFromWebSocket(); };
+            return () => {
+                disconnectFromWebSocket();
+                disconnectFromWebSocketNotifications();
+            };
     }, []);
 
     const scrollChatToBottom = () => {
@@ -88,9 +92,17 @@ const ChatUIPacijent = (props) => {
         connect();
     };
 
+    const connectToWebSocketNotifications = () => {
+        connectNotifications();
+    }
+
     const disconnectFromWebSocket = () => {
         setMessages([]);
         disconnect();
+    };
+
+    const disconnectFromWebSocketNotifications = () => {
+        disconnectNotifications();
     };
 
     const handleTyping = (event) => {
@@ -108,6 +120,12 @@ const ChatUIPacijent = (props) => {
         stompClient.connect({}, onConnected, onError);
     }
 
+    function connectNotifications() {
+        var socketNotifications = new SockJS(SERVER_URL_NOTIFICATIONS);
+        stompClientNotifications = Stomp.over(socketNotifications);
+        stompClientNotifications.connect({}, onConnectedNotifications, onErrorNotifications);
+    }
+
     const onConnected = (frame) => {
         console.log('Connected: ' + frame);
         stompClient.subscribe("/user/" + localStorage.getItem("id") + "/queue/messages", onMessageReceived);
@@ -115,6 +133,14 @@ const ChatUIPacijent = (props) => {
     };
 
     const onError = (err) => {
+        console.log(err);
+    };
+
+    const onConnectedNotifications = (frame) => {
+        console.log('Connected: ' + frame);
+    };
+
+    const onErrorNotifications = (err) => {
         console.log(err);
     };
 
@@ -150,6 +176,13 @@ const ChatUIPacijent = (props) => {
         console.log("Disconnected");
     }
 
+    const disconnectNotifications = () => {
+        if (stompClientNotifications !== null) {
+            stompClientNotifications.disconnect();
+        }
+        console.log("Disconnected");
+    }
+
     const handleSend = () => {
         const messageText = document.getElementById("tekstPoruke").value;
         if (messageText.trim() != "") {
@@ -173,15 +206,29 @@ const ChatUIPacijent = (props) => {
             timestamp: new Date()
         };
         stompClient.send("/app/chat", {}, JSON.stringify(newMessage));
-    
         const newMessages = [...messages];
         newMessages.push(newMessage);
         setMessages(newMessages);
+
+        sendChatNotification(messageText);
+    }
+
+    function sendChatNotification(tekst) {
+        const newNotification = {
+            senderId: Number(localStorage.getItem("id")),
+            recipientId: Number(idDoktoraSagovornika),
+            naslov: localStorage.getItem("ime") + " " + localStorage.getItem("prezime"),
+            tekst: tekst,
+            datum: "datum",
+            vrijeme: "00:00"
+        };
+        stompClientNotifications.send("/app/chat-notifikacije", {}, JSON.stringify(newNotification));
+        console.log(newNotification);
     }
 
     return (
         <PacijentSideBar>
-            <HeaderNaslovna stranica={imePrezimeSagovornika} />
+            <HeaderNaslovna stranica={imePrezimeSagovornika} zaobidjiChatNotifikacije={true} />
             <div className="chat">
                 {loading ? <><br /><br /><br /><Loader /></> :
                     <>

@@ -29,6 +29,7 @@ import RazgovoriPacijent from './components/RazgovoriPacijent';
 import SviDoktori from './components/SviDoktori';
 import Stranica404 from './components/stranica404';
 import SviPacijenti from './components/SviPacijenti';
+import SveNotifikacije from './components/SveNotifikacije';
 
 function App() {
     useEffect(()=>{
@@ -67,6 +68,7 @@ function App() {
                         <Route exact path="/pacijent/razgovori" component={RazgovoriPacijent} />
                         <Route exact path="/pacijent/svi-doktori" component={SviDoktori} />
                         <Route exact path="/doktor/svi-pacijenti" component={SviPacijenti} />
+                        <Route exact path="/sve-notifikacije" component={SveNotifikacije} />
                         <Route component={Stranica404} />
                     </Switch>
                 </header>

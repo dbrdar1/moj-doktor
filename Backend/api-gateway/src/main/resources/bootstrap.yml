@@ -12,8 +12,8 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: jdbc:postgresql://localhost:5432/moj_doktor_user_management
-    username: user
-    password: password
+    username: postgres
+    password: root
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com
@@ -28,9 +28,11 @@ spring:
             enable: true
     protocol: smtp
     test-connection: false
+
 app:
   jwtSecret: ZWRvLXRlbnNlaQ==
   jwtExpirationInMs: 604800000
+
 zuul:
   #Service will be mapped under the /api URI
   host:
@@ -60,6 +62,7 @@ zuul:
 
   ignored-services: "*"
   sensitive-headers: Cookie,Set-Cookie
+
 eureka:
   client:
     serviceUrl:
@@ -67,7 +70,8 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
   instance:
-    hostname: localhost
+    preferIpAddress: true
+
 management:
   endpoint:
     refresh:
@@ -76,5 +80,8 @@ management:
     web:
       exposure:
         include: "*"
+
 server:
   port: 8080
+
+rabbitname: localhost

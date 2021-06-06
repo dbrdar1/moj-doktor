@@ -17,6 +17,12 @@ const Registracija = () => {
 
     const registrujKorisnika = () => {
         let unos = podaci;
+        if(unos.ime==='') {message.error("Niste unijeli ime!"); return}
+        if(unos.prezime==='') {message.error("Niste unijeli prezime!"); return}
+        if(unos.email==='') {message.error("Niste unijeli email!"); return}
+        if(unos.brojTelefona==='') {message.error("Niste unijeli broj telefona!"); return}
+        if(unos.korisnickoIme==='') {message.error("Niste unijeli korisničko ime!"); return}
+        if(unos.lozinka==='') {message.error("Niste unijeli lozinku!"); return}
 
         if (document.getElementById("chbox").checked) unos.uloga = 'DOKTOR';
         else unos.uloga = 'PACIJENT';

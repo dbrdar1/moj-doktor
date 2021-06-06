@@ -30,19 +30,17 @@ import java.util.stream.Collectors;
 @RestController
 public class NotifikacijaController {
     private final NotifikacijaService notifikacijaService;
-    private PacijentRepository pacijentRepository;
 
-    private final Date datum = new Date(2021,3,17);
-    private final String vrijeme = "9:00";
+    @PostMapping("/radi")
+    public ResponseEntity<Response> dodajNotifikaciju(){
+        System.out.println("/dodaj");
 
-    @DeleteMapping("/obrisi-notifikaciju/{id}")
-    public ResponseEntity<Response> obrisiNotifikaciju(@PathVariable Long id) {
-        Response response = notifikacijaService.obrisiNotifikaciju(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new Response("dodanooo",200));
     }
-
     @PostMapping("/dodaj-notifikaciju")
     public ResponseEntity<Response> dodajNotifikaciju(@RequestBody DodajNotifikacijuRequest dodajNotifikacijuRequest){
+        System.out.println("/dodaj notifikaciju");
+        System.out.println(dodajNotifikacijuRequest.toString());
         Response response = null;
         try {
             response = notifikacijaService.dodajNotifikaciju(dodajNotifikacijuRequest);
@@ -58,16 +56,6 @@ public class NotifikacijaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/dobavi-notifikaciju/{id}")
-    public ResponseEntity<NotifikacijaResponse> dajNotifikaciju(@PathVariable Long id){
-        NotifikacijaResponse response = null;
-        try {
-            response = notifikacijaService.dajNotifikaciju(id);
-        } catch (Exception e){
-            throw e;
-        }
-        return ResponseEntity.ok(response);
-    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

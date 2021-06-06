@@ -34,3 +34,5 @@ server:
 
 app:
   jwtSecret: ZWRvLXRlbnNlaQ==
+
+rabbitname: localhost

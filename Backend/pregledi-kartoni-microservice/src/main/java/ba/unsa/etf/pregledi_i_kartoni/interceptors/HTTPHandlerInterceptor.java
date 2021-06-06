@@ -84,19 +84,37 @@ public class HTTPHandlerInterceptor implements HandlerInterceptor {
                 Timestamp.from(ZonedDateTime.now(ZoneId.of("Europe/Sarajevo")).toInstant()).toString();
         String nazivMikroservisaChat =
                 "pregledi-i-kartoni";
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8866)
-                .usePlaintext()
-                .build();
-        SystemEventsServiceGrpc.SystemEventsServiceBlockingStub stub
-                = SystemEventsServiceGrpc.newBlockingStub(channel);
-        ActionResponse actionResponse = stub.registrujAkciju(ActionRequest.newBuilder()
-                .setTimestampAkcije(timestampAkcijeNow)
-                .setNazivMikroservisa(nazivMikroservisaChat)
-                .setResurs(resurs)
-                .setTipAkcije(tipAkcije)
-                .setTipOdgovoraNaAkciju(tipOdgovoraNaAkciju)
-                .build());
-        System.out.println("Response received from server:\n" + actionResponse);
-        channel.shutdown();
+        try {
+            ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8866)
+                    .usePlaintext()
+                    .build();
+            SystemEventsServiceGrpc.SystemEventsServiceBlockingStub stub
+                    = SystemEventsServiceGrpc.newBlockingStub(channel);
+            ActionResponse actionResponse = stub.registrujAkciju(ActionRequest.newBuilder()
+                    .setTimestampAkcije(timestampAkcijeNow)
+                    .setNazivMikroservisa(nazivMikroservisaChat)
+                    .setResurs(resurs)
+                    .setTipAkcije(tipAkcije)
+                    .setTipOdgovoraNaAkciju(tipOdgovoraNaAkciju)
+                    .build());
+            System.out.println("Response received from server:\n" + actionResponse);
+            channel.shutdown();
+        }
+        catch (Exception e) {
+            ManagedChannel channel = ManagedChannelBuilder.forAddress("system-events", 8866)
+                    .usePlaintext()
+                    .build();
+            SystemEventsServiceGrpc.SystemEventsServiceBlockingStub stub
+                    = SystemEventsServiceGrpc.newBlockingStub(channel);
+            ActionResponse actionResponse = stub.registrujAkciju(ActionRequest.newBuilder()
+                    .setTimestampAkcije(timestampAkcijeNow)
+                    .setNazivMikroservisa(nazivMikroservisaChat)
+                    .setResurs(resurs)
+                    .setTipAkcije(tipAkcije)
+                    .setTipOdgovoraNaAkciju(tipOdgovoraNaAkciju)
+                    .build());
+            System.out.println("Response received from server:\n" + actionResponse);
+            channel.shutdown();
+        }
     }
 }

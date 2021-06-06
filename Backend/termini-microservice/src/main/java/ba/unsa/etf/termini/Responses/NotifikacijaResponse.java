@@ -14,8 +14,7 @@ import java.util.Date;
 @RequestMapping(method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
 @ResponseBody
 public class NotifikacijaResponse {
-    private String naslov;
+    private Long idKorisnika;
     private String tekst;
-    private Date datum;
-    private String vrijeme;
+    private String datum;
 }

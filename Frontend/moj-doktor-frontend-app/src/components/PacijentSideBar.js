@@ -8,7 +8,8 @@ import {
     CalendarOutlined,
     TeamOutlined,
     CommentOutlined,
-    UserOutlined
+    UserOutlined,
+    SearchOutlined
 } from '@ant-design/icons';
 
 import { Layout, Menu } from 'antd';
@@ -63,6 +64,11 @@ const PacijentSideBar = (props) => {
                                 Moji doktori
                             </NavLink>
                         </Menu.Item>
+                        <Menu.Item key="svi-doktori" icon={<SearchOutlined />} >
+                            <NavLink to="/pacijent/svi-doktori" className="nav-text">
+                                Pronađi doktora
+                            </NavLink>
+                        </Menu.Item> 
                         <Menu.Item key="razgovori" icon={<CommentOutlined />} >
                             <NavLink to="/pacijent/razgovori" className="nav-text">
                                 Razgovori

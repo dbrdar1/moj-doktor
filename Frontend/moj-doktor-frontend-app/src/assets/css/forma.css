@@ -22,30 +22,39 @@
   margin-bottom: 30px;
 }
 
-.zaboravljena-sifra{
-    color: rgba(95, 112, 160, 0.712);
-    border: none;
-    font-size: 14px;
-    padding: 10px;
-    background-color: transparent;
-    margin-bottom: 30px;
+.zaboravljena-sifra {
+  color: rgba(95, 112, 160, 0.712);
+  border: none;
+  font-size: 14px;
+  padding: 10px;
+  background-color: transparent;
+  margin-bottom: 30px;
 }
 
-.zaboravljena-sifra:hover{
-    cursor: pointer;
-    color: #001529;
-    font-size: 14px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #001529;
+.zaboravljena-sifra:hover {
+  cursor: pointer;
+  color: #001529;
+  font-size: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #001529;
 }
 
-.lijeva-forma{
-display: inline;
-float: left;
-margin-right: 20px;
+.lijeva-forma {
+  display: inline;
+  float: left;
+  margin-right: 20px;
 }
 
-.desna-forma{
-display: inline;
-float: right;
+.desna-forma {
+  display: inline;
+  float: right;
+}
+
+@media only screen and (max-width: 1500px) {
+  .lijeva-forma {
+    float: none;
+  }
+  .desna-forma {
+    float: none;
+  }
 }

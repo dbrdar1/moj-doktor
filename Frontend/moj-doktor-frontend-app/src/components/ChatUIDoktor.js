@@ -11,8 +11,10 @@ import Loader from './Loader';
 import DoktorSideBar from './DoktorSideBar';
 
 const SERVER_URL = 'http://localhost:8084/ws';
+const SERVER_URL_NOTIFICATIONS = 'http://localhost:8083/ws';
 
 let stompClient;
+let stompClientNotifications;
 
 let typingTimeout = null;
 
@@ -20,20 +22,15 @@ const ChatUIDoktor = (props) => {
 
     const { idPacijentaSagovornika } = useParams();
 
-    //let messagesList = [];
-
     let [loading, setLoading] = useState(true);
     const [imePrezimeSagovornika, setImePrezimeSagovornika] = useState('');
     const [messages, setMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState('');
-    const [currentUser, setCurrentUser] = useState('');
-    const [otherUser, setOtherUser] = useState('');
     const [isTyping, setIsTyping] = useState(false);
 
     const divRef = useRef();
 
     useEffect(() => {
-        console.log("pozvana useeffect");
         scrollChatToBottom();
         setImePrezimeSagovornika(props.location.state.imePrezimeSagovornika);
         let URL = 'http://localhost:8080/chat/poruke';
@@ -43,10 +40,8 @@ const ChatUIDoktor = (props) => {
                 return res.json();
             })
             .then((res) => {
-                console.log("evo me");
                 console.log(res);
                 const fetchedMessages = res;
-                console.log("dosadasnje: ", fetchedMessages);
                 let messagesArray = [];
                 fetchedMessages.forEach(fetchedMessage => {
                     let newMessage = null;
@@ -67,14 +62,18 @@ const ChatUIDoktor = (props) => {
                 });
                 localStorage.setItem("messages", JSON.stringify(messagesArray));
                 setMessages(messagesArray);
-                scrollChatToBottom();
                 setLoading(false);
                 connectToWebSocket();
+                connectToWebSocketNotifications();
+                scrollChatToBottom();
             })
             .catch(() => {
                 message.error("Došlo je do greške pri učitavanju podataka. Pokušajte ponovo.");
             });
-            return () => { disconnectFromWebSocket(); };
+            return () => {
+                disconnectFromWebSocket();
+                disconnectFromWebSocketNotifications();
+            };
     }, []);
 
     const scrollChatToBottom = () => {
@@ -89,9 +88,17 @@ const ChatUIDoktor = (props) => {
         connect();
     };
 
+    const connectToWebSocketNotifications = () => {
+        connectNotifications();
+    }
+
     const disconnectFromWebSocket = () => {
         setMessages([]);
         disconnect();
+    };
+
+    const disconnectFromWebSocketNotifications = () => {
+        disconnectNotifications();
     };
 
     const handleTyping = (event) => {
@@ -109,6 +116,12 @@ const ChatUIDoktor = (props) => {
         stompClient.connect({}, onConnected, onError);
     }
 
+    function connectNotifications() {
+        var socketNotifications = new SockJS(SERVER_URL_NOTIFICATIONS);
+        stompClientNotifications = Stomp.over(socketNotifications);
+        stompClientNotifications.connect({}, onConnectedNotifications, onErrorNotifications);
+    }
+
     const onConnected = (frame) => {
         console.log('Connected: ' + frame);
         stompClient.subscribe("/user/" + localStorage.getItem("id") + "/queue/messages", onMessageReceived);
@@ -116,6 +129,14 @@ const ChatUIDoktor = (props) => {
     };
 
     const onError = (err) => {
+        console.log(err);
+    };
+
+    const onConnectedNotifications = (frame) => {
+        console.log('Connected: ' + frame);
+    };
+
+    const onErrorNotifications = (err) => {
         console.log(err);
     };
 
@@ -153,6 +174,13 @@ const ChatUIDoktor = (props) => {
         console.log("Disconnected");
     }
 
+    const disconnectNotifications = () => {
+        if (stompClientNotifications !== null) {
+            stompClientNotifications.disconnect();
+        }
+        console.log("Disconnected");
+    }
+
     const handleSend = () => {
         const messageText = document.getElementById("tekstPoruke").value;
         if (messageText.trim() != "") {
@@ -176,15 +204,29 @@ const ChatUIDoktor = (props) => {
             timestamp: new Date()
         };
         stompClient.send("/app/chat", {}, JSON.stringify(newMessage));
-    
         const newMessages = [...messages];
         newMessages.push(newMessage);
         setMessages(newMessages);
+
+        sendChatNotification(messageText);
+    }
+
+    function sendChatNotification(tekst) {
+        const newNotification = {
+            senderId: Number(localStorage.getItem("id")),
+            recipientId: Number(idPacijentaSagovornika),
+            naslov: localStorage.getItem("ime") + " " + localStorage.getItem("prezime"),
+            tekst: tekst,
+            datum: "datum",
+            vrijeme: "00:00"
+        };
+        stompClientNotifications.send("/app/chat-notifikacije", {}, JSON.stringify(newNotification));
+        console.log(newNotification);
     }
 
     return (
         <DoktorSideBar>
-            <HeaderNaslovna stranica={imePrezimeSagovornika} />
+            <HeaderNaslovna stranica={imePrezimeSagovornika} zaobidjiChatNotifikacije={true} />
             <div className="chat">
                 {loading ? <><br /><br /><br /><Loader /></> :
                     <>

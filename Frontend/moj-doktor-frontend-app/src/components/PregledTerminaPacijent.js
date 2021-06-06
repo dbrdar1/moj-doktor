@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import PacijentSideBar from './PacijentSideBar';
 import HeaderNaslovna from './HeaderNaslovna';
 import '../assets/css/termin.css';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 import { message } from 'antd';
 import { Table, Button } from 'antd';
 import Loader from './Loader';
@@ -10,6 +12,8 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Stranica403 from './stranica403';
 const { confirm, error } = Modal;
 
+const SERVER_URL = 'http://localhost:8083/ws';
+let stompClient;
 
 const PregledTerminaPacijent = () => {
   let [data, setData] = useState([]);
@@ -33,8 +37,9 @@ const PregledTerminaPacijent = () => {
     return !(danas || sutra)
   }
 
-  const obrisiTermin = (id, datum) => {
-    if (okDatum(datum))
+  const obrisiTermin = (record) => {
+    const id = record.key;
+    const datum = record.datum;    if (okDatum(datum))
       confirm({
         title: 'Da li ste sigurni da želite otkazati ovaj termin?',
         icon: <ExclamationCircleOutlined />,
@@ -52,6 +57,7 @@ const PregledTerminaPacijent = () => {
               }
               else {
                 message.success("Uspješno ste otkazali termin.", 2);
+                sendNotification(record.recipientId, record.datum, record.vrijeme)
                 window.location.reload();
               }
             })
@@ -92,7 +98,7 @@ const PregledTerminaPacijent = () => {
       title: 'Akcije',
       key: 'akcije',
       dataIndex: 'akcije',
-      render: (tag, record) => <Button type="primary" danger key={tag} onClick={() => obrisiTermin(record.key, record.datum)}>{tag}</Button>
+      render: (tag, record) => <Button type="primary" danger key={tag} onClick={() => obrisiTermin(record)}>{tag}</Button>
     },
   ]);
 
@@ -110,6 +116,7 @@ const PregledTerminaPacijent = () => {
         resTermini.forEach(termin => {
           const item = {
             key: termin.id,
+            recipientId: termin.doktor.id,
             doktor: termin.doktor.ime + ' ' + termin.doktor.prezime,
             datum: termin.datum,
             vrijeme: termin.vrijeme,
@@ -138,11 +145,59 @@ const PregledTerminaPacijent = () => {
         }
         setData(termini)
         setLoading(false);
+        connectToWebSocket()
+
       })
       .catch(() => {
         message.error("Došlo je do greške pri učitavanju podataka. Pokušajte ponovo.");
       });
+      return () => { disconnectFromWebSocket(); };
   }, []);
+
+  const connectToWebSocket = () => {
+    connect();
+  };
+
+  const disconnectFromWebSocket = () => {
+    disconnect();
+  };
+
+  function connect() {
+    var socket = new SockJS(SERVER_URL);
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, onConnected, onError);
+  }
+
+  const onConnected = (frame) => {
+    console.log('Connected: ' + frame);
+  };
+
+  const onError = (err) => {
+    console.log(err);
+  };
+
+  const disconnect = () => {
+    if (stompClient !== null) {
+      stompClient.disconnect();
+    }
+    console.log("Disconnected");
+  }
+
+  function sendNotification(recipientId, datumTermina, vrijemeTermina) {
+    const naslov = "Obavještenje: Termin otkazan"
+    const tekst = "Pacijent " + localStorage.getItem("ime") + ' ' + localStorage.getItem("prezime") +
+      ' otkazao je termin ' + datumTermina + ' u ' + vrijemeTermina + 'h.'
+    const newNotification = {
+      senderId: Number(localStorage.getItem("id")),
+      recipientId: recipientId,
+      naslov: naslov,
+      tekst: tekst,
+      datum: "datum",
+      vrijeme: "00:00"
+    };
+    stompClient.send("/app/notifikacije", {}, JSON.stringify(newNotification));
+    console.log(newNotification);
+  }
 
   if (localStorage.getItem("uloga") !== 'PACIJENT') return (<Stranica403 />)
   return (

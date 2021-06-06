@@ -10,9 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DodajNotifikacijuRequest {
-    private Long idKorisnika;
-    private String naslov;
     private String tekst;
-    private Date datum;
-    private String vrijeme;
+    private String datum;
+    private Long idKorisnika;
 }

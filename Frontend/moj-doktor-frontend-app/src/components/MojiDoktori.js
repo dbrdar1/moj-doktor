@@ -30,11 +30,17 @@ const MojiDoktori = () => {
             .then((res) => {
                 return res.json();
             })
-            .then((res) => {
-                res.forEach(doktor => {
-                    setPodaciDoktora(p => [...p, doktor])
-                });
-                setLoading(false);
+            .then((res2) => {
+                let svi=[]
+                res2.forEach(doktor => {
+                    let postoji = false;
+                    for (let i=0; i<svi.length; i++) if(svi[i].id===doktor.id) postoji=true;
+                    if(!postoji)
+                    svi.push(doktor);
+                 //setLoading(false)
+               });
+               setPodaciDoktora(svi)
+               setLoading(false);
             })
             .catch(() => {
                 message.error("Došlo je do greške.");

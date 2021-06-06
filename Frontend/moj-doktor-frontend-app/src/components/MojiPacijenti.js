@@ -55,15 +55,20 @@ const MojiPacijenti = () => {
                         email: res.email
                     }
                 })
-                fetch('http://localhost:8080/pregledi-kartoni/pacijenti-doktora/' + res.id.toString(10), { method: "get", headers })
+                fetch('http://localhost:8080/pregledi-kartoni/pacijenti-doktora/' + res.id, { method: "get", headers })
                 .then((res2) => {
                     return res2.json();
                 })
                 .then((res2) => {
+                    let svi=[]
                     res2.forEach(pacijent => {
-                        setPodaciPacijenata(p => [...p, pacijent])
+                        let postoji = false;
+                        for (let i=0; i<svi.length; i++) if(svi[i].id===pacijent.id) postoji=true;
+                        if(!postoji)
+                        svi.push(pacijent);
                      //setLoading(false)
                    });
+                   setPodaciPacijenata(svi)
                    setLoading(false);
                 })
                 .catch(() => {

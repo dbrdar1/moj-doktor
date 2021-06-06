@@ -15,7 +15,7 @@
   height: 100%;
   text-align: left;
   padding: 0px;
-  display: inline;
+  display: table-cell;
   float: left;
 }
 .opis-prijava {
@@ -40,7 +40,6 @@
   font-style: italic;
   font-family: "Montserrat", sans-serif;
 }
-
 .poruka {
   margin: 10px;
   text-align: center;
@@ -94,8 +93,29 @@
   width: 20%;
   font-size: 12px;
 }
-
+.nestajuce{
+  visibility:hidden;
+}
 .red button:hover{
   font-size: 14px;
   width: 23%;
+}
+@media only screen and (max-width: 1000px) {
+  .opis{
+    display: none;
+  }
+  .prijavaPage{
+    width: 400px;
+  }
+  .forma{
+    margin: auto;
+  }
+}
+@media only screen and (max-width: 1500px) {
+.registracijaPage{
+  width: 600px;
+}
+.blok{
+  overflow-y: scroll;
+}
 }

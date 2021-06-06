@@ -93,6 +93,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.4.3</version>
             </plugin>
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
@@ -106,6 +107,8 @@
                     <pluginArtifact>
                         io.grpc:protoc-gen-grpc-java:1.4.0:exe:${os.detected.classifier}
                     </pluginArtifact>
+                    <outputDirectory>${basedir}/src/main/java</outputDirectory>
+                    <clearOutputDirectory>false</clearOutputDirectory>
                 </configuration>
                 <executions>
                     <execution>

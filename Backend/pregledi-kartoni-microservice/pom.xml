@@ -10,7 +10,7 @@
     </parent>
     <groupId>ba.unsa.etf</groupId>
     <artifactId>pregledikartonimicroservice</artifactId>
-    <version>1.0</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>pregledikartonimicroservice</name>
     <description>Mikroservis za preglede i kartone za MojDoktor web app</description>
     <properties>
@@ -172,6 +172,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${project.parent.version}</version>
             </plugin>
 
             <plugin>
@@ -186,6 +187,8 @@
                     <pluginArtifact>
                         io.grpc:protoc-gen-grpc-java:1.4.0:exe:${os.detected.classifier}
                     </pluginArtifact>
+                    <outputDirectory>${basedir}/src/main/java</outputDirectory>
+                    <clearOutputDirectory>false</clearOutputDirectory>
                 </configuration>
                 <executions>
                     <execution>

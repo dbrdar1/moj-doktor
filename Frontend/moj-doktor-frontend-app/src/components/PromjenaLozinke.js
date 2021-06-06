@@ -66,7 +66,7 @@ const PromjenaLozinke = () => {
                 <div className="poruka">
                     <br /><br />
                     <h2>Dobro došli!</h2>
-                    <p>Officia cillum duis nostrud esse adipisicing sit. Excepteur sint veniam tempor officia qui fugiat ullamco occaecat amet. Ullamco nostrud nulla amet enim.</p>
+                    <p>Mi brinemo o sigurnosti Vašeg računa. Nakon dostavljanja tokena i njegove verifikacije, bit će Vam omogućen unos nove lozinke.</p>
                 </div>
             </div>
             <div className="red">
