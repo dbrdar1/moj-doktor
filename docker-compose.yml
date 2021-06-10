@@ -128,6 +128,10 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create
       - eureka.client.serviceUrl.defaultZone=http://discovery:8761/eureka/
       - rabbitname=rabbitmq
+      - zuul.routes.doktor-detalji.url=http://doktor-detalji:8081
+      - zuul.routes.pregledi-kartoni.url=http://pregledi-kartoni:8082
+      - zuul.routes.termini.url=http://termini:8083
+      - zuul.routes.chat.url=http://chat:8084
     expose:
       - 8080
     ports:

@@ -1,3 +1,6 @@
+Upute za pokretanje aplikacije korištenjem Docker-a (dakle, potrebno je imati instaliran Docker):
+
+
 Iz root foldera (repozitorija, dakle iz foldera "moj-doktor") pokrenuti niz sljedećih komandi:
 
 docker build -t moj-doktor-system-events ./Backend/system-events-server
@@ -16,4 +19,7 @@ Zatim pokrenuti sljedeću komandu koja pokreće sve zajedno:
 docker-compose up
 
 
-Ukoliko se pokreće na Linux-u, moguće da će trebati dodati "sudo" ispred docker komandi.
+(Ukoliko se pokreće na Linux-u, moguće da će trebati dodati "sudo" ispred docker komandi.)
+
+
+Zatim u web browseru otvoriti localhost:3000 i aplikacija je spremna za korištenje.
